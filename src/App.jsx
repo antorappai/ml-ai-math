@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { lessons } from "./lessonData.js";
 import VectorScene from "./VectorScene.jsx";
 
