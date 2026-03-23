@@ -37,6 +37,7 @@ export default function App() {
   const [mcqFeedback, setMcqFeedback] = useState("");
   const [selectedMcq, setSelectedMcq] = useState(null);
   const [extraMcqState, setExtraMcqState] = useState({});
+  const [revealedPractice, setRevealedPractice] = useState({});
   const [problemAnswer, setProblemAnswer] = useState("");
   const [problemFeedback, setProblemFeedback] = useState("");
   const [showConceptAnswer, setShowConceptAnswer] = useState(false);
@@ -65,6 +66,7 @@ export default function App() {
       setMcqFeedback("");
       setSelectedMcq(null);
       setExtraMcqState({});
+      setRevealedPractice({});
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
@@ -84,6 +86,7 @@ export default function App() {
       setMcqFeedback("");
       setSelectedMcq(null);
       setExtraMcqState({});
+      setRevealedPractice({});
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
@@ -129,6 +132,13 @@ export default function App() {
         correctIndex,
         explanation
       }
+    }));
+  }
+
+  function revealPracticeSolution(questionIndex) {
+    setRevealedPractice((current) => ({
+      ...current,
+      [questionIndex]: !current[questionIndex]
     }));
   }
 
@@ -508,12 +518,30 @@ export default function App() {
               {lesson.extraPractice.length > 0 ? (
                 <article className="content-card wide">
                   <p className="panel-label">Practice Variations</p>
-                  <div className="steps">
+                  <div className="extra-mcq-list">
                     {lesson.extraPractice.map((item, index) => (
-                      <div key={`${lesson.key}-practice-${index + 1}`} className="step">
-                        <strong>Q{index + 1}.</strong> {item.prompt}
-                        <br />
-                        <span>{item.answer}</span>
+                      <div key={`${lesson.key}-practice-${index + 1}`} className="extra-mcq-card">
+                        <p className="question">
+                          <strong>Q{index + 1}.</strong> {item.prompt}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => revealPracticeSolution(index)}
+                        >
+                          {revealedPractice[index] ? "Hide solution" : "Reveal solution"}
+                        </button>
+                        {revealedPractice[index] ? (
+                          <div className="revealed-solution">
+                            <p className="feedback">{item.answer}</p>
+                            <div className="steps">
+                              {item.steps.map((step, stepIndex) => (
+                                <div key={`${lesson.key}-practice-step-${index + 1}-${stepIndex + 1}`} className="step">
+                                  {stepIndex + 1}. {step}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
                     ))}
                   </div>

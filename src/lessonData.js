@@ -2384,5 +2384,16 @@ const defaultEnhancement = {
 export const lessons = baseLessons.map((lesson) => ({
   ...defaultEnhancement,
   ...lesson,
-  ...(lessonEnhancements[lesson.key] || {})
+  ...(lessonEnhancements[lesson.key] || {}),
+  extraPractice: (lessonEnhancements[lesson.key]?.extraPractice || []).map(normalizeExtraPractice)
 }));
+
+function normalizeExtraPractice(item) {
+  return {
+    ...item,
+    steps: item.steps || [
+      "Identify the core idea from this topic.",
+      item.answer
+    ]
+  };
+}
