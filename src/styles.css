@@ -623,6 +623,11 @@ button {
   font-weight: 600;
 }
 
+.content-card button,
+.step button {
+  margin-top: 8px;
+}
+
 .problem-row {
   display: flex;
   gap: 10px;
@@ -658,6 +663,10 @@ button {
   margin-top: 14px;
   display: grid;
   gap: 10px;
+}
+
+.compact-steps {
+  margin-top: 6px;
 }
 
 svg {

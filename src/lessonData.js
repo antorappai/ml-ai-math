@@ -1897,6 +1897,51 @@ const lessonEnhancements = {
     ]
   },
   matrices: {
+    advancedExplanation:
+      "At exam level, stop seeing a matrix as four disconnected entries. The columns tell you where the basis vectors go, the determinant tells you whether area is stretched, shrunk, or collapsed, and invertibility tells you whether the transformation can be undone. That is the frame that makes eigenvectors, regression, and neural layers much easier to read.",
+    commonMistakes: [
+      "Treating matrix multiplication like entrywise multiplication instead of row-by-column combination.",
+      "Ignoring the geometric meaning of columns and memorizing only the arithmetic rule.",
+      "Forgetting that determinant 0 means the transformation squashes space onto a lower-dimensional set and loses information."
+    ],
+    examAngles: [
+      "You may be asked to compute Av and then interpret the output geometrically.",
+      "You may be asked to identify the action of a diagonal, identity, or shear matrix from its entries.",
+      "You should be able to explain what determinant sign and size say about the transformation."
+    ],
+    advancedExample: {
+      title: "Build a matrix from transformed basis vectors.",
+      steps: [
+        "Suppose T(e1) = (2, 1) and T(e2) = (3, 4).",
+        "Put those output vectors in the columns of the matrix.",
+        "So the matrix is A = [[2, 3], [1, 4]].",
+        "Now any input vector can be transformed by multiplying with that matrix."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "A matrix sends e1 to (1, 2) and e2 to (0, 3). Write the matrix.",
+        answer: "A = [[1, 0], [2, 3]].",
+        explanation: "The columns of a matrix are exactly the images of the basis vectors.",
+        steps: [
+          "Take T(e1) = (1, 2) as the first column.",
+          "Take T(e2) = (0, 3) as the second column.",
+          "Place them side by side.",
+          "That gives A = [[1, 0], [2, 3]]."
+        ]
+      },
+      {
+        prompt: "What does det(A) = 0 mean geometrically?",
+        answer: "The transformation collapses area and is not invertible.",
+        explanation: "When the determinant is zero, the output vectors become linearly dependent, so some information is lost.",
+        steps: [
+          "Determinant measures signed area scaling in 2D.",
+          "If that scale factor is zero, all output parallelograms have zero area.",
+          "That means space has been flattened onto a line or point.",
+          "A flattened transformation cannot be undone uniquely."
+        ]
+      }
+    ],
     realLifeExamples: [
       "An image filter can be thought of as a matrix-like transformation on pixel values.",
       "In ML, one dense layer of a neural network is matrix multiplication followed by a bias and activation."
@@ -1908,11 +1953,33 @@ const lessonEnhancements = {
     extraPractice: [
       {
         prompt: "If A = [[2, 0], [0, 3]], what does A do geometrically?",
-        answer: "It scales x by 2 and y by 3."
+        answer: "It scales x by 2 and y by 3.",
+        steps: [
+          "Read the diagonal entries.",
+          "The x-coordinate is multiplied by 2.",
+          "The y-coordinate is multiplied by 3.",
+          "So the transformation stretches along the axes without mixing them."
+        ]
       },
       {
         prompt: "If A is the identity matrix, what is Av for any vector v?",
-        answer: "Av = v."
+        answer: "Av = v.",
+        steps: [
+          "Identity means the diagonal entries are 1 and the off-diagonal entries are 0.",
+          "Each coordinate is copied directly.",
+          "No stretching, shearing, or rotation occurs.",
+          "So the output equals the input."
+        ]
+      },
+      {
+        prompt: "If A = [[1, 2], [3, 4]] and v = (1, -1), find Av.",
+        answer: "Av = (-1, -1).",
+        steps: [
+          "Compute the first coordinate: 1×1 + 2×(-1) = -1.",
+          "Compute the second coordinate: 3×1 + 4×(-1) = -1.",
+          "Write the result as a vector.",
+          "So Av = (-1, -1)."
+        ]
       }
     ],
     extraMcqs: [
@@ -1931,6 +1998,51 @@ const lessonEnhancements = {
     ]
   },
   transformations: {
+    advancedExplanation:
+      "A linear transformation is a rule on the whole space, not just a trick for one vector. At exam level, you should connect three views instantly: the matrix entries, the moved basis vectors, and the geometric effect on every vector. This is the same viewpoint you need later for eigenvectors, PCA, and neural-network layers.",
+    commonMistakes: [
+      "Describing the action on one sample vector and thinking that fully explains the transformation.",
+      "Forgetting that linear transformations preserve the origin and map lines to lines.",
+      "Not using transformed basis vectors to reconstruct the entire map."
+    ],
+    examAngles: [
+      "You may be asked to identify a transformation from the images of e1 and e2.",
+      "You may be asked whether a rule is linear by checking additivity and scaling behavior.",
+      "You should be able to recognize scaling, shear, reflection, and projection patterns."
+    ],
+    advancedExample: {
+      title: "Decide the transformation from basis images.",
+      steps: [
+        "Suppose T(e1) = (1, 0) and T(e2) = (1, 1).",
+        "The first basis direction stays fixed, but the second gets tilted toward x.",
+        "That is a shear transformation.",
+        "The matrix is built by placing those outputs as columns: [[1, 1], [0, 1]]."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "How can you tell from a matrix whether the origin moves?",
+        answer: "For a linear transformation, the origin never moves.",
+        explanation: "Linearity forces T(0) = 0, so if the origin moves, the rule is not purely linear.",
+        steps: [
+          "Use T(0) = T(0 + 0).",
+          "By linearity, T(0 + 0) = T(0) + T(0).",
+          "So T(0) must equal 0.",
+          "Therefore the origin stays fixed."
+        ]
+      },
+      {
+        prompt: "Why do transformed basis vectors determine the whole transformation?",
+        answer: "Because every vector is a combination of basis vectors.",
+        explanation: "Once you know how the map acts on the basis, linearity tells you how it acts on any combination of them.",
+        steps: [
+          "Write any vector as x e1 + y e2.",
+          "Apply T to that combination.",
+          "Use linearity: T(x e1 + y e2) = xT(e1) + yT(e2).",
+          "So knowing T(e1) and T(e2) determines every output."
+        ]
+      }
+    ],
     realLifeExamples: [
       "Stretching a photo in one direction is a transformation of the image space.",
       "A learned feature layer in ML reshapes the whole representation space, not just one data point."
@@ -1942,11 +2054,33 @@ const lessonEnhancements = {
     extraPractice: [
       {
         prompt: "If both basis vectors double, what transformation is that?",
-        answer: "Uniform scaling by 2."
+        answer: "Uniform scaling by 2.",
+        steps: [
+          "Look at what happens to e1 and e2.",
+          "If both directions keep their lines and double in length, every vector doubles too.",
+          "That is the same scale factor in every direction.",
+          "So the transformation is uniform scaling by 2."
+        ]
       },
       {
         prompt: "Why can one transformation affect every point consistently?",
-        answer: "Because linear transformations follow one fixed rule for the whole space."
+        answer: "Because linear transformations follow one fixed rule for the whole space.",
+        steps: [
+          "A linear map is defined by one matrix or one consistent rule.",
+          "That rule is applied to every vector.",
+          "The same basis movement governs all vectors.",
+          "So the effect is globally consistent."
+        ]
+      },
+      {
+        prompt: "The matrix [[1, 1], [0, 1]] acts on space. What geometric effect should you expect?",
+        answer: "A shear to the right.",
+        steps: [
+          "Track the basis: e1 stays (1, 0).",
+          "e2 becomes (1, 1), so the vertical direction tilts toward x.",
+          "That means the shape slants without pure rotation.",
+          "This is the standard shear pattern."
+        ]
       }
     ],
     extraMcqs: [
@@ -2033,6 +2167,51 @@ const lessonEnhancements = {
     ]
   },
   multivariable: {
+    advancedExplanation:
+      "At exam level, multivariable calculus is not just 'take two derivatives'. You need to know what partial derivatives measure, why the gradient is perpendicular to level curves, and why a zero gradient is only a candidate critical point rather than an automatic minimum. This is exactly the language used in optimization and backpropagation.",
+    commonMistakes: [
+      "Treating the gradient like a single number instead of a vector of partial derivatives.",
+      "Forgetting to hold the other variables fixed when taking a partial derivative.",
+      "Assuming gradient zero always means a minimum without checking the local shape."
+    ],
+    examAngles: [
+      "You may be asked to compute a gradient and evaluate it at a point.",
+      "You may be asked to explain why the negative gradient gives steepest local decrease.",
+      "You should be able to interpret contour plots and relate them to gradient direction."
+    ],
+    advancedExample: {
+      title: "Gradient on a quadratic loss surface.",
+      steps: [
+        "Take f(x, y) = x^2 + 4y^2.",
+        "Differentiate partially: ∂f/∂x = 2x and ∂f/∂y = 8y.",
+        "So the gradient is (2x, 8y).",
+        "At (1, 1), the gradient is (2, 8), showing the function rises much faster in the y-direction."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "Why is the gradient perpendicular to level curves?",
+        answer: "Because moving along a level curve does not change the function value, so the gradient must point in the orthogonal direction of greatest change.",
+        explanation: "The gradient captures the direction where the function increases fastest, while tangent directions along a contour keep the value constant.",
+        steps: [
+          "A level curve keeps f constant.",
+          "So tangent motion along that curve gives zero first-order change in f.",
+          "The gradient stores the direction of change of f.",
+          "Therefore it must be perpendicular to tangent directions of the contour."
+        ]
+      },
+      {
+        prompt: "Does ∇f = 0 guarantee a minimum?",
+        answer: "No. It only gives a critical point candidate.",
+        explanation: "A zero gradient can describe a minimum, maximum, or saddle point.",
+        steps: [
+          "Zero gradient means local first-order change disappears.",
+          "But second-order shape still matters.",
+          "The surface may curve upward, downward, or in mixed directions.",
+          "So more analysis is needed before calling it a minimum."
+        ]
+      }
+    ],
     realLifeExamples: [
       "A mountain landscape has many possible directions of movement, not just left and right. That is multivariable thinking.",
       "ML losses depend on many weights at the same time, so training needs gradient vectors, not single slopes."
@@ -2044,11 +2223,33 @@ const lessonEnhancements = {
     extraPractice: [
       {
         prompt: "For f(x, y) = x² + 3y², what is ∇f?",
-        answer: "(2x, 6y)."
+        answer: "(2x, 6y).",
+        steps: [
+          "Differentiate with respect to x while treating y as constant.",
+          "That gives 2x.",
+          "Differentiate with respect to y while treating x as constant.",
+          "That gives 6y, so the gradient is (2x, 6y)."
+        ]
       },
       {
         prompt: "At a minimum, what often happens to the gradient?",
-        answer: "It becomes zero or very close to zero."
+        answer: "It becomes zero or very close to zero.",
+        steps: [
+          "At a smooth minimum, there is no downhill first-order direction left.",
+          "That means the local slope in every coordinate direction is tiny or zero.",
+          "Those partial derivatives collect into the gradient.",
+          "So the gradient is often zero or close to zero."
+        ]
+      },
+      {
+        prompt: "Find ∇f at (1, -1) for f(x, y) = 3x² + xy + y².",
+        answer: "∇f(1, -1) = (5, -1).",
+        steps: [
+          "Compute partials: ∂f/∂x = 6x + y and ∂f/∂y = x + 2y.",
+          "Substitute (x, y) = (1, -1) into the first partial: 6(1) + (-1) = 5.",
+          "Substitute into the second partial: 1 + 2(-1) = -1.",
+          "So the gradient is (5, -1)."
+        ]
       }
     ],
     extraMcqs: [
@@ -2169,6 +2370,51 @@ const lessonEnhancements = {
     ]
   },
   bayes: {
+    advancedExplanation:
+      "Bayes questions become much easier once you stop reading them as one formula and start reading them as a population split. Prior tells you how many true cases exist before the test, likelihood tells you how evidence behaves inside each group, and the posterior asks what fraction of the observed evidence really came from the target group. This is the base-rate logic many exam questions are testing.",
+    commonMistakes: [
+      "Confusing P(A|B) with P(B|A).",
+      "Ignoring the base rate and focusing only on sensitivity.",
+      "Forgetting that the evidence term includes both true positives and false positives."
+    ],
+    examAngles: [
+      "You may be asked to compute a posterior from prevalence, sensitivity, and false-positive rate.",
+      "You may be asked conceptual questions about why rare conditions can still produce low posterior probabilities.",
+      "You should be able to explain Bayes with a frequency table, not just a formula."
+    ],
+    advancedExample: {
+      title: "Frequency-table Bayes reasoning.",
+      steps: [
+        "Imagine 1000 people with disease prevalence 1%.",
+        "That means about 10 actually have the disease and 990 do not.",
+        "Apply sensitivity to the 10 diseased cases and false-positive rate to the 990 non-diseased cases.",
+        "Posterior after a positive test is true positives divided by all positives."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "Why can a highly accurate test still have a low posterior on a positive result?",
+        answer: "Because when the condition is rare, false positives from the large healthy group can still outnumber true positives.",
+        explanation: "This is the base-rate effect. The size of the groups matters, not just the test accuracy percentages.",
+        steps: [
+          "Start with the prior prevalence.",
+          "Separate the population into true cases and non-cases.",
+          "Apply sensitivity and false-positive rate to each group.",
+          "Compare how many positives come from each side."
+        ]
+      },
+      {
+        prompt: "What is the cleanest way to avoid conditional-probability confusion in Bayes problems?",
+        answer: "Translate the percentages into counts in a concrete population first.",
+        explanation: "Counts force you to see which group each probability applies to and make the denominator easier to interpret.",
+        steps: [
+          "Choose a simple population size like 1000 or 10,000.",
+          "Convert each percentage into counts.",
+          "Track true positives and false positives separately.",
+          "Compute the posterior as a ratio of counts."
+        ]
+      }
+    ],
     realLifeExamples: [
       "A medical test result should update your belief about disease, not replace it blindly.",
       "Spam filters update class beliefs after seeing words like 'offer' or 'discount'."
@@ -2180,11 +2426,33 @@ const lessonEnhancements = {
     extraPractice: [
       {
         prompt: "If the prior is tiny and false positives are common, what happens to the posterior after a positive test?",
-        answer: "It may stay modest despite the positive test."
+        answer: "It may stay modest despite the positive test.",
+        steps: [
+          "A tiny prior means true cases are rare to begin with.",
+          "A noticeable false-positive rate creates many fake positives from the large non-case group.",
+          "Those false positives enlarge the denominator in the posterior.",
+          "So the positive result may not be as convincing as it first looks."
+        ]
       },
       {
         prompt: "What is the evidence term in Bayes rule doing conceptually?",
-        answer: "It normalizes the result so the posterior is a valid probability."
+        answer: "It normalizes the result so the posterior is a valid probability.",
+        steps: [
+          "Likelihood times prior gives an unnormalized score for the hypothesis.",
+          "But probabilities must add up correctly across competing hypotheses.",
+          "The evidence term rescales by the total probability of seeing the evidence.",
+          "That turns the result into a proper posterior probability."
+        ]
+      },
+      {
+        prompt: "In a population of 1000, prevalence is 2%, sensitivity is 90%, and false-positive rate is 5%. How many true positives and false positives are expected?",
+        answer: "About 18 true positives and 49 false positives.",
+        steps: [
+          "2% of 1000 is 20 true cases, leaving 980 non-cases.",
+          "90% of 20 gives 18 true positives.",
+          "5% of 980 gives 49 false positives.",
+          "Those are the two groups that form the positive-test pool."
+        ]
       }
     ],
     extraMcqs: [
@@ -2203,6 +2471,51 @@ const lessonEnhancements = {
     ]
   },
   distributions: {
+    advancedExplanation:
+      "A common exam jump is moving from 'probability of one event' to 'shape of uncertainty'. For continuous variables, the curve height is density, not probability at a single exact point. You need to read mean, spread, standardization, and unusualness together. This is also the foundation for likelihood models and Gaussian assumptions in ML.",
+    commonMistakes: [
+      "Treating the height of a continuous density curve as the probability of one exact value.",
+      "Confusing variance with standard deviation.",
+      "Thinking two distributions with the same mean must behave similarly."
+    ],
+    examAngles: [
+      "You may be asked to compute and interpret z-scores.",
+      "You may be asked how changing μ or σ changes the graph.",
+      "You should be ready to explain why standardization helps compare different scales."
+    ],
+    advancedExample: {
+      title: "Compare two unusual values using z-scores.",
+      steps: [
+        "A score of 80 on a test with mean 70 and standard deviation 5 has z = 2.",
+        "A score of 120 on a test with mean 100 and standard deviation 20 has z = 1.",
+        "Even though 120 is numerically larger, the 80 is more extreme relative to its distribution.",
+        "That is the point of standardization."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "Why does z-score help compare values from different units or scales?",
+        answer: "Because it measures distance from the mean in standard-deviation units, not raw units.",
+        explanation: "Once standardized, values from different contexts can be compared on the same relative scale.",
+        steps: [
+          "Subtract the mean to center the value.",
+          "Divide by the standard deviation to scale the deviation.",
+          "Interpret the result as relative extremeness.",
+          "Then compare those standardized distances."
+        ]
+      },
+      {
+        prompt: "If two datasets have the same mean but different standard deviations, what changes?",
+        answer: "Their spreads and how unusual a given raw value looks.",
+        explanation: "A raw score may be ordinary in a wide distribution but extreme in a narrow one.",
+        steps: [
+          "Keep the center fixed.",
+          "Widen or narrow the distribution using σ.",
+          "Observe that the same raw difference from the mean changes in significance.",
+          "So spread changes interpretation even when the mean stays fixed."
+        ]
+      }
+    ],
     realLifeExamples: [
       "Human heights often cluster around a center with fewer extreme values, which is distribution thinking.",
       "In ML, Gaussian noise assumptions are common in modeling errors and feature behavior."
@@ -2214,11 +2527,33 @@ const lessonEnhancements = {
     extraPractice: [
       {
         prompt: "If μ = 10 and σ = 2, what value is one standard deviation below the mean?",
-        answer: "8."
+        answer: "8.",
+        steps: [
+          "One standard deviation below the mean means μ - σ.",
+          "Substitute μ = 10 and σ = 2.",
+          "Compute 10 - 2.",
+          "The value is 8."
+        ]
       },
       {
         prompt: "What kind of value usually has a large positive z-score?",
-        answer: "A value far above the mean."
+        answer: "A value far above the mean.",
+        steps: [
+          "Positive z-score means the value is above the mean.",
+          "Large magnitude means it is many standard deviations away.",
+          "So it is not just above average, but well above average.",
+          "That is why it is relatively unusual."
+        ]
+      },
+      {
+        prompt: "A value x = 65 comes from a distribution with μ = 50 and σ = 5. Compute the z-score and interpret it.",
+        answer: "z = 3, so the value is 3 standard deviations above the mean.",
+        steps: [
+          "Use z = (x - μ) / σ.",
+          "Substitute z = (65 - 50) / 5.",
+          "Compute 15 / 5 = 3.",
+          "Interpret that as a relatively extreme value above the center."
+        ]
       }
     ],
     extraMcqs: [
@@ -2237,6 +2572,51 @@ const lessonEnhancements = {
     ]
   },
   eigen: {
+    advancedExplanation:
+      "This topic is worth taking seriously because it is where linear algebra starts feeling like university math. An eigenvector is a direction that a transformation does not bend away from itself, and the eigenvalue tells how strongly that direction is scaled. In exams, you are often expected to move between geometry, algebra, and PCA interpretation: solve det(A - λI) = 0, find the matching vectors, and then explain what large or small eigenvalues mean for data variance or stability.",
+    commonMistakes: [
+      "Thinking every vector is an eigenvector.",
+      "Confusing the eigenvalue λ with the eigenvector v.",
+      "Forgetting that an eigenvector can flip direction when the eigenvalue is negative."
+    ],
+    examAngles: [
+      "You may be asked to solve a 2×2 eigenvalue problem by finding det(A - λI) = 0.",
+      "You may be asked to find an eigenvector after finding λ.",
+      "You should be able to connect large eigenvalues to dominant PCA directions and small eigenvalues to weak variation."
+    ],
+    advancedExample: {
+      title: "Solve a basic eigenvalue problem.",
+      steps: [
+        "Take A = [[3, 1], [0, 2]].",
+        "Form A - λI = [[3 - λ, 1], [0, 2 - λ]].",
+        "Set the determinant to zero: (3 - λ)(2 - λ) = 0, so λ = 3 or λ = 2.",
+        "For each eigenvalue, solve (A - λI)v = 0 to find the corresponding eigenvector direction."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "For A = [[2, 0], [0, 5]], what are the eigenvalues and what do they mean geometrically?",
+        answer: "The eigenvalues are 2 and 5; the x-axis direction is scaled by 2 and the y-axis direction is scaled by 5.",
+        explanation: "A diagonal matrix reveals its eigenvalues immediately because each coordinate axis is already an eigenvector direction.",
+        steps: [
+          "Read the diagonal entries.",
+          "For a diagonal matrix, those are the eigenvalues.",
+          "The corresponding coordinate axes are the eigenvector directions.",
+          "Interpret them as separate stretch factors on x and y."
+        ]
+      },
+      {
+        prompt: "Why does PCA keep the eigenvectors with the largest eigenvalues of the covariance matrix?",
+        answer: "Because those directions explain the most variance in the data.",
+        explanation: "In PCA, larger covariance eigenvalues mean the data spread more strongly along those eigenvector directions.",
+        steps: [
+          "Covariance measures how variation is distributed.",
+          "Eigenvectors give the principal directions of that variation.",
+          "Eigenvalues measure how much variance each direction carries.",
+          "So PCA keeps the directions with the largest values first."
+        ]
+      }
+    ],
     realLifeExamples: [
       "A stretched rubber sheet may have one strongest stretch direction. PCA looks for that kind of dominant direction in data.",
       "Recommendation and compression systems often use lower-dimensional structure found by spectral methods."
@@ -2248,11 +2628,33 @@ const lessonEnhancements = {
     extraPractice: [
       {
         prompt: "If Av = 0.5v, does v keep its direction?",
-        answer: "Yes. It keeps its line and shrinks by a factor of 0.5."
+        answer: "Yes. It keeps its line and shrinks by a factor of 0.5.",
+        steps: [
+          "Compare Av with v.",
+          "The output is a scalar multiple of the original vector.",
+          "A scalar multiple stays on the same line.",
+          "Because the scalar is 0.5, the vector shrinks to half its length."
+        ]
       },
       {
         prompt: "Why might PCA drop a direction with very small variance?",
-        answer: "Because it often contributes little information compared with stronger directions."
+        answer: "Because it often contributes little information compared with stronger directions.",
+        steps: [
+          "PCA ranks directions by variance captured.",
+          "A very small variance means little spread of the data in that direction.",
+          "Keeping it adds little information relative to its dimension cost.",
+          "So it is often dropped during compression."
+        ]
+      },
+      {
+        prompt: "For A = [[4, 0], [0, 1]], which axis is the dominant PCA-like direction if this represented covariance-style scaling?",
+        answer: "The x-axis, because its scaling/eigenvalue 4 is larger than 1.",
+        steps: [
+          "Read the scaling values on the diagonal.",
+          "Larger scaling means more variation in that direction.",
+          "Compare 4 versus 1.",
+          "So the x-direction is dominant."
+        ]
       }
     ],
     extraMcqs: [
@@ -2271,6 +2673,51 @@ const lessonEnhancements = {
     ]
   },
   "gradient-descent": {
+    advancedExplanation:
+      "Gradient descent is simple in form but subtle in behavior. The gradient gives a local direction, the learning rate controls how far you trust that direction, and the loss surface determines whether updates settle smoothly, crawl slowly, or oscillate. In ML exams, you are often tested on update mechanics, sign logic, and why bad step sizes break training.",
+    commonMistakes: [
+      "Moving in the same direction as the gradient during minimization.",
+      "Treating the learning rate as a harmless constant instead of a major stability choice.",
+      "Assuming a zero gradient always means the global minimum has been found."
+    ],
+    examAngles: [
+      "You may be asked to carry out one or two explicit update steps.",
+      "You may be asked what happens when the learning rate is too small or too large.",
+      "You should be able to connect gradient sign to parameter movement direction."
+    ],
+    advancedExample: {
+      title: "Two-step gradient descent update.",
+      steps: [
+        "Suppose x0 = 4 and f'(x0) = 3 with learning rate 0.1.",
+        "First update: x1 = 4 - 0.1(3) = 3.7.",
+        "If the new slope is 2.4, then x2 = 3.7 - 0.1(2.4) = 3.46.",
+        "This shows how repeated local steps gradually move toward lower loss."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "Why can gradient descent zig-zag or oscillate?",
+        answer: "Because the learning rate is too large relative to the local curvature, so updates overshoot the valley.",
+        explanation: "When steps are too aggressive, the algorithm keeps jumping across the low region instead of settling into it.",
+        steps: [
+          "Start near a sloped valley.",
+          "Take a large step using the gradient direction.",
+          "Land on the opposite side of the valley.",
+          "Repeat and observe oscillation instead of smooth convergence."
+        ]
+      },
+      {
+        prompt: "What does a very small learning rate trade off against stability?",
+        answer: "It improves stability but makes training much slower.",
+        explanation: "Tiny steps reduce overshooting risk but require many more updates to make visible progress.",
+        steps: [
+          "Reduce the step size η.",
+          "Each update becomes safer and smaller.",
+          "The path is more controlled.",
+          "But many more iterations are needed."
+        ]
+      }
+    ],
     realLifeExamples: [
       "Trying to find the lowest point in a foggy valley by feeling the local slope is a good mental model for gradient descent.",
       "Training ML models means repeatedly reducing loss with update steps like this."
@@ -2282,11 +2729,33 @@ const lessonEnhancements = {
     extraPractice: [
       {
         prompt: "If the slope is negative at the current point, what sign is the update direction in gradient descent?",
-        answer: "Positive, because subtracting a negative slope moves you to the right."
+        answer: "Positive, because subtracting a negative slope moves you to the right.",
+        steps: [
+          "Use the update xnew = xold - ηf'(xold).",
+          "If the slope is negative, then f'(xold) < 0.",
+          "Subtracting a negative quantity becomes addition.",
+          "So the update moves in the positive direction."
+        ]
       },
       {
         prompt: "Why can a tiny learning rate be frustrating in practice?",
-        answer: "Because progress becomes extremely slow even when the direction is correct."
+        answer: "Because progress becomes extremely slow even when the direction is correct.",
+        steps: [
+          "Each step changes parameters only a little.",
+          "Loss decreases, but very slowly.",
+          "Many iterations are needed to cover the same distance.",
+          "So training can become inefficient."
+        ]
+      },
+      {
+        prompt: "If x = 2, gradient = -4, and η = 0.25, what is the next x?",
+        answer: "xnew = 3.",
+        steps: [
+          "Start with xnew = xold - η gradient.",
+          "Substitute xnew = 2 - 0.25(-4).",
+          "Compute 0.25(-4) = -1.",
+          "So xnew = 2 - (-1) = 3."
+        ]
       }
     ],
     extraMcqs: [
@@ -2305,6 +2774,51 @@ const lessonEnhancements = {
     ]
   },
   logistic: {
+    advancedExplanation:
+      "The advanced layer of logistic regression is not the sigmoid formula itself; it is understanding score, probability, threshold, and loss as different objects. The model forms a linear score z = wx + b, converts that score into a probability through the sigmoid, and then often uses cross-entropy loss to punish confident wrong predictions. This makes logistic regression a serious bridge topic before neural networks.",
+    commonMistakes: [
+      "Confusing the raw score z with the final probability.",
+      "Thinking the decision threshold changes the learned probability itself.",
+      "Using linear-regression intuition and expecting outputs outside [0, 1] to still make sense for classification."
+    ],
+    examAngles: [
+      "You may be asked to compute z first and only then apply the sigmoid.",
+      "You may be asked to interpret the decision boundary z = 0.",
+      "You should be able to explain why logistic regression is better suited to binary classification than plain linear regression."
+    ],
+    advancedExample: {
+      title: "Score, probability, and decision boundary.",
+      steps: [
+        "Take z = wx + b.",
+        "If z = 0, the sigmoid output is 0.5, which is the natural decision boundary.",
+        "Positive z pushes the probability above 0.5; negative z pushes it below 0.5.",
+        "So classification depends on the sign and size of the score before thresholding."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "Why is z = 0 the standard decision boundary in logistic regression?",
+        answer: "Because sigmoid(0) = 0.5, which is the midpoint between the two classes.",
+        explanation: "The boundary is easiest to express in score space: class 1 if z > 0 and class 0 if z < 0 when using a 0.5 threshold.",
+        steps: [
+          "Start from the sigmoid output.",
+          "Check the value at z = 0.",
+          "That gives probability 0.5.",
+          "Use that midpoint as the default class cutoff."
+        ]
+      },
+      {
+        prompt: "Why does cross-entropy punish confident wrong predictions strongly?",
+        answer: "Because predicting a probability near 1 for the wrong class means the model is confidently incorrect, which the loss treats as a major mistake.",
+        explanation: "This helps training push down especially bad classification errors.",
+        steps: [
+          "Compare a mildly wrong prediction with a highly confident wrong prediction.",
+          "Cross-entropy grows much faster for the confident error.",
+          "That creates a stronger corrective gradient.",
+          "So training focuses on severe mistakes."
+        ]
+      }
+    ],
     realLifeExamples: [
       "A credit-risk system may output the probability that a borrower defaults, not just a yes/no guess.",
       "Binary ML classifiers often convert a linear score into a probability with a sigmoid."
@@ -2316,11 +2830,33 @@ const lessonEnhancements = {
     extraPractice: [
       {
         prompt: "If z is large and negative, what kind of class prediction should you expect?",
-        answer: "Probability near 0, so likely class 0."
+        answer: "Probability near 0, so likely class 0.",
+        steps: [
+          "A large negative z sits far on the left side of the sigmoid.",
+          "The sigmoid output there is close to 0.",
+          "That means the model assigns very low probability to class 1.",
+          "So class 0 is the likely prediction."
+        ]
       },
       {
         prompt: "Why is z = 0 a special point on the sigmoid?",
-        answer: "Because it maps to probability 0.5, the natural midpoint."
+        answer: "Because it maps to probability 0.5, the natural midpoint.",
+        steps: [
+          "Plug z = 0 into the sigmoid formula.",
+          "That gives 1 / (1 + e^0) = 1 / 2.",
+          "So the output is 0.5.",
+          "This is why z = 0 is the default decision boundary."
+        ]
+      },
+      {
+        prompt: "If w = 2, x = -1, and b = 1, find z and say whether the model leans toward class 0 or class 1.",
+        answer: "z = -1, so the model leans toward class 0.",
+        steps: [
+          "Compute z = wx + b = 2(-1) + 1.",
+          "That gives z = -2 + 1 = -1.",
+          "A negative score gives a probability below 0.5.",
+          "So the prediction leans toward class 0."
+        ]
       }
     ],
     extraMcqs: [
@@ -2339,6 +2875,51 @@ const lessonEnhancements = {
     ]
   },
   backprop: {
+    advancedExplanation:
+      "The advanced view of backprop is a computation graph story. Each node contributes a local derivative, and the total gradient for an earlier weight is the product of local effects along the paths that connect that weight to the loss. This is why chain rule is central, why activations influence gradient flow, and why deep models can suffer from vanishing or exploding gradients.",
+    commonMistakes: [
+      "Thinking backprop is a separate algorithm unrelated to calculus.",
+      "Forgetting that gradients at earlier layers depend on every later local derivative along the path.",
+      "Ignoring activation derivatives and then not understanding why gradients can vanish."
+    ],
+    examAngles: [
+      "You may be asked to compute one local gradient using chain rule.",
+      "You may be asked to distinguish forward-pass quantities from backward-pass gradients.",
+      "You should be able to explain why deep networks can have gradient-flow problems."
+    ],
+    advancedExample: {
+      title: "One backprop chain-rule path.",
+      steps: [
+        "Suppose L depends on activation a, a depends on pre-activation z, and z = w1x1 + w2x2 + b.",
+        "Then dL/dw1 = dL/da × da/dz × dz/dw1.",
+        "Because dz/dw1 = x1, the input directly scales how strongly w1 feels the loss.",
+        "This is the local-to-global logic repeated across the whole network."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "Why can gradients vanish in deep networks?",
+        answer: "Because many small local derivatives multiplied together can shrink the final gradient dramatically.",
+        explanation: "Chain rule multiplies local terms across layers, so repeated factors below 1 can quickly drive gradients toward zero.",
+        steps: [
+          "Write the gradient as a product of local derivatives.",
+          "Notice several terms are small.",
+          "Multiply many small numbers together.",
+          "The result becomes tiny for early layers."
+        ]
+      },
+      {
+        prompt: "What does backprop give you after the forward pass is finished?",
+        answer: "Gradients of the loss with respect to the weights and biases.",
+        explanation: "Those gradients are what optimization uses to update parameters.",
+        steps: [
+          "Run the forward pass to compute outputs and loss.",
+          "Differentiate the loss backward through the graph.",
+          "Collect dL/dw and dL/db for each parameter.",
+          "Use them in gradient descent or a related optimizer."
+        ]
+      }
+    ],
     realLifeExamples: [
       "If a group project fails, you trace backward which part of the chain contributed most. That is the spirit of backpropagation.",
       "Neural-network training sends error information backward so each weight knows how it affected the loss."
@@ -2350,11 +2931,33 @@ const lessonEnhancements = {
     extraPractice: [
       {
         prompt: "If z = w1x1 + w2x2 + b, what is ∂z/∂w1?",
-        answer: "x1."
+        answer: "x1.",
+        steps: [
+          "Differentiate z with respect to w1.",
+          "Treat x1 as a constant multiplier.",
+          "The term w1x1 becomes x1 after differentiation.",
+          "The other terms do not depend on w1, so the derivative is x1."
+        ]
       },
       {
         prompt: "Why can ReLU shut off gradient flow for a neuron?",
-        answer: "Because when the pre-activation is non-positive, the local derivative can be zero."
+        answer: "Because when the pre-activation is non-positive, the local derivative can be zero.",
+        steps: [
+          "ReLU outputs max(0, z).",
+          "When z is not positive, the output is flat in that region.",
+          "A flat region has derivative 0 there.",
+          "That zero local derivative blocks gradient flow through that neuron."
+        ]
+      },
+      {
+        prompt: "If dL/da = 3, da/dz = 0.5, and dz/dw1 = 2, what is dL/dw1?",
+        answer: "dL/dw1 = 3.",
+        steps: [
+          "Use chain rule: dL/dw1 = dL/da × da/dz × dz/dw1.",
+          "Substitute the numbers: 3 × 0.5 × 2.",
+          "Multiply 0.5 × 2 = 1.",
+          "So the final gradient is 3."
+        ]
       }
     ],
     extraMcqs: [
@@ -2378,7 +2981,10 @@ const defaultEnhancement = {
   realLifeExamples: [],
   goDeeper: [],
   extraPractice: [],
-  extraMcqs: []
+  extraMcqs: [],
+  advancedExplanation: "",
+  commonMistakes: [],
+  examAngles: []
 };
 
 export const lessons = baseLessons.map((lesson) => ({

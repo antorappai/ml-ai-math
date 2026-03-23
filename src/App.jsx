@@ -38,6 +38,7 @@ export default function App() {
   const [selectedMcq, setSelectedMcq] = useState(null);
   const [extraMcqState, setExtraMcqState] = useState({});
   const [revealedPractice, setRevealedPractice] = useState({});
+  const [revealedExamAnswers, setRevealedExamAnswers] = useState({});
   const [problemAnswer, setProblemAnswer] = useState("");
   const [problemFeedback, setProblemFeedback] = useState("");
   const [showConceptAnswer, setShowConceptAnswer] = useState(false);
@@ -67,6 +68,7 @@ export default function App() {
       setSelectedMcq(null);
       setExtraMcqState({});
       setRevealedPractice({});
+      setRevealedExamAnswers({});
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
@@ -87,6 +89,7 @@ export default function App() {
       setSelectedMcq(null);
       setExtraMcqState({});
       setRevealedPractice({});
+      setRevealedExamAnswers({});
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
@@ -137,6 +140,13 @@ export default function App() {
 
   function revealPracticeSolution(questionIndex) {
     setRevealedPractice((current) => ({
+      ...current,
+      [questionIndex]: !current[questionIndex]
+    }));
+  }
+
+  function revealExamAnswer(questionIndex) {
+    setRevealedExamAnswers((current) => ({
       ...current,
       [questionIndex]: !current[questionIndex]
     }));
@@ -430,6 +440,35 @@ export default function App() {
                   </ul>
                 </article>
 
+                {lesson.advancedExplanation ? (
+                  <article className="content-card wide">
+                    <p className="panel-label">Advanced Layer</p>
+                    <p>{lesson.advancedExplanation}</p>
+                  </article>
+                ) : null}
+
+                {lesson.commonMistakes?.length ? (
+                  <article className="content-card">
+                    <p className="panel-label">Common Traps</p>
+                    <ul className="shortcut-list">
+                      {lesson.commonMistakes.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </article>
+                ) : null}
+
+                {lesson.examAngles?.length ? (
+                  <article className="content-card">
+                    <p className="panel-label">Exam Lens</p>
+                    <ul className="shortcut-list">
+                      {lesson.examAngles.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </article>
+                ) : null}
+
                 <article className="content-card wide">
                   <p className="panel-label">Big Picture</p>
                   <p>{lesson.bigPicture}</p>
@@ -591,6 +630,17 @@ export default function App() {
                 </ul>
               </article>
 
+              {lesson.examAngles?.length ? (
+                <article className="content-card">
+                  <p className="panel-label">Exam Patterns To Expect</p>
+                  <ul className="shortcut-list">
+                    {lesson.examAngles.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+              ) : null}
+
               {lesson.extraMcqs.length > 0 ? (
                 <article className="content-card wide">
                   <p className="panel-label">More MCQ Variations</p>
@@ -641,9 +691,30 @@ export default function App() {
                   <div className="steps">
                     {lesson.examQuestions.map((item, index) => (
                       <div key={`${lesson.key}-exam-${index + 1}`} className="step">
-                        <strong>Q{index + 1}.</strong> {item.prompt}
-                        <br />
-                        <span>{item.answer}</span>
+                        <p className="question">
+                          <strong>Q{index + 1}.</strong> {item.prompt}
+                        </p>
+                        <button type="button" onClick={() => revealExamAnswer(index)}>
+                          {revealedExamAnswers[index] ? "Hide solution" : "Reveal solution"}
+                        </button>
+                        {revealedExamAnswers[index] ? (
+                          <div className="revealed-solution">
+                            <p className="feedback">{item.answer}</p>
+                            {item.explanation ? <p>{item.explanation}</p> : null}
+                            {item.steps?.length ? (
+                              <div className="steps compact-steps">
+                                {item.steps.map((step, stepIndex) => (
+                                  <div
+                                    key={`${lesson.key}-exam-step-${index + 1}-${stepIndex + 1}`}
+                                    className="step"
+                                  >
+                                    {stepIndex + 1}. {step}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+                          </div>
+                        ) : null}
                       </div>
                     ))}
                   </div>
