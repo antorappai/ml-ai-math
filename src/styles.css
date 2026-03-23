@@ -65,6 +65,34 @@ button {
   margin-bottom: 24px;
 }
 
+.study-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.study-title {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(2rem, 3vw, 3.4rem);
+  line-height: 0.95;
+}
+
+.study-subtitle {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.study-actions,
+.home-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
 .hero-copy,
 .hero-card,
 .starter-panel,
@@ -176,6 +204,34 @@ button {
 
 .future-chip {
   background: rgba(15, 118, 110, 0.09);
+}
+
+.primary-button,
+.secondary-button {
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(25, 50, 41, 0.14);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.primary-button {
+  background: var(--accent);
+  color: #f7fffd;
+}
+
+.secondary-button {
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+}
+
+.primary-button:hover,
+.primary-button:focus-visible,
+.secondary-button:hover,
+.secondary-button:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.35);
+  outline: none;
 }
 
 .hero-card {
@@ -334,6 +390,35 @@ button {
   gap: 20px;
 }
 
+.section-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.section-tab {
+  padding: 11px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.section-tab.active {
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.14), rgba(255, 250, 240, 0.98));
+  border-color: rgba(15, 118, 110, 0.42);
+  color: var(--accent-deep);
+  font-weight: 700;
+}
+
+.section-tab:hover,
+.section-tab:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.35);
+  outline: none;
+}
+
 .lesson-header {
   display: flex;
   justify-content: space-between;
@@ -397,6 +482,19 @@ button {
 .controls-card {
   align-content: start;
   gap: 18px;
+}
+
+.empty-controls {
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.54);
+  border: 1px solid var(--line);
+}
+
+.empty-controls p:last-child {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
 }
 
 .control-group {
@@ -678,7 +776,8 @@ svg {
 
   .lesson-header,
   .visual-header,
-  .roadmap-header {
+  .roadmap-header,
+  .study-header {
     flex-direction: column;
     align-items: start;
   }
