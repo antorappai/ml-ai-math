@@ -1,0 +1,578 @@
+:root {
+  --bg: #f3efe4;
+  --bg-soft: #fbf8f1;
+  --panel: rgba(255, 251, 243, 0.82);
+  --panel-strong: #fffaf0;
+  --text: #193229;
+  --muted: #4d6358;
+  --line: rgba(25, 50, 41, 0.12);
+  --accent: #0f766e;
+  --accent-soft: #d7f3ec;
+  --accent-deep: #0b3f39;
+  --gold: #c58a2e;
+  --shadow: 0 24px 60px rgba(25, 50, 41, 0.12);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "IBM Plex Sans", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(197, 138, 46, 0.22), transparent 28%),
+    radial-gradient(circle at 85% 20%, rgba(15, 118, 110, 0.18), transparent 24%),
+    linear-gradient(180deg, #f6f0e0 0%, #efe7d5 48%, #f8f5ee 100%);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.page-shell {
+  width: min(1380px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.hero,
+.workspace,
+.visual-layout {
+  display: grid;
+  gap: 24px;
+}
+
+.hero {
+  grid-template-columns: 1.5fr 0.9fr;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+
+.hero-copy,
+.hero-card,
+.starter-panel,
+.lesson-nav,
+.primer-card,
+.visual-panel,
+.content-card {
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  box-shadow: var(--shadow);
+  animation: fade-up 520ms ease both;
+}
+
+.hero-copy {
+  border-radius: 36px;
+  padding: 36px;
+}
+
+.hero-card,
+.starter-panel,
+.lesson-nav,
+.primer-card,
+.visual-panel,
+.content-card {
+  border-radius: 28px;
+}
+
+.hero-card,
+.starter-panel,
+.lesson-nav,
+.primer-card,
+.visual-panel,
+.content-card {
+  padding: 24px;
+}
+
+.eyebrow,
+.panel-label {
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.hero h1,
+.starter-title,
+.lesson-header h2,
+.visual-header h3 {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  line-height: 0.95;
+}
+
+.hero h1 {
+  font-size: clamp(2.6rem, 5vw, 4.8rem);
+  max-width: 13ch;
+}
+
+.hero-text,
+.starter-text,
+.lesson-subtitle,
+.visual-description {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.hero-text {
+  max-width: 58ch;
+  margin: 18px 0 0;
+  font-size: 1.08rem;
+}
+
+.hero-pills,
+.symbol-strip,
+.lesson-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hero-pills {
+  margin-top: 24px;
+}
+
+.hero-pills span,
+.metric-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 250, 240, 0.92);
+  border: 1px solid rgba(25, 50, 41, 0.08);
+  color: var(--accent-deep);
+  font-weight: 600;
+}
+
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation-delay: 80ms;
+}
+
+.hero-card-label {
+  margin: 0 0 16px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.1rem;
+}
+
+.hero-card ol {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.starter-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 18px;
+  margin-bottom: 24px;
+  animation-delay: 120ms;
+}
+
+.starter-title {
+  font-size: clamp(1.7rem, 2.6vw, 2.7rem);
+}
+
+.symbol-chip {
+  flex: 1 1 160px;
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.54);
+  border: 1px solid var(--line);
+}
+
+.symbol-chip strong {
+  font-size: 1.1rem;
+  color: var(--accent-deep);
+}
+
+.symbol-chip span {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.workspace {
+  grid-template-columns: 300px minmax(0, 1fr);
+  align-items: start;
+}
+
+.lesson-nav {
+  position: sticky;
+  top: 20px;
+  animation-delay: 160ms;
+}
+
+.lesson-tabs,
+.lesson-stage,
+.controls-card,
+.controls-grid,
+.steps,
+.options,
+.symbol-list {
+  display: grid;
+  gap: 10px;
+}
+
+.lesson-tab {
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.45);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.lesson-tab:hover,
+.lesson-tab:focus-visible,
+.option-button:hover,
+.option-button:focus-visible,
+.problem-row button:hover,
+.problem-row button:focus-visible,
+.content-card button:hover,
+.content-card button:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.35);
+  outline: none;
+}
+
+.lesson-tab.active {
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.14), rgba(255, 250, 240, 0.98));
+  border-color: rgba(15, 118, 110, 0.42);
+}
+
+.lesson-tab strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 1rem;
+  color: var(--accent-deep);
+}
+
+.lesson-tab span,
+.nav-note p:last-child,
+.content-card p,
+.content-card li {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.nav-note {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.lesson-stage {
+  gap: 20px;
+}
+
+.lesson-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+}
+
+.lesson-header h2 {
+  font-size: clamp(2rem, 3vw, 3.3rem);
+}
+
+.primer-card {
+  animation-delay: 200ms;
+}
+
+.primer-card p:last-child {
+  margin: 0;
+}
+
+.visual-panel {
+  animation-delay: 240ms;
+}
+
+.visual-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.visual-header h3 {
+  font-size: 1.6rem;
+}
+
+.visual-layout {
+  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+}
+
+.visual-card,
+.controls-card {
+  background: var(--panel-strong);
+  border-radius: 24px;
+  border: 1px solid rgba(25, 50, 41, 0.08);
+  padding: 16px;
+}
+
+.controls-card {
+  align-content: start;
+  gap: 18px;
+}
+
+.control-group {
+  display: grid;
+  gap: 8px;
+}
+
+.control-group label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 600;
+  color: var(--accent-deep);
+}
+
+.control-group input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.visual-insight {
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(140deg, rgba(15, 118, 110, 0.1), rgba(197, 138, 46, 0.12));
+  color: var(--accent-deep);
+  line-height: 1.6;
+}
+
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.content-card.wide {
+  grid-column: 1 / -1;
+}
+
+.formula-box {
+  padding: 16px;
+  border-radius: 18px;
+  background: #f7f1e2;
+  border: 1px solid rgba(197, 138, 46, 0.22);
+}
+
+.formula {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-deep);
+}
+
+.formula-meaning {
+  margin: 0;
+}
+
+.symbol-row,
+.step {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--line);
+}
+
+.symbol-row {
+  display: grid;
+  gap: 6px;
+}
+
+.symbol-row strong {
+  color: var(--accent-deep);
+  font-size: 1rem;
+}
+
+.question {
+  margin-top: 0;
+  margin-bottom: 14px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.option-button,
+.problem-row button,
+.content-card button {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(25, 50, 41, 0.14);
+  background: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.option-button.correct {
+  background: rgba(15, 118, 110, 0.14);
+  border-color: rgba(15, 118, 110, 0.38);
+}
+
+.option-button.incorrect {
+  background: rgba(197, 138, 46, 0.14);
+  border-color: rgba(197, 138, 46, 0.34);
+}
+
+.feedback {
+  min-height: 1.5em;
+  margin: 14px 0 0;
+  color: var(--accent-deep);
+  font-weight: 600;
+}
+
+.problem-row {
+  display: flex;
+  gap: 10px;
+}
+
+.problem-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(25, 50, 41, 0.14);
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.shortcut-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.grid-line {
+  stroke: rgba(25, 50, 41, 0.1);
+  stroke-width: 1;
+}
+
+.axis-line {
+  stroke: rgba(25, 50, 41, 0.26);
+  stroke-width: 1.6;
+}
+
+.vector-a {
+  stroke: #0f766e;
+  stroke-width: 4;
+  fill: none;
+}
+
+.vector-b {
+  stroke: #c58a2e;
+  stroke-width: 4;
+  fill: none;
+}
+
+.projection-line {
+  stroke: rgba(15, 118, 110, 0.75);
+  stroke-width: 3;
+  fill: none;
+}
+
+.helper-line {
+  stroke: rgba(25, 50, 41, 0.42);
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+}
+
+.origin-dot,
+.point-dot {
+  fill: var(--accent-deep);
+}
+
+.label-text {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 13px;
+  fill: var(--accent-deep);
+  font-weight: 600;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero,
+  .starter-panel,
+  .workspace,
+  .visual-layout,
+  .lesson-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lesson-nav {
+    position: static;
+  }
+
+  .lesson-header,
+  .visual-header {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-shell {
+    width: min(100% - 20px, 1380px);
+    padding-top: 18px;
+  }
+
+  .hero-copy,
+  .hero-card,
+  .starter-panel,
+  .lesson-nav,
+  .primer-card,
+  .visual-panel,
+  .content-card {
+    border-radius: 22px;
+    padding: 18px;
+  }
+
+  .problem-row {
+    flex-direction: column;
+  }
+}
