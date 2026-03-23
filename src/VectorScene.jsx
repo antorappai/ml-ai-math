@@ -221,16 +221,6 @@ function regressionScene(drawing) {
   drawing.points.forEach((point) => {
     elements.push(`<circle class="point-b" cx="${toX(point.x)}" cy="${toY(point.y)}" r="6" />`);
   });
-  const path = linePath(
-    (x) => drawing.m * x + drawing.b,
-    0,
-    5,
-    0.1,
-    width / 5,
-    height / 7
-  )
-    .replaceAll(`${CENTER}`, `${left}`)
-    .replaceAll(" 210", ` ${bottom}`);
   const lineCommands = [];
   for (let x = 0; x <= 5.001; x += 0.1) {
     const y = drawing.m * x + drawing.b;
@@ -238,6 +228,134 @@ function regressionScene(drawing) {
   }
   elements.push(`<path class="regression-line" d="${lineCommands.join(" ")}" />`);
   return `<svg viewBox="0 0 420 420" aria-label="Regression line fit">${elements.join("")}</svg>`;
+}
+
+function bayesScene(drawing) {
+  const diseased = 280 * drawing.prior;
+  const healthy = 280 * (1 - drawing.prior);
+  const truePositive = 240 * (drawing.truePositive / Math.max(drawing.truePositive + drawing.falsePositive, 0.001));
+  const falsePositive = 240 - truePositive;
+  return `
+    <svg viewBox="0 0 420 420" aria-label="Bayes evidence split">
+      <rect class="chart-bg" x="40" y="40" width="340" height="320" rx="22" />
+      <text class="label-text" x="62" y="82">Population split</text>
+      <rect class="bar-a" x="70" y="110" width="${diseased}" height="44" rx="12" />
+      <rect class="bar-b" x="${70 + diseased}" y="110" width="${healthy}" height="44" rx="12" />
+      <text class="label-text" x="74" y="180">Among positive tests</text>
+      <rect class="bar-a" x="70" y="208" width="${truePositive}" height="44" rx="12" />
+      <rect class="bar-b" x="${70 + truePositive}" y="208" width="${falsePositive}" height="44" rx="12" />
+      <text class="label-text" x="72" y="300">Posterior ≈ ${formatNumber(drawing.posterior)}</text>
+      <text class="label-text" x="74" y="104">disease</text>
+      <text class="label-text" x="${70 + diseased + 8}" y="104">no disease</text>
+      <text class="label-text" x="74" y="202">true positive</text>
+      <text class="label-text" x="${70 + truePositive + 8}" y="202">false positive</text>
+    </svg>
+  `;
+}
+
+function distributionScene(drawing) {
+  const left = 60;
+  const bottom = 330;
+  const width = 300;
+  const height = 230;
+  const toX = (x) => left + ((x + 4) / 8) * width;
+  const toY = (y) => bottom - y * height;
+  const density = (x) => {
+    const z = (x - drawing.mu) / drawing.sigma;
+    return Math.exp(-0.5 * z * z);
+  };
+  const commands = [];
+  for (let x = -4; x <= 4.001; x += 0.1) {
+    const px = toX(x);
+    const py = toY(density(x));
+    commands.push(`${commands.length === 0 ? "M" : "L"} ${px} ${py}`);
+  }
+  const meanX = toX(drawing.mu);
+  return `
+    <svg viewBox="0 0 420 420" aria-label="Distribution curve">
+      <rect class="chart-bg" x="40" y="40" width="340" height="320" rx="22" />
+      <line class="axis-line" x1="${left}" y1="${bottom}" x2="${left + width}" y2="${bottom}" />
+      <path class="curve-line" d="${commands.join(" ")}" />
+      <line class="mean-line" x1="${meanX}" y1="90" x2="${meanX}" y2="${bottom}" />
+      <text class="label-text" x="${meanX - 10}" y="84">μ</text>
+      <text class="label-text" x="72" y="345">spread = ${formatNumber(drawing.sigma)}</text>
+    </svg>
+  `;
+}
+
+function pcaScene() {
+  return `
+    <svg viewBox="0 0 420 420" aria-label="PCA intuition">
+      <rect class="chart-bg" x="40" y="40" width="340" height="320" rx="22" />
+      <ellipse cx="210" cy="200" rx="110" ry="48" fill="rgba(15,118,110,0.08)" stroke="rgba(15,118,110,0.4)" stroke-width="3" transform="rotate(-24 210 200)" />
+      <line class="regression-line" x1="110" y1="250" x2="315" y2="155" />
+      <line class="helper-line" x1="170" y1="105" x2="247" y2="290" />
+      <text class="label-text" x="278" y="148">1st principal component</text>
+      <text class="label-text" x="84" y="320">keep strongest spread direction</text>
+    </svg>
+  `;
+}
+
+function descentScene(drawing) {
+  const elements = baseGrid(28);
+  elements.push(defsBlock());
+  elements.push(
+    `<path class="curve-line" d="${linePath((x) => 0.18 * x * x - 0.8 * x + 1.2, -4, 8, 0.1)}" />`
+  );
+  const current = pointToCanvas(drawing.x0, drawing.y0);
+  const next = pointToCanvas(drawing.nextX, drawing.nextY);
+  elements.push(`<circle class="point-b" cx="${current.x}" cy="${current.y}" r="5" />`);
+  elements.push(`<circle class="highlight-dot" cx="${next.x}" cy="${next.y}" r="5" />`);
+  elements.push(`<line class="gradient-line" x1="${current.x}" y1="${current.y}" x2="${next.x}" y2="${next.y}" marker-end="url(#marker-a)" />`);
+  elements.push(`<text class="label-text" x="${current.x + 10}" y="${current.y - 10}">current</text>`);
+  elements.push(`<text class="label-text" x="${next.x + 10}" y="${next.y - 10}">next</text>`);
+  return elements.join("");
+}
+
+function sigmoidScene(drawing) {
+  const left = 60;
+  const bottom = 340;
+  const width = 300;
+  const height = 260;
+  const toX = (x) => left + ((x + 6) / 12) * width;
+  const toY = (y) => bottom - y * height;
+  const commands = [];
+  for (let z = -6; z <= 6.001; z += 0.1) {
+    const p = 1 / (1 + Math.exp(-z));
+    commands.push(`${commands.length === 0 ? "M" : "L"} ${toX(z)} ${toY(p)}`);
+  }
+  const pointX = toX(drawing.z);
+  const pointY = toY(drawing.p);
+  return `
+    <svg viewBox="0 0 420 420" aria-label="Sigmoid curve">
+      <rect class="chart-bg" x="40" y="40" width="340" height="320" rx="22" />
+      <line class="axis-line" x1="${left}" y1="${bottom}" x2="${left + width}" y2="${bottom}" />
+      <line class="axis-line" x1="${left}" y1="${bottom}" x2="${left}" y2="${bottom - height}" />
+      <path class="curve-line" d="${commands.join(" ")}" />
+      <circle class="highlight-dot" cx="${pointX}" cy="${pointY}" r="5" />
+      <line class="helper-line" x1="${pointX}" y1="${pointY}" x2="${pointX}" y2="${bottom}" />
+      <text class="label-text" x="${pointX + 8}" y="${pointY - 10}">p ≈ ${formatNumber(drawing.p)}</text>
+    </svg>
+  `;
+}
+
+function networkScene(drawing) {
+  return `
+    <svg viewBox="0 0 420 420" aria-label="Neural unit diagram">
+      <rect class="chart-bg" x="40" y="40" width="340" height="320" rx="22" />
+      <circle class="point-b" cx="100" cy="150" r="24" />
+      <circle class="point-b" cx="100" cy="250" r="24" />
+      <circle class="highlight-dot" cx="300" cy="200" r="32" />
+      <line class="gradient-line" x1="124" y1="150" x2="268" y2="188" />
+      <line class="gradient-line" x1="124" y1="250" x2="268" y2="212" />
+      <text class="label-text" x="84" y="156">x1</text>
+      <text class="label-text" x="84" y="256">x2</text>
+      <text class="label-text" x="287" y="206">a</text>
+      <text class="label-text" x="150" y="146">w1 = ${formatNumber(drawing.w1)}</text>
+      <text class="label-text" x="150" y="244">w2 = ${formatNumber(drawing.w2)}</text>
+      <text class="label-text" x="68" y="315">z = ${formatNumber(drawing.z)} | ReLU(z) = ${formatNumber(drawing.a)}</text>
+    </svg>
+  `;
 }
 
 function buildScene(drawing) {
@@ -270,6 +388,24 @@ function buildScene(drawing) {
   }
   if (drawing.type === "regression") {
     return regressionScene(drawing);
+  }
+  if (drawing.type === "bayes") {
+    return bayesScene(drawing);
+  }
+  if (drawing.type === "distribution") {
+    return distributionScene(drawing);
+  }
+  if (drawing.type === "pca") {
+    return pcaScene(drawing);
+  }
+  if (drawing.type === "descent") {
+    return descentScene(drawing);
+  }
+  if (drawing.type === "sigmoid") {
+    return sigmoidScene(drawing);
+  }
+  if (drawing.type === "network") {
+    return networkScene(drawing);
   }
   return `<svg viewBox="0 0 420 420" aria-label="Concept visual">${baseGrid(28).join("")}</svg>`;
 }

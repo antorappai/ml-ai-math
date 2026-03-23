@@ -415,6 +415,35 @@ export default function App() {
               </ul>
             </article>
 
+            {lesson.advancedExample ? (
+              <article className="content-card wide">
+                <p className="panel-label">Advanced Example</p>
+                <p className="question">{lesson.advancedExample.title}</p>
+                <div className="steps">
+                  {lesson.advancedExample.steps.map((step, index) => (
+                    <div key={`${lesson.key}-advanced-${index + 1}`} className="step">
+                      {index + 1}. {step}
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ) : null}
+
+            {lesson.examQuestions ? (
+              <article className="content-card wide">
+                <p className="panel-label">Exam-Style Questions</p>
+                <div className="steps">
+                  {lesson.examQuestions.map((item, index) => (
+                    <div key={`${lesson.key}-exam-${index + 1}`} className="step">
+                      <strong>Q{index + 1}.</strong> {item.prompt}
+                      <br />
+                      <span>{item.answer}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ) : null}
+
             <article className="content-card wide">
               <p className="panel-label">11. Connect To Big Picture</p>
               <p>{lesson.bigPicture}</p>

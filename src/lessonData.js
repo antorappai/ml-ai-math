@@ -33,7 +33,7 @@ export const curriculumStages = [
       "Reason about uncertainty, averages, spread, and noisy data.",
     mlConnection:
       "Classification confidence, likelihood, model evaluation, and generalization all depend on probability and statistics.",
-    topics: ["Probability", "Statistics"]
+    topics: ["Probability", "Statistics", "Bayes", "Distributions"]
   },
   {
     key: "modeling",
@@ -42,17 +42,17 @@ export const curriculumStages = [
       "Connect the math to an actual predictive model before moving on to more advanced ML.",
     mlConnection:
       "Linear regression is the cleanest first example of linear algebra, calculus, and statistics working together.",
-    topics: ["Linear Regression"]
+    topics: ["Linear Regression", "Gradient Descent", "Logistic Regression", "Backprop"]
   }
 ];
 
 export const futureModules = [
-  "Eigenvalues, eigenvectors, and PCA",
-  "Conditional probability and Bayes rule",
-  "Common probability distributions",
-  "Optimization and gradient descent",
-  "Logistic regression and classification loss",
-  "Neural networks and backpropagation"
+  "SVD and singular values",
+  "Regularization and bias-variance tradeoff",
+  "Convex optimization",
+  "Attention and transformer math",
+  "Information theory",
+  "Advanced probability inequalities"
 ];
 
 export const lessons = [
@@ -1003,6 +1003,25 @@ export const lessons = [
       "Compute residuals.",
       "Explain why a better-fitting line has lower error."
     ],
+    advancedExample: {
+      title: "Compare two candidate regression lines by MSE.",
+      steps: [
+        "Take the same dataset and evaluate line A and line B.",
+        "Compute each residual: actual - predicted.",
+        "Square the residuals so negative and positive misses do not cancel.",
+        "Average the squared residuals. The line with smaller MSE is the better fit under squared-error loss."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "A line predicts 5 when the actual value is 8. What is the residual?",
+        answer: "Residual = actual - predicted = 8 - 5 = 3."
+      },
+      {
+        prompt: "Why is linear regression considered a linear model even if the data are noisy?",
+        answer: "Because the prediction rule is linear in the parameters and input features."
+      }
+    ],
     mcq: {
       question: "If a fitted line has very large residuals, what does that usually mean?",
       options: [
@@ -1058,6 +1077,718 @@ export const lessons = [
           m,
           b,
           points
+        }
+      };
+    }
+  },
+  {
+    key: "bayes",
+    order: 11,
+    stage: "Probability",
+    difficulty: "Advanced Core",
+    label: "Conditional Probability & Bayes",
+    navDescription: "Update belief when evidence arrives.",
+    subtitle:
+      "Bayes rule matters when new evidence changes what you believe about a class or hypothesis.",
+    learningPurpose:
+      "Understand how prior belief and evidence combine into a posterior probability.",
+    whyThisBefore:
+      "Study this before advanced probabilistic models because it is the core rule behind evidence-based updating.",
+    prerequisites: ["Probability Basics", "Statistics: Mean & Spread"],
+    mlPurpose:
+      "Bayesian classifiers, spam filters, medical-test reasoning, and posterior inference all depend on this logic.",
+    visualTitle: "Move prior, sensitivity, and false-positive rate.",
+    visualDescription:
+      "The visual shows how a positive test is built from true positives and false positives, which is what Bayes rule has to separate.",
+    beginnerNote:
+      "Bayes rule answers a specific question: once I see evidence, how should I update my belief?",
+    symbolGuide: [
+      { symbol: "P(A|B)", meaning: "Probability of A given B." },
+      { symbol: "prior", meaning: "Belief before seeing the new evidence." },
+      { symbol: "posterior", meaning: "Updated belief after seeing the evidence." }
+    ],
+    simpleExplanation:
+      "Bayes rule is a belief update rule. Start with an initial belief, then adjust it based on how strongly the evidence supports or misleads you.",
+    formula: "P(A|B) = P(B|A)P(A) / P(B)",
+    formulaMeaning:
+      "Meaning: posterior = likelihood × prior, then normalize by how common the evidence is overall.",
+    mlUseCase:
+      "Naive Bayes classification and many probabilistic models rely on updating class probabilities when features are observed.",
+    intuition:
+      "Ask: after I see this evidence, should my belief go up a little, a lot, or barely at all?",
+    examShortcuts: [
+      "Posterior is not the same as likelihood.",
+      "Rare events can still dominate if evidence is very strong.",
+      "False positives matter because they inflate the evidence pool."
+    ],
+    bigPicture:
+      "Bayes rule is one of the cleanest bridges between probability theory and decision-making under uncertainty.",
+    examReadiness: [
+      "Distinguish prior, likelihood, evidence, and posterior.",
+      "Compute simple posteriors numerically.",
+      "Avoid confusing P(A|B) with P(B|A)."
+    ],
+    advancedExample: {
+      title: "Medical-test style posterior update.",
+      steps: [
+        "Suppose disease prevalence is low, but the test is very sensitive.",
+        "Compute true positives and false positives separately.",
+        "Add them to get all positive tests.",
+        "Posterior disease probability is the true-positive part divided by all positives."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "Why can a test with high sensitivity still give a modest posterior probability?",
+        answer: "Because if the condition is rare or the false-positive rate is not tiny, many positives can still come from non-cases."
+      },
+      {
+        prompt: "What is the main conceptual difference between prior and posterior?",
+        answer: "The prior is before evidence; the posterior is after evidence."
+      }
+    ],
+    mcq: {
+      question: "Which quantity is the updated belief after observing evidence?",
+      options: ["Posterior", "Prior", "Likelihood only", "Feature vector"],
+      correctIndex: 0,
+      explanation: "Correct. The posterior is the updated belief after the evidence is observed."
+    },
+    problem: {
+      prompt: "If prior = 0.1, sensitivity = 0.9, and false-positive rate = 0.2, what is P(disease | positive)?",
+      answers: ["0.33", ".33", "0.333", ".333", "1/3"],
+      success: "Correct. Posterior = 0.09 / (0.09 + 0.18) = 0.333..., about 0.33."
+    },
+    conceptQuestion: {
+      prompt: "Why does Bayes rule matter so much in classification?",
+      answer:
+        "Because classification often means choosing the most likely class after observing evidence, which is exactly what posterior probability describes."
+    },
+    controls: [
+      { id: "prior", label: "Prior", min: 0.05, max: 0.5, step: 0.05, value: 0.1 },
+      { id: "sens", label: "Sensitivity", min: 0.5, max: 0.95, step: 0.05, value: 0.9 },
+      { id: "fpr", label: "False positive rate", min: 0.05, max: 0.5, step: 0.05, value: 0.2 }
+    ],
+    calculate(values) {
+      const prior = Number(values.prior);
+      const sens = Number(values.sens);
+      const fpr = Number(values.fpr);
+      const truePositive = sens * prior;
+      const falsePositive = fpr * (1 - prior);
+      const posterior = truePositive / (truePositive + falsePositive);
+      return {
+        metrics: [
+          `Prior = ${formatNumber(prior)}`,
+          `P(+|disease) = ${formatNumber(sens)}`,
+          `Posterior ≈ ${formatNumber(posterior)}`
+        ],
+        exampleSteps: [
+          `True positive mass = ${formatNumber(sens)} × ${formatNumber(prior)} = ${formatNumber(truePositive)}.`,
+          `False positive mass = ${formatNumber(fpr)} × ${formatNumber(1 - prior)} = ${formatNumber(falsePositive)}.`,
+          `All positive mass = ${formatNumber(truePositive + falsePositive)}.`,
+          `Posterior = ${formatNumber(truePositive)} / ${formatNumber(truePositive + falsePositive)} ≈ ${formatNumber(posterior)}.`
+        ],
+        insight:
+          posterior > prior
+            ? "The evidence increases belief in the hypothesis."
+            : "The evidence is not strong enough to raise belief much above the prior.",
+        drawing: {
+          type: "bayes",
+          prior,
+          sens,
+          fpr,
+          posterior,
+          truePositive,
+          falsePositive
+        }
+      };
+    }
+  },
+  {
+    key: "distributions",
+    order: 12,
+    stage: "Probability",
+    difficulty: "Advanced Core",
+    label: "Distributions",
+    navDescription: "How uncertainty is shaped, not just how large it is.",
+    subtitle:
+      "A distribution tells you how probability mass or density is spread across possible values.",
+    learningPurpose:
+      "Move from single-event probabilities to full uncertainty profiles over many possible outcomes.",
+    whyThisBefore:
+      "Study distributions before statistical inference and probabilistic modeling because they describe the shape of uncertainty itself.",
+    prerequisites: ["Probability Basics"],
+    mlPurpose:
+      "Gaussian assumptions, likelihoods, normalization, anomaly detection, and many generative models depend on distributions.",
+    visualTitle: "Change the mean and spread of the bell curve.",
+    visualDescription:
+      "The center moves with the mean and the curve widens or narrows with the standard deviation.",
+    beginnerNote:
+      "A distribution answers more than 'how likely is one event?'. It answers 'how is uncertainty spread across all possible values?'",
+    symbolGuide: [
+      { symbol: "μ", meaning: "Mean, the center of the distribution." },
+      { symbol: "σ", meaning: "Standard deviation, the spread." },
+      { symbol: "N(μ, σ²)", meaning: "Normal distribution with mean μ and variance σ²." }
+    ],
+    simpleExplanation:
+      "A distribution is a map of where values are likely to appear and how tightly or loosely they cluster.",
+    formula: "z = (x - μ) / σ",
+    formulaMeaning:
+      "Meaning: z-score tells you how many standard deviations a value is from the mean.",
+    mlUseCase:
+      "Normal distributions appear in modeling noise, standardized features, and many probabilistic assumptions used in ML.",
+    intuition:
+      "Ask: where is the center, how wide is the spread, and how surprising is a value far from the center?",
+    examShortcuts: [
+      "Larger σ means wider spread.",
+      "z = 0 means the value is exactly at the mean.",
+      "Large |z| means the value is far from the center."
+    ],
+    bigPicture:
+      "Distributions let you reason about whole uncertainty patterns, not just isolated event chances.",
+    examReadiness: [
+      "Compute z-scores.",
+      "Read the effect of μ and σ on curve shape.",
+      "Interpret how unusual a value is."
+    ],
+    advancedExample: {
+      title: "Use z-scores to compare values from different scales.",
+      steps: [
+        "Take two raw values from different contexts.",
+        "Convert each to a z-score using its own mean and standard deviation.",
+        "Compare the standardized values.",
+        "The larger z-score is the more extreme value relative to its own distribution."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "If σ increases while μ stays fixed, what happens to the curve?",
+        answer: "It spreads out and becomes flatter."
+      },
+      {
+        prompt: "What does a z-score of 2 mean?",
+        answer: "The value is two standard deviations above the mean."
+      }
+    ],
+    mcq: {
+      question: "What happens when standard deviation increases?",
+      options: [
+        "The distribution spreads out",
+        "The mean becomes zero",
+        "All probabilities become equal",
+        "The curve disappears"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. Larger standard deviation means more spread."
+    },
+    problem: {
+      prompt: "If the mean is 50 and the standard deviation is 10, what is the z-score of 70?",
+      answers: ["2", "2.0"],
+      success: "Correct. z = (70 - 50) / 10 = 2."
+    },
+    conceptQuestion: {
+      prompt: "Why do distributions matter more than just averages?",
+      answer:
+        "Because two datasets can share the same mean but behave very differently if their uncertainty is shaped differently."
+    },
+    controls: [
+      { id: "mu", label: "Mean μ", min: -2, max: 2, step: 0.5, value: 0 },
+      { id: "sigma", label: "Std dev σ", min: 0.5, max: 2.5, step: 0.25, value: 1 }
+    ],
+    calculate(values) {
+      const mu = Number(values.mu);
+      const sigma = Number(values.sigma);
+      const x = mu + sigma;
+      const z = (x - mu) / sigma;
+      return {
+        metrics: [`μ = ${formatNumber(mu)}`, `σ = ${formatNumber(sigma)}`, `z(μ + σ) = ${formatNumber(z)}`],
+        exampleSteps: [
+          `Set the mean to ${formatNumber(mu)} and standard deviation to ${formatNumber(sigma)}.`,
+          `One standard deviation above the mean is x = μ + σ = ${formatNumber(x)}.`,
+          `Compute z = (${formatNumber(x)} - ${formatNumber(mu)}) / ${formatNumber(sigma)}.`,
+          `So the z-score is ${formatNumber(z)}.`
+        ],
+        insight:
+          sigma > 1.5
+            ? "The uncertainty is relatively spread out."
+            : "The uncertainty is relatively concentrated around the center.",
+        drawing: {
+          type: "distribution",
+          mu,
+          sigma
+        }
+      };
+    }
+  },
+  {
+    key: "eigen",
+    order: 13,
+    stage: "Linear Algebra",
+    difficulty: "Advanced Core",
+    label: "Eigenvalues & PCA Intuition",
+    navDescription: "Special directions that only stretch.",
+    subtitle:
+      "This is the doorway to PCA and dimensionality reduction.",
+    learningPurpose:
+      "Understand that some transformations have special directions that keep their direction and only change size.",
+    whyThisBefore:
+      "Study this after matrices and transformations because eigen ideas only make sense once transformations feel natural.",
+    prerequisites: ["Matrices & Multiplication", "Linear Transformations"],
+    mlPurpose:
+      "PCA, covariance analysis, spectral methods, and many compression ideas rely on eigenvalues and eigenvectors.",
+    visualTitle: "See the main spread direction in an ellipse.",
+    visualDescription:
+      "The long axis is the principal direction. PCA keeps the directions with the largest spread and often drops weaker ones.",
+    beginnerNote:
+      "An eigenvector is a direction a transformation does not bend away from itself. It may stretch or shrink, but it stays on the same line.",
+    symbolGuide: [
+      { symbol: "Av = λv", meaning: "v is an eigenvector and λ is its eigenvalue." },
+      { symbol: "λ", meaning: "How much that special direction is scaled." },
+      { symbol: "principal component", meaning: "A direction of strong variation kept by PCA." }
+    ],
+    simpleExplanation:
+      "Some directions are special. A transformation may stretch them, but it does not rotate them off their own line.",
+    formula: "Av = λv",
+    formulaMeaning:
+      "Meaning: after applying A, the vector v still points along the same direction, only scaled by λ.",
+    mlUseCase:
+      "PCA finds strong variation directions in data so you can compress or visualize it more efficiently.",
+    intuition:
+      "Ask: which directions survive the transformation without changing their line?",
+    examShortcuts: [
+      "Eigenvectors keep their direction.",
+      "Eigenvalues tell the scale factor on that direction.",
+      "PCA keeps directions of large variance."
+    ],
+    bigPicture:
+      "Eigen ideas turn linear algebra into data compression and structure discovery.",
+    examReadiness: [
+      "Recognize the meaning of Av = λv.",
+      "Interpret large eigenvalues as strong scaling directions.",
+      "Connect PCA to keeping the most informative directions."
+    ],
+    advancedExample: {
+      title: "Why PCA reduces dimension.",
+      steps: [
+        "Find the direction where data varies the most.",
+        "Project data onto that principal direction.",
+        "If one direction carries much more information than the others, keep it and drop weaker directions.",
+        "This preserves much of the structure with fewer numbers."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "If Av = 3v, what is the eigenvalue?",
+        answer: "The eigenvalue is 3."
+      },
+      {
+        prompt: "Why does PCA care about variance?",
+        answer: "Because high-variance directions usually carry more of the dataset's structural information."
+      }
+    ],
+    mcq: {
+      question: "What stays the same for an eigenvector after transformation?",
+      options: [
+        "Its direction line",
+        "Its exact coordinates",
+        "Its length only",
+        "Nothing"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. The vector can scale, but it stays on the same line."
+    },
+    problem: {
+      prompt: "If Av = 3v, what is the eigenvalue associated with v?",
+      answers: ["3", "3.0"],
+      success: "Correct. The scaling factor λ is 3."
+    },
+    conceptQuestion: {
+      prompt: "Why is PCA useful before modeling?",
+      answer:
+        "Because it can compress high-dimensional data into fewer informative directions and reduce noise or redundancy."
+    },
+    controls: [],
+    calculate() {
+      return {
+        metrics: ["Core idea: Av = λv", "PCA keeps high-variance directions", "Compression without full collapse"],
+        exampleSteps: [
+          "Start with a data cloud that is stretched more in one direction than others.",
+          "That dominant direction becomes the first principal component.",
+          "Project points onto it to reduce dimension.",
+          "Keep extra components only if they carry enough remaining variation."
+        ],
+        insight:
+          "PCA works because some directions in data matter much more than others.",
+        drawing: {
+          type: "pca"
+        }
+      };
+    }
+  },
+  {
+    key: "gradient-descent",
+    order: 14,
+    stage: "Calculus",
+    difficulty: "Advanced Core",
+    label: "Gradient Descent",
+    navDescription: "How models actually move downhill.",
+    subtitle:
+      "Once you know derivatives and gradients, this is the algorithmic step that turns math into learning.",
+    learningPurpose:
+      "Understand the update rule that repeatedly reduces loss.",
+    whyThisBefore:
+      "Study this before neural networks because training deep models is essentially a gradient-based optimization process.",
+    prerequisites: ["Derivatives", "Multivariable Calculus"],
+    mlPurpose:
+      "Gradient descent is the basic engine behind training many ML models.",
+    visualTitle: "Move the point and learning rate on the loss curve.",
+    visualDescription:
+      "The current point sits on the curve and the next point shows where one gradient descent step would move.",
+    beginnerNote:
+      "Gradient descent is just repeated downhill walking on a loss surface, using local slope information.",
+    symbolGuide: [
+      { symbol: "η", meaning: "Learning rate, the step size." },
+      { symbol: "xnew = xold - ηf'(xold)", meaning: "Move against the slope to reduce the function." },
+      { symbol: "loss", meaning: "How wrong the model currently is." }
+    ],
+    simpleExplanation:
+      "Gradient descent updates parameters by taking small steps downhill on the loss function.",
+    formula: "xnew = xold - η f'(xold)",
+    formulaMeaning:
+      "Meaning: move opposite the slope, scaled by the learning rate η.",
+    mlUseCase:
+      "Training regression, logistic regression, and neural networks all depends on optimization steps like this.",
+    intuition:
+      "Ask: which way is downhill, and how big should my step be?",
+    examShortcuts: [
+      "Negative gradient means downhill direction.",
+      "Large learning rate can overshoot.",
+      "Small learning rate can be very slow."
+    ],
+    bigPicture:
+      "Gradient descent is the algorithmic heartbeat of ML training.",
+    examReadiness: [
+      "Apply one update step correctly.",
+      "Explain the role of learning rate.",
+      "Connect gradient sign to parameter movement."
+    ],
+    advancedExample: {
+      title: "Why bad learning rates fail.",
+      steps: [
+        "If η is too small, progress is slow because each step barely moves.",
+        "If η is too large, the update can jump past the minimum.",
+        "Training then oscillates or diverges.",
+        "Good optimization balances direction quality with step size."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "If the derivative is positive, which way should gradient descent move?",
+        answer: "It should move left or downward in parameter space, against the positive slope."
+      },
+      {
+        prompt: "What is the effect of doubling the learning rate, all else equal?",
+        answer: "Each update becomes twice as large, which can speed learning or cause overshooting."
+      }
+    ],
+    mcq: {
+      question: "What happens if the learning rate is far too large?",
+      options: [
+        "The updates can overshoot the minimum",
+        "Training becomes exact in one step",
+        "The gradient becomes zero automatically",
+        "The model stops using derivatives"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. Steps that are too large can jump over the minimum and destabilize training."
+    },
+    problem: {
+      prompt: "If current x = 5, derivative = 2, and η = 0.1, what is the new x after one update?",
+      answers: ["4.8"],
+      success: "Correct. xnew = 5 - 0.1×2 = 4.8."
+    },
+    conceptQuestion: {
+      prompt: "Why do we move in the negative gradient direction instead of the positive one?",
+      answer:
+        "Because the gradient points uphill, and learning usually tries to minimize loss, which means moving downhill."
+    },
+    controls: [
+      { id: "x0", label: "Current x", min: -2, max: 8, step: 0.5, value: 5 },
+      { id: "lr", label: "Learning rate η", min: 0.05, max: 0.8, step: 0.05, value: 0.2 }
+    ],
+    calculate(values) {
+      const x0 = Number(values.x0);
+      const lr = Number(values.lr);
+      const y0 = curveValue(x0);
+      const slope = curveSlope(x0);
+      const nextX = x0 - lr * slope;
+      const nextY = curveValue(nextX);
+      return {
+        metrics: [`Current x = ${formatNumber(x0)}`, `Slope ≈ ${formatNumber(slope)}`, `Next x ≈ ${formatNumber(nextX)}`],
+        exampleSteps: [
+          `Start at x = ${formatNumber(x0)} where the slope is about ${formatNumber(slope)}.`,
+          `Use η = ${formatNumber(lr)}.`,
+          `Compute xnew = ${formatNumber(x0)} - ${formatNumber(lr)} × ${formatNumber(slope)}.`,
+          `So the next step is xnew ≈ ${formatNumber(nextX)}.`
+        ],
+        insight:
+          `The update moves from x = ${formatNumber(x0)} to about ${formatNumber(nextX)} to lower the loss.`,
+        drawing: {
+          type: "descent",
+          x0,
+          y0,
+          slope,
+          nextX,
+          nextY
+        }
+      };
+    }
+  },
+  {
+    key: "logistic",
+    order: 15,
+    stage: "Modeling",
+    difficulty: "Advanced Core",
+    label: "Logistic Regression",
+    navDescription: "From scores to probabilities for classification.",
+    subtitle:
+      "This is the classification counterpart to linear regression.",
+    learningPurpose:
+      "Understand how a linear score becomes a probability for binary classification.",
+    whyThisBefore:
+      "Study this before neural networks because it introduces classification loss, probabilities, and nonlinear squashing in a simpler setting.",
+    prerequisites: ["Functions & Graphs", "Probability Basics", "Gradient Descent"],
+    mlPurpose:
+      "Logistic regression is a standard baseline model for binary classification and a conceptual bridge to neural networks.",
+    visualTitle: "Change the score function and watch the sigmoid output.",
+    visualDescription:
+      "The linear score changes the horizontal position on the sigmoid, and the sigmoid turns that score into a probability between 0 and 1.",
+    beginnerNote:
+      "Logistic regression is still linear in its score, but the sigmoid turns that score into a probability.",
+    symbolGuide: [
+      { symbol: "σ(z)", meaning: "Sigmoid applied to score z." },
+      { symbol: "z = wx + b", meaning: "Linear score before squashing." },
+      { symbol: "p(y=1|x)", meaning: "Predicted probability of class 1 given x." }
+    ],
+    simpleExplanation:
+      "Logistic regression takes a straight-line score and squeezes it into a probability between 0 and 1.",
+    formula: "p = 1 / (1 + e^-(wx + b))",
+    formulaMeaning:
+      "Meaning: compute a score wx + b, then squash it into a probability.",
+    mlUseCase:
+      "Spam detection, fraud checks, medical classification, and many binary decision systems use this structure.",
+    intuition:
+      "Ask: how strongly does the score push the prediction toward class 1 versus class 0?",
+    examShortcuts: [
+      "z = 0 gives probability 0.5.",
+      "Large positive z gives probability near 1.",
+      "Large negative z gives probability near 0."
+    ],
+    bigPicture:
+      "Logistic regression is the first clean link between linear models and probabilistic classification.",
+    examReadiness: [
+      "Compute probabilities from simple scores.",
+      "Interpret score sign and magnitude.",
+      "Know why the output is between 0 and 1."
+    ],
+    advancedExample: {
+      title: "Read score margins in classification.",
+      steps: [
+        "Compute z = wx + b for two samples.",
+        "Send each score through the sigmoid.",
+        "Compare the resulting probabilities.",
+        "Larger positive scores mean stronger confidence toward class 1."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "What probability does logistic regression output when z = 0?",
+        answer: "0.5, because the sigmoid is centered there."
+      },
+      {
+        prompt: "Why is logistic regression better for binary labels than plain linear regression?",
+        answer: "Because it outputs probabilities in [0, 1] instead of unrestricted real values."
+      }
+    ],
+    mcq: {
+      question: "If z becomes very large and positive, what happens to the logistic output?",
+      options: [
+        "It approaches 1",
+        "It approaches -1",
+        "It becomes exactly z",
+        "It approaches infinity"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. The sigmoid saturates near 1 for large positive scores."
+    },
+    problem: {
+      prompt: "If w = 1, b = 0, and x = 0, what probability does logistic regression output?",
+      answers: ["0.5", ".5"],
+      success: "Correct. z = 0, and sigmoid(0) = 0.5."
+    },
+    conceptQuestion: {
+      prompt: "Why is logistic regression still called 'regression' if it does classification?",
+      answer:
+        "Historically, the model regresses the log-odds linearly, even though the final task is classification."
+    },
+    controls: [
+      { id: "w", label: "Weight w", min: -3, max: 3, step: 0.5, value: 1.5 },
+      { id: "b", label: "Bias b", min: -3, max: 3, step: 0.5, value: 0 },
+      { id: "x", label: "Input x", min: -4, max: 4, step: 0.5, value: 1 }
+    ],
+    calculate(values) {
+      const w = Number(values.w);
+      const b = Number(values.b);
+      const x = Number(values.x);
+      const z = w * x + b;
+      const p = 1 / (1 + Math.exp(-z));
+      return {
+        metrics: [`Score z = ${formatNumber(z)}`, `Probability ≈ ${formatNumber(p)}`, p > 0.5 ? "Predict class 1" : "Predict class 0"],
+        exampleSteps: [
+          `Compute the linear score: z = ${formatNumber(w)}×${formatNumber(x)} + ${formatNumber(b)} = ${formatNumber(z)}.`,
+          `Apply the sigmoid to z.`,
+          `That turns the score into a probability between 0 and 1.`,
+          `The predicted probability for class 1 is about ${formatNumber(p)}.`
+        ],
+        insight:
+          p > 0.8
+            ? "The model is strongly leaning toward class 1."
+            : p < 0.2
+              ? "The model is strongly leaning toward class 0."
+              : "The model is relatively uncertain.",
+        drawing: {
+          type: "sigmoid",
+          w,
+          b,
+          x,
+          z,
+          p
+        }
+      };
+    }
+  },
+  {
+    key: "backprop",
+    order: 16,
+    stage: "Modeling",
+    difficulty: "Advanced Core",
+    label: "Neural Layer & Backprop Intuition",
+    navDescription: "Where chain rule meets weight updates.",
+    subtitle:
+      "This is the bridge from single models to neural networks.",
+    learningPurpose:
+      "Understand what a neural layer computes and why gradients need to flow backward through it.",
+    whyThisBefore:
+      "Study this after gradients and logistic regression because backprop is basically chain rule applied through layered computations.",
+    prerequisites: ["Dot Product", "Multivariable Calculus", "Gradient Descent", "Logistic Regression"],
+    mlPurpose:
+      "Neural networks stack weighted sums and nonlinearities, and backprop computes how loss changes with each weight.",
+    visualTitle: "Change inputs and weights in one tiny neural unit.",
+    visualDescription:
+      "Two inputs feed one neuron. The neuron forms a weighted sum plus bias and then applies a nonlinearity.",
+    beginnerNote:
+      "Backprop is not magic. It is repeated chain rule through a computational graph.",
+    symbolGuide: [
+      { symbol: "z = w1x1 + w2x2 + b", meaning: "Weighted sum before activation." },
+      { symbol: "a", meaning: "Activation, the neuron's output after nonlinearity." },
+      { symbol: "∂L/∂w", meaning: "How loss changes if the weight changes." }
+    ],
+    simpleExplanation:
+      "A neuron multiplies inputs by weights, adds them up, then passes the result through an activation function. Backprop tells each weight how it contributed to the final error.",
+    formula: "z = w1x1 + w2x2 + b",
+    formulaMeaning:
+      "Meaning: a neural unit first computes a weighted sum before applying an activation.",
+    mlUseCase:
+      "Every dense layer in a neural network is built from weighted sums like this, and backprop updates those weights.",
+    intuition:
+      "Ask: which weights helped the prediction, which hurt it, and by how much?",
+    examShortcuts: [
+      "Forward pass computes outputs.",
+      "Backward pass computes gradients.",
+      "Chain rule links local derivatives into full loss gradients."
+    ],
+    bigPicture:
+      "This is where linear algebra, gradients, and optimization finally become neural-network training.",
+    examReadiness: [
+      "Compute a simple weighted sum.",
+      "Explain forward pass vs backward pass.",
+      "State why chain rule is essential for deep learning."
+    ],
+    advancedExample: {
+      title: "One local gradient inside backprop.",
+      steps: [
+        "Suppose L depends on output a, and a depends on z, and z depends on weight w1.",
+        "Backprop multiplies local derivatives: dL/dw1 = dL/da × da/dz × dz/dw1.",
+        "For a weighted sum, dz/dw1 = x1.",
+        "This is why input values directly affect gradient size on incoming weights."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "What does the forward pass compute?",
+        answer: "The network outputs and intermediate activations."
+      },
+      {
+        prompt: "Why is chain rule necessary in backprop?",
+        answer: "Because the loss depends on weights indirectly through many intermediate computations."
+      }
+    ],
+    mcq: {
+      question: "Which statement best describes backpropagation?",
+      options: [
+        "It uses chain rule to compute gradients through layers",
+        "It randomly changes weights",
+        "It removes all nonlinearities",
+        "It only works for linear regression"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. Backpropagation is chain rule applied through the network graph."
+    },
+    problem: {
+      prompt: "If x1 = 2, x2 = 3, w1 = 1, w2 = -1, and b = 0, what is z = w1x1 + w2x2 + b?",
+      answers: ["-1"],
+      success: "Correct. z = 1×2 + (-1)×3 + 0 = -1."
+    },
+    conceptQuestion: {
+      prompt: "Why can deep networks learn complicated patterns from repeated simple layers?",
+      answer:
+        "Because many simple weighted transformations and nonlinearities composed together can represent much richer functions than a single layer."
+    },
+    controls: [
+      { id: "x1", label: "Input x1", min: -3, max: 3, step: 1, value: 2 },
+      { id: "x2", label: "Input x2", min: -3, max: 3, step: 1, value: 1 },
+      { id: "w1", label: "Weight w1", min: -3, max: 3, step: 0.5, value: 1 },
+      { id: "w2", label: "Weight w2", min: -3, max: 3, step: 0.5, value: -0.5 },
+      { id: "b", label: "Bias b", min: -2, max: 2, step: 0.5, value: 0.5 }
+    ],
+    calculate(values) {
+      const x1 = Number(values.x1);
+      const x2 = Number(values.x2);
+      const w1 = Number(values.w1);
+      const w2 = Number(values.w2);
+      const b = Number(values.b);
+      const z = w1 * x1 + w2 * x2 + b;
+      const a = Math.max(0, z);
+      return {
+        metrics: [`z = ${formatNumber(z)}`, `ReLU(z) = ${formatNumber(a)}`, `Most influential input = ${Math.abs(w1 * x1) >= Math.abs(w2 * x2) ? "x1" : "x2"}`],
+        exampleSteps: [
+          `Compute weighted input from x1: ${formatNumber(w1)}×${formatNumber(x1)} = ${formatNumber(w1 * x1)}.`,
+          `Compute weighted input from x2: ${formatNumber(w2)}×${formatNumber(x2)} = ${formatNumber(w2 * x2)}.`,
+          `Add bias ${formatNumber(b)} to get z = ${formatNumber(z)}.`,
+          `Apply ReLU: a = max(0, z) = ${formatNumber(a)}.`
+        ],
+        insight:
+          a > 0
+            ? "This neuron is active after the ReLU."
+            : "This neuron is inactive after the ReLU because the pre-activation is not positive.",
+        drawing: {
+          type: "network",
+          x1,
+          x2,
+          w1,
+          w2,
+          b,
+          z,
+          a
         }
       };
     }
