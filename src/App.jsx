@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { lessons } from "./lessonData.js";
+import React, { startTransition, useState } from "react";
+import { curriculumStages, futureModules, lessons } from "./lessonData.js";
 import VectorScene from "./VectorScene.jsx";
 
 const starterGuide = [
@@ -18,6 +18,10 @@ const starterGuide = [
   {
     symbol: "≈",
     meaning: "Approximately equal. Close, not exact."
+  },
+  {
+    symbol: "∂ / ∇",
+    meaning: "Partial derivative and gradient."
   }
 ];
 
@@ -42,22 +46,26 @@ export default function App() {
   const result = lesson.calculate(currentValues);
 
   function switchLesson(nextKey) {
-    setLessonKey(nextKey);
-    setMcqFeedback("");
-    setSelectedMcq(null);
-    setProblemAnswer("");
-    setProblemFeedback("");
-    setShowConceptAnswer(false);
+    startTransition(() => {
+      setLessonKey(nextKey);
+      setMcqFeedback("");
+      setSelectedMcq(null);
+      setProblemAnswer("");
+      setProblemFeedback("");
+      setShowConceptAnswer(false);
+    });
   }
 
   function updateControl(controlId, value) {
-    setControlState((current) => ({
-      ...current,
-      [lesson.key]: {
-        ...current[lesson.key],
-        [controlId]: value
-      }
-    }));
+    startTransition(() => {
+      setControlState((current) => ({
+        ...current,
+        [lesson.key]: {
+          ...current[lesson.key],
+          [controlId]: value
+        }
+      }));
+    });
   }
 
   function checkMcq(index) {
@@ -84,28 +92,29 @@ export default function App() {
       <header className="hero">
         <div className="hero-copy">
           <p className="eyebrow">ML Math Studio</p>
-          <h1>Understand ML math without getting lost in formulas.</h1>
+          <h1>Prepare for ML math in the right order.</h1>
           <p className="hero-text">
-            Built for beginners who did not come from a heavy math background.
-            Learn the meaning first, decode the symbols, and only then use the
-            formula.
+            This is built for beginners who may have skipped advanced school
+            math but still want to become ready for ML or a master's-level ML
+            program. The goal is not just to show formulas. The goal is to make
+            each topic make sense, in sequence, with practice and ML context.
           </p>
           <div className="hero-pills">
-            <span>Beginner-first</span>
-            <span>Visual before symbolic</span>
-            <span>Made for ML prep</span>
+            <span>Study order matters</span>
+            <span>Beginner-first explanations</span>
+            <span>Exam-style practice</span>
           </div>
         </div>
 
         <div className="hero-card">
-          <p className="hero-card-label">How Each Lesson Works</p>
+          <p className="hero-card-label">Recommended Order For ML Prep</p>
           <ol>
-            <li>Plain-English explanation</li>
-            <li>Interactive picture</li>
-            <li>One small formula</li>
-            <li>Worked example</li>
-            <li>ML use case</li>
-            <li>Quick checks and shortcuts</li>
+            <li>Math language and functions</li>
+            <li>Linear algebra</li>
+            <li>Single-variable calculus</li>
+            <li>Multivariable calculus</li>
+            <li>Probability and statistics</li>
+            <li>Model-specific topics like regression</li>
           </ol>
         </div>
       </header>
@@ -113,11 +122,12 @@ export default function App() {
       <section className="starter-panel">
         <div>
           <p className="panel-label">Start Here</p>
-          <h2 className="starter-title">No class 11/12 math background needed.</h2>
+          <h2 className="starter-title">You do not need class 11/12 math to begin.</h2>
           <p className="starter-text">
-            This app assumes you may be rusty on symbols, signs, and notation.
-            So every lesson includes a symbol decoder and uses examples before
-            abstract language.
+            You do need a clean sequence. For ML, linear algebra comes before
+            most calculus applications because data and model parameters are
+            represented as vectors and matrices. Then calculus explains learning.
+            Then probability and statistics explain uncertainty and data noise.
           </p>
         </div>
         <div className="symbol-strip">
@@ -130,9 +140,39 @@ export default function App() {
         </div>
       </section>
 
+      <section className="roadmap-panel">
+        <div className="roadmap-header">
+          <div>
+            <p className="panel-label">Curriculum Roadmap</p>
+            <h2 className="starter-title">What to study first, and why.</h2>
+          </div>
+          <p className="roadmap-text">
+            If your goal is ML readiness, do not start with isolated formulas.
+            Start with representation, then change, then uncertainty, then full
+            models.
+          </p>
+        </div>
+        <div className="roadmap-grid">
+          {curriculumStages.map((stage) => (
+            <article key={stage.key} className="roadmap-card">
+              <h3>{stage.title}</h3>
+              <p>{stage.purpose}</p>
+              <p className="roadmap-ml">{stage.mlConnection}</p>
+              <div className="roadmap-topics">
+                {stage.topics.map((topic) => (
+                  <span key={topic} className="topic-chip">
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <main className="workspace">
         <aside className="lesson-nav">
-          <p className="panel-label">Core Concepts</p>
+          <p className="panel-label">Lessons In Order</p>
           <div className="lesson-tabs">
             {lessons.map((item) => (
               <button
@@ -141,18 +181,24 @@ export default function App() {
                 className={`lesson-tab ${item.key === lesson.key ? "active" : ""}`}
                 onClick={() => switchLesson(item.key)}
               >
-                <strong>{item.label}</strong>
+                <strong>
+                  {item.order}. {item.label}
+                </strong>
                 <span>{item.navDescription}</span>
+                <small>{item.stage}</small>
               </button>
             ))}
           </div>
 
           <div className="nav-note">
-            <p className="panel-label">Why This Works</p>
-            <p>
-              Many learners get stuck because math starts with symbols. This
-              product starts with meaning and lets formulas arrive later.
-            </p>
+            <p className="panel-label">After This Path</p>
+            <div className="future-list">
+              {futureModules.map((item) => (
+                <span key={item} className="future-chip">
+                  {item}
+                </span>
+              ))}
+            </div>
           </div>
         </aside>
 
@@ -164,13 +210,36 @@ export default function App() {
               <p className="lesson-subtitle">{lesson.subtitle}</p>
             </div>
             <div className="lesson-metrics">
-              {result.metrics.map((metric) => (
-                <span key={metric} className="metric-pill">
-                  {metric}
-                </span>
-              ))}
+              <span className="metric-pill">Stage: {lesson.stage}</span>
+              <span className="metric-pill">Order: {lesson.order}</span>
+              <span className="metric-pill">Level: {lesson.difficulty}</span>
             </div>
           </div>
+
+          <section className="meta-grid">
+            <article className="meta-card">
+              <p className="panel-label">Why Learn This</p>
+              <p>{lesson.learningPurpose}</p>
+            </article>
+            <article className="meta-card">
+              <p className="panel-label">Why In This Order</p>
+              <p>{lesson.whyThisBefore}</p>
+            </article>
+            <article className="meta-card">
+              <p className="panel-label">Relation To ML</p>
+              <p>{lesson.mlPurpose}</p>
+            </article>
+            <article className="meta-card">
+              <p className="panel-label">Learn This After</p>
+              <div className="prereq-list">
+                {lesson.prerequisites.map((item) => (
+                  <span key={item} className="topic-chip">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </article>
+          </section>
 
           <section className="primer-card">
             <p className="panel-label">Beginner Primer</p>
@@ -211,6 +280,13 @@ export default function App() {
                     </div>
                   ))}
                 </div>
+                <div className="lesson-metrics compact">
+                  {result.metrics.map((metric) => (
+                    <span key={metric} className="metric-pill">
+                      {metric}
+                    </span>
+                  ))}
+                </div>
                 <div className="visual-insight">{result.insight}</div>
               </div>
             </div>
@@ -242,6 +318,11 @@ export default function App() {
               </div>
             </article>
 
+            <article className="content-card">
+              <p className="panel-label">5. Real-World ML Scenario</p>
+              <p>{lesson.mlUseCase}</p>
+            </article>
+
             <article className="content-card wide">
               <p className="panel-label">4. Step-by-Step Example</p>
               <div className="steps">
@@ -254,13 +335,17 @@ export default function App() {
             </article>
 
             <article className="content-card">
-              <p className="panel-label">5. Real-World ML Scenario</p>
-              <p>{lesson.mlUseCase}</p>
+              <p className="panel-label">6. Intuition Block</p>
+              <p>{lesson.intuition}</p>
             </article>
 
             <article className="content-card">
-              <p className="panel-label">6. Intuition Block</p>
-              <p>{lesson.intuition}</p>
+              <p className="panel-label">Exam Readiness</p>
+              <ul className="shortcut-list">
+                {lesson.examReadiness.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </article>
 
             <article className="content-card">
@@ -331,7 +416,7 @@ export default function App() {
             </article>
 
             <article className="content-card wide">
-              <p className="panel-label">11. Connect to Big Picture</p>
+              <p className="panel-label">11. Connect To Big Picture</p>
               <p>{lesson.bigPicture}</p>
             </article>
           </section>
