@@ -55,7 +55,7 @@ export const futureModules = [
   "Advanced probability inequalities"
 ];
 
-export const lessons = [
+const baseLessons = [
   {
     key: "functions",
     order: 1,
@@ -1826,3 +1826,563 @@ function directionText(x, y) {
   const vertical = y === 0 ? "" : y > 0 ? `${Math.abs(y)} up` : `${Math.abs(y)} down`;
   return [horizontal, vertical].filter(Boolean).join(" and ");
 }
+
+const lessonEnhancements = {
+  functions: {
+    realLifeExamples: [
+      "Taxi fare models often start with a fixed base charge plus a per-kilometer rate. That is function thinking.",
+      "In ML, an activation function takes one input value and returns one output value using one clear rule."
+    ],
+    goDeeper: [
+      "Be able to move between equation, table, and graph without treating them as separate topics.",
+      "Notice whether a model's output changes fast, slowly, or not at all as the input changes."
+    ],
+    extraPractice: [
+      {
+        prompt: "If f(x) = -2x + 5, find f(-1).",
+        answer: "f(-1) = -2(-1) + 5 = 7."
+      },
+      {
+        prompt: "A gym charges a signup fee of 100 and 20 per class. Write a function for total cost after x classes.",
+        answer: "C(x) = 20x + 100."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "If the slope is negative, what happens as x increases?",
+        options: ["The output decreases", "The output always becomes zero", "The graph becomes vertical", "The intercept disappears"],
+        correctIndex: 0,
+        explanation: "Correct. Negative slope means the graph falls as x increases."
+      },
+      {
+        question: "Which part of y = mx + c is the starting value?",
+        options: ["c", "m", "x", "y"],
+        correctIndex: 0,
+        explanation: "Correct. c is the value when x = 0."
+      }
+    ]
+  },
+  vectors: {
+    realLifeExamples: [
+      "A drone moving 4 meters east and 3 meters north can be described with one vector.",
+      "In ML, a sentence embedding is just a very long vector representing many learned features at once."
+    ],
+    goDeeper: [
+      "Be comfortable reading a vector both as coordinates and as direction plus magnitude.",
+      "Notice that high-dimensional ML vectors follow the same logic as 2D arrows, just with more coordinates."
+    ],
+    extraPractice: [
+      {
+        prompt: "If v = (-2, 5), which quadrant is it in?",
+        answer: "Second quadrant, because x is negative and y is positive."
+      },
+      {
+        prompt: "What is the zero vector in 2D?",
+        answer: "(0, 0). It represents no movement."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What is special about the zero vector?",
+        options: ["It has no movement", "It always points right", "It is the longest vector", "It can only appear in calculus"],
+        correctIndex: 0,
+        explanation: "Correct. The zero vector represents no displacement."
+      },
+      {
+        question: "If only the sign of every coordinate changes, what happens?",
+        options: ["The vector flips to the opposite direction", "The vector stays unchanged", "The vector disappears", "The length must become zero"],
+        correctIndex: 0,
+        explanation: "Correct. Flipping all signs reverses the direction."
+      }
+    ]
+  },
+  matrices: {
+    realLifeExamples: [
+      "An image filter can be thought of as a matrix-like transformation on pixel values.",
+      "In ML, one dense layer of a neural network is matrix multiplication followed by a bias and activation."
+    ],
+    goDeeper: [
+      "Think of a matrix as a transformation machine, not a table to memorize.",
+      "Practice seeing matrix multiplication as mixing input coordinates into new coordinates."
+    ],
+    extraPractice: [
+      {
+        prompt: "If A = [[2, 0], [0, 3]], what does A do geometrically?",
+        answer: "It scales x by 2 and y by 3."
+      },
+      {
+        prompt: "If A is the identity matrix, what is Av for any vector v?",
+        answer: "Av = v."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does a diagonal matrix mainly do?",
+        options: ["Scales coordinates independently", "Always rotates vectors", "Always projects to zero", "Always swaps coordinates"],
+        correctIndex: 0,
+        explanation: "Correct. Diagonal matrices usually scale coordinates without mixing them."
+      },
+      {
+        question: "What do the columns of a 2×2 matrix tell you geometrically?",
+        options: ["Where the basis vectors go", "The mean of the dataset", "The derivative of the function", "The probabilities of classes"],
+        correctIndex: 0,
+        explanation: "Correct. The columns show the transformed basis directions."
+      }
+    ]
+  },
+  transformations: {
+    realLifeExamples: [
+      "Stretching a photo in one direction is a transformation of the image space.",
+      "A learned feature layer in ML reshapes the whole representation space, not just one data point."
+    ],
+    goDeeper: [
+      "Be able to explain a transformation by describing what happens to the basis vectors.",
+      "Recognize that understanding the action on space is more powerful than memorizing entries."
+    ],
+    extraPractice: [
+      {
+        prompt: "If both basis vectors double, what transformation is that?",
+        answer: "Uniform scaling by 2."
+      },
+      {
+        prompt: "Why can one transformation affect every point consistently?",
+        answer: "Because linear transformations follow one fixed rule for the whole space."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "If T(e1) and T(e2) are known, what else is essentially known?",
+        options: ["The whole linear transformation", "The dataset labels", "The loss function", "The training accuracy"],
+        correctIndex: 0,
+        explanation: "Correct. Knowing the transformed basis determines the full linear map."
+      },
+      {
+        question: "Which is a common linear transformation effect?",
+        options: ["Shear", "Taking a median", "Sorting values", "Random sampling"],
+        correctIndex: 0,
+        explanation: "Correct. Shear is a standard linear transformation."
+      }
+    ]
+  },
+  dot: {
+    realLifeExamples: [
+      "If two people pull a sled in nearly the same direction, more of their effort adds together.",
+      "Search systems often score how well a query vector matches a document vector using a dot product."
+    ],
+    goDeeper: [
+      "Be able to interpret the sign and size of the dot product without immediately reaching for the formula.",
+      "Connect dot product to similarity and weighted sums in high-dimensional ML settings."
+    ],
+    extraPractice: [
+      {
+        prompt: "What is the dot product of (2, 0) and (0, 5)?",
+        answer: "0, because the vectors are perpendicular."
+      },
+      {
+        prompt: "If two vectors are aligned and long, what should happen to their dot product?",
+        answer: "It should be strongly positive."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does a dot product near zero usually suggest?",
+        options: ["The vectors are nearly perpendicular", "The vectors are identical", "Both vectors are zero", "The vectors must have equal lengths"],
+        correctIndex: 0,
+        explanation: "Correct. Near-zero dot product usually indicates near-orthogonality."
+      },
+      {
+        question: "Why is dot product useful in recommendation systems?",
+        options: ["It summarizes similarity into one score", "It removes all uncertainty", "It sorts labels alphabetically", "It guarantees fairness"],
+        correctIndex: 0,
+        explanation: "Correct. It compresses matching coordinates into a useful relevance score."
+      }
+    ]
+  },
+  derivatives: {
+    realLifeExamples: [
+      "A car's speedometer is tracking how position changes over time, which is derivative thinking.",
+      "In ML, the derivative of loss with respect to a parameter tells whether that parameter should go up or down."
+    ],
+    goDeeper: [
+      "Learn to infer derivative sign directly from a graph.",
+      "Connect derivative size to sensitivity: big derivative means the output reacts strongly to small input changes."
+    ],
+    extraPractice: [
+      {
+        prompt: "If a function is flat at a point, what is its derivative there likely to be?",
+        answer: "Near zero."
+      },
+      {
+        prompt: "If f(x) = 3x², what is f'(2)?",
+        answer: "f'(x) = 6x, so f'(2) = 12."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does a derivative of zero usually mean at a point?",
+        options: ["The graph is locally flat", "The function does not exist", "The graph is vertical", "The output is negative"],
+        correctIndex: 0,
+        explanation: "Correct. Zero derivative usually signals local flatness."
+      },
+      {
+        question: "Why are derivatives important in ML?",
+        options: ["They guide parameter updates", "They remove all data noise", "They replace vectors", "They make probability unnecessary"],
+        correctIndex: 0,
+        explanation: "Correct. They tell optimization how the loss changes with parameters."
+      }
+    ]
+  },
+  multivariable: {
+    realLifeExamples: [
+      "A mountain landscape has many possible directions of movement, not just left and right. That is multivariable thinking.",
+      "ML losses depend on many weights at the same time, so training needs gradient vectors, not single slopes."
+    ],
+    goDeeper: [
+      "Be able to explain why the gradient is a vector and not a single number.",
+      "Understand that optimization in ML happens in high-dimensional parameter spaces."
+    ],
+    extraPractice: [
+      {
+        prompt: "For f(x, y) = x² + 3y², what is ∇f?",
+        answer: "(2x, 6y)."
+      },
+      {
+        prompt: "At a minimum, what often happens to the gradient?",
+        answer: "It becomes zero or very close to zero."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does the gradient point toward?",
+        options: ["Steepest increase", "Steepest decrease", "Always toward the origin", "Always along the x-axis"],
+        correctIndex: 0,
+        explanation: "Correct. The gradient points uphill."
+      },
+      {
+        question: "Why do we use the negative gradient in optimization?",
+        options: ["To move downhill", "To increase the loss", "To remove variables", "To create more dimensions"],
+        correctIndex: 0,
+        explanation: "Correct. Minimization means moving against the uphill direction."
+      }
+    ]
+  },
+  probability: {
+    realLifeExamples: [
+      "Weather apps saying there is a 70% chance of rain are using probability to represent uncertainty.",
+      "A classifier that outputs 0.9 for spam is expressing uncertainty, not certainty."
+    ],
+    goDeeper: [
+      "Be able to separate likelihood from certainty.",
+      "Practice sanity-checking whether a claimed probability is even valid."
+    ],
+    extraPractice: [
+      {
+        prompt: "If P(A) = 0.25, what is P(not A)?",
+        answer: "0.75."
+      },
+      {
+        prompt: "Can a probability be -0.2 or 1.3?",
+        answer: "No. Probabilities must be between 0 and 1."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What must the probabilities of all complete mutually exclusive outcomes sum to?",
+        options: ["1", "0", "The sample size", "The mean"],
+        correctIndex: 0,
+        explanation: "Correct. A full probability distribution sums to 1."
+      },
+      {
+        question: "What does a probability of 0.5 suggest?",
+        options: ["Moderate uncertainty", "Impossible event", "Guaranteed event", "Negative chance"],
+        correctIndex: 0,
+        explanation: "Correct. 0.5 is a balanced uncertain case, not certainty."
+      }
+    ]
+  },
+  statistics: {
+    realLifeExamples: [
+      "An average exam score tells the center, but you also want spread to know if students performed similarly or very differently.",
+      "In ML, normalization often uses mean and spread so features are on comparable scales."
+    ],
+    goDeeper: [
+      "Be able to explain why the same mean can hide very different datasets.",
+      "Recognize when outliers distort the average."
+    ],
+    extraPractice: [
+      {
+        prompt: "Which dataset has larger spread: [4, 5, 6] or [1, 5, 9]?",
+        answer: "[1, 5, 9] has larger spread."
+      },
+      {
+        prompt: "Why can one outlier change the mean a lot?",
+        answer: "Because the mean uses every value directly in the total."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "Which pair can have the same mean but different variance?",
+        options: ["[4, 5, 6] and [1, 5, 9]", "[3, 3, 3] and [3, 3, 3]", "[2, 2] and [2, 2]", "None of them"],
+        correctIndex: 0,
+        explanation: "Correct. Both have mean 5, but the spread is very different."
+      },
+      {
+        question: "Why is variance useful?",
+        options: ["It measures spread around the mean", "It gives class labels", "It computes derivatives", "It rotates vectors"],
+        correctIndex: 0,
+        explanation: "Correct. Variance quantifies spread."
+      }
+    ]
+  },
+  regression: {
+    realLifeExamples: [
+      "House price prediction often starts with a regression model using size, location, and other features.",
+      "In ML, linear regression is the first clean example of prediction plus error minimization."
+    ],
+    goDeeper: [
+      "Be able to explain residuals both numerically and visually.",
+      "Notice that regression is about fitting patterns, not forcing all points onto one line."
+    ],
+    extraPractice: [
+      {
+        prompt: "If a line predicts 10 and the actual value is 7, what is the residual?",
+        answer: "Residual = 7 - 10 = -3."
+      },
+      {
+        prompt: "Why do squared errors get used instead of plain residuals?",
+        answer: "Because positive and negative errors would otherwise cancel."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does a residual of 0 mean?",
+        options: ["The prediction matched the actual value", "The model is useless", "The slope is zero", "The variance is zero"],
+        correctIndex: 0,
+        explanation: "Correct. Zero residual means perfect prediction on that point."
+      },
+      {
+        question: "What usually indicates a better regression fit?",
+        options: ["Lower error", "Higher randomness", "Bigger residuals", "Fewer features always"],
+        correctIndex: 0,
+        explanation: "Correct. Lower error generally means a better fit."
+      }
+    ]
+  },
+  bayes: {
+    realLifeExamples: [
+      "A medical test result should update your belief about disease, not replace it blindly.",
+      "Spam filters update class beliefs after seeing words like 'offer' or 'discount'."
+    ],
+    goDeeper: [
+      "Train yourself to separate P(A|B) from P(B|A), because exams and real decisions both exploit that confusion.",
+      "Understand that rare-event priors can dominate the final answer."
+    ],
+    extraPractice: [
+      {
+        prompt: "If the prior is tiny and false positives are common, what happens to the posterior after a positive test?",
+        answer: "It may stay modest despite the positive test."
+      },
+      {
+        prompt: "What is the evidence term in Bayes rule doing conceptually?",
+        answer: "It normalizes the result so the posterior is a valid probability."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "Which common mistake does Bayes rule help correct?",
+        options: ["Confusing reverse conditional probabilities", "Forgetting how to add vectors", "Replacing matrices with scalars", "Assuming gradients are constants"],
+        correctIndex: 0,
+        explanation: "Correct. People often confuse P(A|B) with P(B|A)."
+      },
+      {
+        question: "If evidence strongly favors a hypothesis, what should usually happen to the posterior?",
+        options: ["It increases", "It becomes negative", "It always becomes 1", "It disappears"],
+        correctIndex: 0,
+        explanation: "Correct. Strong supporting evidence should raise the posterior."
+      }
+    ]
+  },
+  distributions: {
+    realLifeExamples: [
+      "Human heights often cluster around a center with fewer extreme values, which is distribution thinking.",
+      "In ML, Gaussian noise assumptions are common in modeling errors and feature behavior."
+    ],
+    goDeeper: [
+      "Practice reading how mean and spread change the whole shape, not just a single number.",
+      "Use z-scores to compare values across different scales."
+    ],
+    extraPractice: [
+      {
+        prompt: "If μ = 10 and σ = 2, what value is one standard deviation below the mean?",
+        answer: "8."
+      },
+      {
+        prompt: "What kind of value usually has a large positive z-score?",
+        answer: "A value far above the mean."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What stays fixed if only the standard deviation changes?",
+        options: ["The center mean", "The whole curve disappears", "Every z-score becomes zero", "The x-axis labels must change"],
+        correctIndex: 0,
+        explanation: "Correct. Changing spread does not move the center if μ stays fixed."
+      },
+      {
+        question: "Why are z-scores useful?",
+        options: ["They standardize distance from the mean", "They always equal probability", "They replace gradients", "They are only for geometry"],
+        correctIndex: 0,
+        explanation: "Correct. z-scores express how far a value sits from the mean in standard-deviation units."
+      }
+    ]
+  },
+  eigen: {
+    realLifeExamples: [
+      "A stretched rubber sheet may have one strongest stretch direction. PCA looks for that kind of dominant direction in data.",
+      "Recommendation and compression systems often use lower-dimensional structure found by spectral methods."
+    ],
+    goDeeper: [
+      "Be able to explain eigenvectors geometrically before worrying about solving characteristic polynomials by hand.",
+      "Understand PCA as keeping informative directions rather than as a mysterious algorithm."
+    ],
+    extraPractice: [
+      {
+        prompt: "If Av = 0.5v, does v keep its direction?",
+        answer: "Yes. It keeps its line and shrinks by a factor of 0.5."
+      },
+      {
+        prompt: "Why might PCA drop a direction with very small variance?",
+        answer: "Because it often contributes little information compared with stronger directions."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does an eigenvalue bigger than 1 usually mean geometrically?",
+        options: ["Stretch along that eigenvector", "Flip to zero", "Guaranteed rotation", "Projection to the origin"],
+        correctIndex: 0,
+        explanation: "Correct. Values above 1 indicate expansion along that direction."
+      },
+      {
+        question: "Why is PCA useful in ML pipelines?",
+        options: ["It can reduce dimension while keeping important variation", "It always improves every model", "It replaces probability", "It makes all features independent automatically"],
+        correctIndex: 0,
+        explanation: "Correct. PCA is a dimension-reduction tool that preserves major variation directions."
+      }
+    ]
+  },
+  "gradient-descent": {
+    realLifeExamples: [
+      "Trying to find the lowest point in a foggy valley by feeling the local slope is a good mental model for gradient descent.",
+      "Training ML models means repeatedly reducing loss with update steps like this."
+    ],
+    goDeeper: [
+      "Understand that optimization quality depends on both the gradient and the learning rate.",
+      "Be ready to explain slow convergence, overshooting, and local flatness."
+    ],
+    extraPractice: [
+      {
+        prompt: "If the slope is negative at the current point, what sign is the update direction in gradient descent?",
+        answer: "Positive, because subtracting a negative slope moves you to the right."
+      },
+      {
+        prompt: "Why can a tiny learning rate be frustrating in practice?",
+        answer: "Because progress becomes extremely slow even when the direction is correct."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What is the main job of the learning rate?",
+        options: ["Set the step size", "Set the dataset size", "Set the feature count", "Set the number of classes"],
+        correctIndex: 0,
+        explanation: "Correct. It controls how large each optimization step is."
+      },
+      {
+        question: "What does a zero gradient suggest?",
+        options: ["No local first-order change", "The model is always perfect", "The data disappear", "The probability is undefined"],
+        correctIndex: 0,
+        explanation: "Correct. Zero gradient means locally flat according to first-order information."
+      }
+    ]
+  },
+  logistic: {
+    realLifeExamples: [
+      "A credit-risk system may output the probability that a borrower defaults, not just a yes/no guess.",
+      "Binary ML classifiers often convert a linear score into a probability with a sigmoid."
+    ],
+    goDeeper: [
+      "Be able to explain the difference between a score, a probability, and a final class decision threshold.",
+      "Recognize logistic regression as a strong baseline model, not just a classroom exercise."
+    ],
+    extraPractice: [
+      {
+        prompt: "If z is large and negative, what kind of class prediction should you expect?",
+        answer: "Probability near 0, so likely class 0."
+      },
+      {
+        prompt: "Why is z = 0 a special point on the sigmoid?",
+        answer: "Because it maps to probability 0.5, the natural midpoint."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What is the role of the sigmoid in logistic regression?",
+        options: ["Convert a score into a probability", "Compute the derivative of every layer", "Standardize features", "Sort training data"],
+        correctIndex: 0,
+        explanation: "Correct. The sigmoid squashes the score into the 0-to-1 range."
+      },
+      {
+        question: "Why is a threshold like 0.5 used?",
+        options: ["To turn probability into a class decision", "To compute a dot product", "To remove the bias term", "To find eigenvectors"],
+        correctIndex: 0,
+        explanation: "Correct. The threshold converts probability output into a hard class label."
+      }
+    ]
+  },
+  backprop: {
+    realLifeExamples: [
+      "If a group project fails, you trace backward which part of the chain contributed most. That is the spirit of backpropagation.",
+      "Neural-network training sends error information backward so each weight knows how it affected the loss."
+    ],
+    goDeeper: [
+      "Be able to explain backprop as chain rule on a computation graph, not as a magical black box.",
+      "Understand why local gradients multiply and why activations affect gradient flow."
+    ],
+    extraPractice: [
+      {
+        prompt: "If z = w1x1 + w2x2 + b, what is ∂z/∂w1?",
+        answer: "x1."
+      },
+      {
+        prompt: "Why can ReLU shut off gradient flow for a neuron?",
+        answer: "Because when the pre-activation is non-positive, the local derivative can be zero."
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does backpropagation compute for each weight?",
+        options: ["How the loss changes if the weight changes", "The dataset mean", "The class prior only", "A matrix inverse automatically"],
+        correctIndex: 0,
+        explanation: "Correct. Backprop computes gradients with respect to weights."
+      },
+      {
+        question: "Why is chain rule central to backprop?",
+        options: ["Because outputs depend on weights through many intermediate steps", "Because gradients are always constants", "Because neural nets are only linear", "Because probabilities must sum to 1"],
+        correctIndex: 0,
+        explanation: "Correct. The chain rule connects those layered dependencies."
+      }
+    ]
+  }
+};
+
+const defaultEnhancement = {
+  realLifeExamples: [],
+  goDeeper: [],
+  extraPractice: [],
+  extraMcqs: []
+};
+
+export const lessons = baseLessons.map((lesson) => ({
+  ...defaultEnhancement,
+  ...lesson,
+  ...(lessonEnhancements[lesson.key] || {})
+}));

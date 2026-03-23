@@ -36,6 +36,7 @@ export default function App() {
   );
   const [mcqFeedback, setMcqFeedback] = useState("");
   const [selectedMcq, setSelectedMcq] = useState(null);
+  const [extraMcqState, setExtraMcqState] = useState({});
   const [problemAnswer, setProblemAnswer] = useState("");
   const [problemFeedback, setProblemFeedback] = useState("");
   const [showConceptAnswer, setShowConceptAnswer] = useState(false);
@@ -56,6 +57,20 @@ export default function App() {
     });
   }
 
+  function openLessonFromHome(nextKey) {
+    startTransition(() => {
+      setLessonKey(nextKey);
+      setStudyTab("explanation");
+      setScreen("study");
+      setMcqFeedback("");
+      setSelectedMcq(null);
+      setExtraMcqState({});
+      setProblemAnswer("");
+      setProblemFeedback("");
+      setShowConceptAnswer(false);
+    });
+  }
+
   function goHome() {
     startTransition(() => {
       setScreen("home");
@@ -68,6 +83,7 @@ export default function App() {
       setStudyTab("explanation");
       setMcqFeedback("");
       setSelectedMcq(null);
+      setExtraMcqState({});
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
@@ -103,6 +119,17 @@ export default function App() {
       return;
     }
     setProblemFeedback("Try again. Focus on the meaning first, then the notation.");
+  }
+
+  function checkExtraMcq(questionIndex, optionIndex, correctIndex, explanation) {
+    setExtraMcqState((current) => ({
+      ...current,
+      [questionIndex]: {
+        selected: optionIndex,
+        correctIndex,
+        explanation
+      }
+    }));
   }
 
   if (screen === "home") {
@@ -199,9 +226,14 @@ export default function App() {
           </div>
           <div className="future-list">
             {lessons.map((item) => (
-              <span key={item.key} className="topic-chip">
+              <button
+                key={item.key}
+                type="button"
+                className="topic-link"
+                onClick={() => openLessonFromHome(item.key)}
+              >
                 {item.order}. {item.label}
-              </span>
+              </button>
             ))}
           </div>
           <div className="nav-note">
@@ -365,9 +397,27 @@ export default function App() {
                   <p>{lesson.mlUseCase}</p>
                 </article>
 
+                <article className="content-card">
+                  <p className="panel-label">Real-Life & ML Uses</p>
+                  <ul className="shortcut-list">
+                    {lesson.realLifeExamples.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+
                 <article className="content-card wide">
                   <p className="panel-label">Intuition</p>
                   <p>{lesson.intuition}</p>
+                </article>
+
+                <article className="content-card wide">
+                  <p className="panel-label">Go Deeper</p>
+                  <ul className="shortcut-list">
+                    {lesson.goDeeper.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                 </article>
 
                 <article className="content-card wide">
@@ -454,6 +504,21 @@ export default function App() {
                   ))}
                 </ul>
               </article>
+
+              {lesson.extraPractice.length > 0 ? (
+                <article className="content-card wide">
+                  <p className="panel-label">Practice Variations</p>
+                  <div className="steps">
+                    {lesson.extraPractice.map((item, index) => (
+                      <div key={`${lesson.key}-practice-${index + 1}`} className="step">
+                        <strong>Q{index + 1}.</strong> {item.prompt}
+                        <br />
+                        <span>{item.answer}</span>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              ) : null}
             </section>
           ) : null}
 
@@ -497,6 +562,50 @@ export default function App() {
                   ))}
                 </ul>
               </article>
+
+              {lesson.extraMcqs.length > 0 ? (
+                <article className="content-card wide">
+                  <p className="panel-label">More MCQ Variations</p>
+                  <div className="extra-mcq-list">
+                    {lesson.extraMcqs.map((item, questionIndex) => {
+                      const state = extraMcqState[questionIndex];
+                      return (
+                        <div key={`${lesson.key}-extra-mcq-${questionIndex + 1}`} className="extra-mcq-card">
+                          <p className="question">
+                            {questionIndex + 1}. {item.question}
+                          </p>
+                          <div className="options">
+                            {item.options.map((option, optionIndex) => {
+                              const isCorrect = optionIndex === item.correctIndex;
+                              const className =
+                                state == null
+                                  ? "option-button"
+                                  : state.selected === optionIndex && !isCorrect
+                                    ? "option-button incorrect"
+                                    : isCorrect
+                                      ? "option-button correct"
+                                      : "option-button";
+                              return (
+                                <button
+                                  key={`${lesson.key}-extra-mcq-${questionIndex + 1}-${optionIndex + 1}`}
+                                  type="button"
+                                  className={className}
+                                  onClick={() =>
+                                    checkExtraMcq(questionIndex, optionIndex, item.correctIndex, item.explanation)
+                                  }
+                                >
+                                  {option}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <p className="feedback">{state ? state.explanation : ""}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </article>
+              ) : null}
 
               {lesson.examQuestions ? (
                 <article className="content-card wide">

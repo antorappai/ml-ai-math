@@ -206,6 +206,26 @@ button {
   background: rgba(15, 118, 110, 0.09);
 }
 
+.topic-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 250, 240, 0.92);
+  border: 1px solid rgba(25, 50, 41, 0.08);
+  color: var(--accent-deep);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.topic-link:hover,
+.topic-link:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.35);
+  outline: none;
+}
+
 .primary-button,
 .secondary-button {
   padding: 12px 16px;
@@ -620,6 +640,18 @@ button {
 .shortcut-list {
   margin: 0;
   padding-left: 18px;
+}
+
+.extra-mcq-list {
+  display: grid;
+  gap: 16px;
+}
+
+.extra-mcq-card {
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid var(--line);
 }
 
 svg {
