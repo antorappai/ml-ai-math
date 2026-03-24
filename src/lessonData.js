@@ -1829,6 +1829,18 @@ function directionText(x, y) {
 
 const lessonEnhancements = {
   functions: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a gym charging a fixed sign-up fee plus a cost for every class you attend.",
+      graphMeaning:
+        "The graph shows how total cost changes as the number of classes increases. The intercept is the starting fee and the slope is the extra cost per class.",
+      mlBridge:
+        "ML models do the same basic thing: take an input and turn it into an output by following one rule.",
+      summary(values) {
+        return `Here, x = ${values.x} could mean ${values.x} classes, slope m = ${formatNumber(values.m)} is the per-class cost, and intercept c = ${formatNumber(values.c)} is the sign-up fee.`;
+      }
+    },
     visualAnalogy: {
       title: "Read The Sliders Like A Real Story",
       intro:
@@ -1876,6 +1888,18 @@ const lessonEnhancements = {
     ]
   },
   vectors: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a drone starting at one point and then moving across a map.",
+      graphMeaning:
+        "The arrow shows one full movement instruction: how far to go horizontally and how far to go vertically.",
+      mlBridge:
+        "In ML, embeddings and feature lists are stored as vectors. The graph is the 2D version of that same idea.",
+      summary(values) {
+        return `This arrow could mean the drone moves ${Math.abs(values.ax)} units ${Number(values.ax) >= 0 ? "east" : "west"} and ${Math.abs(values.ay)} units ${Number(values.ay) >= 0 ? "north" : "south"}.`;
+      }
+    },
     visualAnalogy: {
       title: "Read The Sliders Like A Map",
       intro:
@@ -1922,6 +1946,18 @@ const lessonEnhancements = {
     ]
   },
   matrices: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a model taking two raw student features, like algebra skill and coding skill, and remixing them into two new hidden scores.",
+      graphMeaning:
+        "The gold vector is the original profile and the teal vector is the transformed profile after the matrix has mixed the two inputs.",
+      mlBridge:
+        "This is the core action of a neural-network layer: turn one representation into another by mixing features.",
+      summary(values, result) {
+        return `A student profile of (${values.vx}, ${values.vy}) becomes ${result.metrics[1].split(" = ")[1]} after the feature mixer acts.`;
+      }
+    },
     visualAnalogy: {
       title: "Read The Sliders Like A Feature Mixer",
       intro:
@@ -2039,6 +2075,18 @@ const lessonEnhancements = {
     ]
   },
   transformations: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine printing a city map on a rubber sheet and then stretching or shearing the whole sheet.",
+      graphMeaning:
+        "The visual is not about one point only. It shows how the whole space changes when the basic horizontal and vertical directions move.",
+      mlBridge:
+        "ML layers also reshape whole representation spaces so that useful patterns become easier for the model to separate.",
+      summary(values, result) {
+        return `In this version, the map's horizontal basis becomes ${result.metrics[0].split(" = ")[1]} and the vertical basis becomes ${result.metrics[1].split(" = ")[1]}.`;
+      }
+    },
     visualAnalogy: {
       title: "Read The Sliders Like Reshaping A Whole Map",
       intro:
@@ -2153,6 +2201,18 @@ const lessonEnhancements = {
     ]
   },
   dot: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine one vector is a user's interest profile and the other is the direction of a course, product, or document.",
+      graphMeaning:
+        "When the arrows line up, the score rises. When they point sideways, the score falls toward zero. When they oppose each other, the score becomes negative.",
+      mlBridge:
+        "This is exactly how recommendation, retrieval, and search systems often score similarity.",
+      summary(values, result) {
+        return `With B length ${formatNumber(values.bmag)} and angle ${values.bangle}°, the current match score is ${result.metrics[0].split(" = ")[1]}.`;
+      }
+    },
     visualAnalogy: {
       title: "Read The Sliders Like Matching A User To A Topic",
       intro:
@@ -2201,6 +2261,18 @@ const lessonEnhancements = {
     ]
   },
   derivatives: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine riding a bicycle on a hill and asking: how steep is the road exactly where I am right now?",
+      graphMeaning:
+        "The tangent line shows the local steepness at one point on the curve. That steepness is the derivative there.",
+      mlBridge:
+        "Training uses the same idea: derivatives tell you whether changing a parameter will increase or decrease loss.",
+      summary(values, result) {
+        return `At x = ${formatNumber(values.x0)}, the graph's local steepness is ${result.metrics[2].split(" = ")[1]}.`;
+      }
+    },
     realLifeExamples: [
       "A car's speedometer is tracking how position changes over time, which is derivative thinking.",
       "In ML, the derivative of loss with respect to a parameter tells whether that parameter should go up or down."
@@ -2235,6 +2307,18 @@ const lessonEnhancements = {
     ]
   },
   multivariable: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine standing on a smooth bowl-shaped hill and deciding which direction climbs fastest.",
+      graphMeaning:
+        "The contour rings are equal-height lines, and the gradient arrow shows the steepest uphill direction from your current position.",
+      mlBridge:
+        "Loss surfaces in ML work the same way. The gradient tells training which way parameters push loss upward or downward.",
+      summary(values, result) {
+        return `From point (${values.px}, ${values.py}), the current uphill direction is ${result.metrics[2].split(" = ")[1]}.`;
+      }
+    },
     advancedExplanation:
       "At exam level, multivariable calculus is not just 'take two derivatives'. You need to know what partial derivatives measure, why the gradient is perpendicular to level curves, and why a zero gradient is only a candidate critical point rather than an automatic minimum. This is exactly the language used in optimization and backpropagation.",
     commonMistakes: [
@@ -2336,6 +2420,18 @@ const lessonEnhancements = {
     ]
   },
   probability: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a coin that may be fair or biased, and you want to see how belief is split between heads and tails.",
+      graphMeaning:
+        "The bar heights show how much probability mass is assigned to each possible outcome.",
+      mlBridge:
+        "Classification models also split belief across outcomes, such as spam vs not spam.",
+      summary(values, result) {
+        return `Right now the graph is assigning ${result.metrics[0].split(" = ")[1]} to heads and ${result.metrics[1].split(" = ")[1]} to tails.`;
+      }
+    },
     realLifeExamples: [
       "Weather apps saying there is a 70% chance of rain are using probability to represent uncertainty.",
       "A classifier that outputs 0.9 for spam is expressing uncertainty, not certainty."
@@ -2370,6 +2466,18 @@ const lessonEnhancements = {
     ]
   },
   statistics: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine three quiz scores from a class and you want to see the class average and how spread out the scores are.",
+      graphMeaning:
+        "The points are the raw data values, and the highlighted marker shows their mean.",
+      mlBridge:
+        "ML uses this kind of summary all the time for feature scaling, data cleaning, and error analysis.",
+      summary(values, result) {
+        return `For the current sample values ${values.x1}, ${values.x2}, and ${values.x3}, the graph centers around ${result.metrics[0].split(" = ")[1]}.`;
+      }
+    },
     realLifeExamples: [
       "An average exam score tells the center, but you also want spread to know if students performed similarly or very differently.",
       "In ML, normalization often uses mean and spread so features are on comparable scales."
@@ -2404,6 +2512,18 @@ const lessonEnhancements = {
     ]
   },
   regression: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine apartment size on the x-axis and rent price on the y-axis, and you are trying to draw a line that predicts rent from size.",
+      graphMeaning:
+        "The scatter points are real data and the line is your model. The gap from a point to the line is the prediction error.",
+      mlBridge:
+        "This is the first full ML workflow: make predictions, measure error, and improve the fit.",
+      summary(values, result) {
+        return `With slope ${formatNumber(values.m)} and intercept ${formatNumber(values.b)}, the model currently has ${result.metrics[2].split(" = ")[1]}.`;
+      }
+    },
     realLifeExamples: [
       "House price prediction often starts with a regression model using size, location, and other features.",
       "In ML, linear regression is the first clean example of prediction plus error minimization."
@@ -2438,6 +2558,18 @@ const lessonEnhancements = {
     ]
   },
   bayes: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a medical test where some positive results are true positives and some are false positives.",
+      graphMeaning:
+        "The visual separates those two sources of positive tests so you can see why a positive result is not automatically strong proof.",
+      mlBridge:
+        "Bayesian classifiers update beliefs in exactly this way when new evidence arrives.",
+      summary(values, result) {
+        return `With prior ${formatNumber(values.prior)}, sensitivity ${formatNumber(values.sens)}, and false-positive rate ${formatNumber(values.fpr)}, the updated belief is ${result.metrics[2].split(" = ")[1]}.`;
+      }
+    },
     advancedExplanation:
       "Bayes questions become much easier once you stop reading them as one formula and start reading them as a population split. Prior tells you how many true cases exist before the test, likelihood tells you how evidence behaves inside each group, and the posterior asks what fraction of the observed evidence really came from the target group. This is the base-rate logic many exam questions are testing.",
     commonMistakes: [
@@ -2539,6 +2671,18 @@ const lessonEnhancements = {
     ]
   },
   distributions: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine human heights or exam scores clustering around a typical center with fewer extreme values.",
+      graphMeaning:
+        "The center of the bell curve is the average and the width shows how spread out the values are.",
+      mlBridge:
+        "Many ML assumptions about noise, errors, and standardized features rely on this shape.",
+      summary(values, result) {
+        return `With mean ${formatNumber(values.mu)} and spread ${formatNumber(values.sigma)}, the graph is centered at ${result.metrics[0].split(" = ")[1]}.`;
+      }
+    },
     advancedExplanation:
       "A common exam jump is moving from 'probability of one event' to 'shape of uncertainty'. For continuous variables, the curve height is density, not probability at a single exact point. You need to read mean, spread, standardization, and unusualness together. This is also the foundation for likelihood models and Gaussian assumptions in ML.",
     commonMistakes: [
@@ -2640,6 +2784,18 @@ const lessonEnhancements = {
     ]
   },
   eigen: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a cloud of data points shaped like a stretched ellipse, where one direction clearly carries more variation than the others.",
+      graphMeaning:
+        "The long axis is the dominant direction. PCA keeps strong directions like that and can drop weaker ones.",
+      mlBridge:
+        "This is how dimensionality reduction compresses data while keeping useful structure.",
+      summary() {
+        return "The graph is asking: which direction carries the most useful structure, and which directions can be simplified away?";
+      }
+    },
     advancedExplanation:
       "This topic is worth taking seriously because it is where linear algebra starts feeling like university math. An eigenvector is a direction that a transformation does not bend away from itself, and the eigenvalue tells how strongly that direction is scaled. In exams, you are often expected to move between geometry, algebra, and PCA interpretation: solve det(A - λI) = 0, find the matching vectors, and then explain what large or small eigenvalues mean for data variance or stability.",
     commonMistakes: [
@@ -2741,6 +2897,18 @@ const lessonEnhancements = {
     ]
   },
   "gradient-descent": {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine walking downhill in fog while only feeling the local slope under your feet.",
+      graphMeaning:
+        "The current point is where you stand on the loss curve, and the next point shows where one update step would move you.",
+      mlBridge:
+        "Training algorithms repeatedly make these downhill updates to reduce model error.",
+      summary(values, result) {
+        return `From x = ${formatNumber(values.x0)} with learning rate ${formatNumber(values.lr)}, the next step lands at ${result.metrics[2].split(" = ")[1]}.`;
+      }
+    },
     advancedExplanation:
       "Gradient descent is simple in form but subtle in behavior. The gradient gives a local direction, the learning rate controls how far you trust that direction, and the loss surface determines whether updates settle smoothly, crawl slowly, or oscillate. In ML exams, you are often tested on update mechanics, sign logic, and why bad step sizes break training.",
     commonMistakes: [
@@ -2842,6 +3010,18 @@ const lessonEnhancements = {
     ]
   },
   logistic: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine an email getting a spam score first, and then that score being turned into a probability of being spam.",
+      graphMeaning:
+        "The sigmoid curve converts a raw score into a value between 0 and 1 so it can be read like confidence.",
+      mlBridge:
+        "Binary classifiers use this exact shape to turn scores into probabilities before making a class decision.",
+      summary(values, result) {
+        return `For the current score ${result.metrics[0].split(" = ")[1]}, the graph converts it into ${result.metrics[1].split(" = ")[1]}.`;
+      }
+    },
     advancedExplanation:
       "The advanced layer of logistic regression is not the sigmoid formula itself; it is understanding score, probability, threshold, and loss as different objects. The model forms a linear score z = wx + b, converts that score into a probability through the sigmoid, and then often uses cross-entropy loss to punish confident wrong predictions. This makes logistic regression a serious bridge topic before neural networks.",
     commonMistakes: [
@@ -2943,6 +3123,18 @@ const lessonEnhancements = {
     ]
   },
   backprop: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a tiny neuron making one decision by combining two signals, such as test score and interview score, before applying an activation.",
+      graphMeaning:
+        "The weighted sum shows how the inputs combine, and the activation shows the neuron's final output after that combination.",
+      mlBridge:
+        "Backprop later asks how much each weight contributed to the final error so those weights can be updated.",
+      summary(values, result) {
+        return `With current inputs and weights, the neuron's pre-activation is ${result.metrics[0].split(" = ")[1]} and its output is ${result.metrics[1].split(" = ")[1]}.`;
+      }
+    },
     advancedExplanation:
       "The advanced view of backprop is a computation graph story. Each node contributes a local derivative, and the total gradient for an earlier weight is the product of local effects along the paths that connect that weight to the loss. This is why chain rule is central, why activations influence gradient flow, and why deep models can suffer from vanishing or exploding gradients.",
     commonMistakes: [
@@ -3053,7 +3245,8 @@ const defaultEnhancement = {
   advancedExplanation: "",
   commonMistakes: [],
   examAngles: [],
-  visualAnalogy: null
+  visualAnalogy: null,
+  visualScenario: null
 };
 
 export const lessons = baseLessons.map((lesson) => ({

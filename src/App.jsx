@@ -789,6 +789,7 @@ export default function App() {
 
 function VisualPanel({ lesson, result, currentValues, updateControl }) {
   const visualAnalogy = lesson.visualAnalogy;
+  const visualScenario = lesson.visualScenario;
 
   return (
     <section className="visual-panel">
@@ -853,6 +854,25 @@ function VisualPanel({ lesson, result, currentValues, updateControl }) {
                 ))}
               </div>
               <p className="visual-story">{visualAnalogy.summary(currentValues, result)}</p>
+            </div>
+          ) : null}
+          {visualScenario ? (
+            <div className="visual-scenario">
+              <p className="panel-label">{visualScenario.title}</p>
+              <p>{visualScenario.scenario}</p>
+              <div className="control-meaning-list">
+                <div className="control-meaning-card">
+                  <strong>What The Graph Means</strong>
+                  <span>{visualScenario.graphMeaning}</span>
+                </div>
+                <div className="control-meaning-card">
+                  <strong>Why It Matters In ML</strong>
+                  <span>{visualScenario.mlBridge}</span>
+                </div>
+              </div>
+              {visualScenario.summary ? (
+                <p className="visual-story">{visualScenario.summary(currentValues, result)}</p>
+              ) : null}
             </div>
           ) : null}
         </div>

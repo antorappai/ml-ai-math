@@ -600,7 +600,8 @@ button {
   gap: 18px;
 }
 
-.visual-analogy {
+.visual-analogy,
+.visual-scenario {
   padding: 16px;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.58);
