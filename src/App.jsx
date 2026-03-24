@@ -17,6 +17,9 @@ const sectionTabs = [
   { key: "exam", label: "Exam Prep" }
 ];
 
+const topicAreas = ["All", ...new Set(lessons.map((lesson) => lesson.stage))];
+const difficultyLevels = ["All", ...new Set(lessons.map((lesson) => lesson.difficulty))];
+
 export default function App() {
   const [screen, setScreen] = useState(() => {
     if (typeof window === "undefined") {
@@ -42,6 +45,13 @@ export default function App() {
   const [problemAnswer, setProblemAnswer] = useState("");
   const [problemFeedback, setProblemFeedback] = useState("");
   const [showConceptAnswer, setShowConceptAnswer] = useState(false);
+  const [filters, setFilters] = useState({
+    topic: "All",
+    difficulty: "All",
+    search: ""
+  });
+
+  const filteredLessons = lessons.filter((entry) => matchesLessonFilters(entry, filters));
 
   const lesson = lessons.find((entry) => entry.key === lessonKey);
   const currentValues = controlState[lesson.key];
@@ -52,6 +62,15 @@ export default function App() {
       window.localStorage.setItem("ml-math-home-seen", "true");
     }
   }, [screen]);
+
+  useEffect(() => {
+    if (!filteredLessons.length) {
+      return;
+    }
+    if (!filteredLessons.some((entry) => entry.key === lessonKey)) {
+      setLessonKey(filteredLessons[0].key);
+    }
+  }, [filters.topic, filters.difficulty, filters.search, lessonKey, filteredLessons]);
 
   function enterStudyGuide() {
     startTransition(() => {
@@ -152,6 +171,21 @@ export default function App() {
     }));
   }
 
+  function updateFilters(nextFilters) {
+    setFilters((current) => ({
+      ...current,
+      ...nextFilters
+    }));
+  }
+
+  function resetFilters() {
+    setFilters({
+      topic: "All",
+      difficulty: "All",
+      search: ""
+    });
+  }
+
   if (screen === "home") {
     return (
       <div className="page-shell">
@@ -244,8 +278,15 @@ export default function App() {
               <h2 className="starter-title">What is already inside the study workspace.</h2>
             </div>
           </div>
+          <LessonFilters
+            filters={filters}
+            onChange={updateFilters}
+            onReset={resetFilters}
+            filteredCount={filteredLessons.length}
+            totalCount={lessons.length}
+          />
           <div className="future-list">
-            {lessons.map((item) => (
+            {filteredLessons.map((item) => (
               <button
                 key={item.key}
                 type="button"
@@ -256,6 +297,11 @@ export default function App() {
               </button>
             ))}
           </div>
+          {filteredLessons.length === 0 ? (
+            <p className="empty-state">
+              No lessons match that filter yet. Try a different topic area, difficulty, or keyword.
+            </p>
+          ) : null}
           <div className="nav-note">
             <p className="panel-label">Still Worth Adding Later</p>
             <div className="future-list">
@@ -291,8 +337,16 @@ export default function App() {
       <main className="workspace">
         <aside className="lesson-nav">
           <p className="panel-label">Lessons In Order</p>
+          <LessonFilters
+            filters={filters}
+            onChange={updateFilters}
+            onReset={resetFilters}
+            filteredCount={filteredLessons.length}
+            totalCount={lessons.length}
+            compact
+          />
           <div className="lesson-tabs">
-            {lessons.map((item) => (
+            {filteredLessons.map((item) => (
               <button
                 key={item.key}
                 type="button"
@@ -307,6 +361,11 @@ export default function App() {
               </button>
             ))}
           </div>
+          {filteredLessons.length === 0 ? (
+            <p className="empty-state">
+              No lessons match your current filter. Reset the filters to see the full path again.
+            </p>
+          ) : null}
 
           <div className="nav-note">
             <p className="panel-label">After This Path</p>
@@ -729,6 +788,8 @@ export default function App() {
 }
 
 function VisualPanel({ lesson, result, currentValues, updateControl }) {
+  const visualAnalogy = lesson.visualAnalogy;
+
   return (
     <section className="visual-panel">
       <div className="visual-header">
@@ -779,12 +840,106 @@ function VisualPanel({ lesson, result, currentValues, updateControl }) {
             ))}
           </div>
           <div className="visual-insight">{result.insight}</div>
+          {visualAnalogy ? (
+            <div className="visual-analogy">
+              <p className="panel-label">{visualAnalogy.title}</p>
+              <p>{visualAnalogy.intro}</p>
+              <div className="control-meaning-list">
+                {visualAnalogy.controls.map((item) => (
+                  <div key={`${lesson.key}-${item.label}`} className="control-meaning-card">
+                    <strong>{item.label}</strong>
+                    <span>{item.meaning}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="visual-story">{visualAnalogy.summary(currentValues, result)}</p>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>
   );
 }
 
+function LessonFilters({ filters, onChange, onReset, filteredCount, totalCount, compact = false }) {
+  return (
+    <div className={`filter-panel ${compact ? "compact" : ""}`}>
+      <div className="filter-header">
+        <p className="panel-label">Browse Lessons</p>
+        <span className="filter-count">
+          Showing {filteredCount} of {totalCount}
+        </span>
+      </div>
+
+      <label className="filter-search">
+        <span>Search by lesson or keyword</span>
+        <input
+          type="text"
+          value={filters.search}
+          onChange={(event) => onChange({ search: event.target.value })}
+          placeholder="Try vectors, Bayes, gradient..."
+        />
+      </label>
+
+      <div className="filter-group">
+        <span className="filter-label">Topic area</span>
+        <div className="filter-chip-row">
+          {topicAreas.map((item) => (
+            <button
+              key={item}
+              type="button"
+              className={`filter-chip ${filters.topic === item ? "active" : ""}`}
+              onClick={() => onChange({ topic: item })}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="filter-row">
+        <label className="filter-select">
+          <span>Difficulty</span>
+          <select
+            value={filters.difficulty}
+            onChange={(event) => onChange({ difficulty: event.target.value })}
+          >
+            {difficultyLevels.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <button type="button" className="secondary-button" onClick={onReset}>
+          Reset
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function normalize(value) {
   return value.trim().toLowerCase().replace(/\s+/g, "");
+}
+
+function matchesLessonFilters(lesson, filters) {
+  const searchHaystack = [
+    lesson.label,
+    lesson.stage,
+    lesson.navDescription,
+    lesson.subtitle,
+    lesson.mlPurpose
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  const matchesTopic = filters.topic === "All" || lesson.stage === filters.topic;
+  const matchesDifficulty =
+    filters.difficulty === "All" || lesson.difficulty === filters.difficulty;
+  const matchesSearch =
+    filters.search.trim() === "" || searchHaystack.includes(filters.search.trim().toLowerCase());
+
+  return matchesTopic && matchesDifficulty && matchesSearch;
 }

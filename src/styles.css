@@ -32,7 +32,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -353,9 +354,104 @@ button {
 .controls-grid,
 .steps,
 .options,
-.symbol-list {
+.symbol-list,
+.control-meaning-list {
   display: grid;
   gap: 10px;
+}
+
+.filter-panel {
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.48);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 14px;
+}
+
+.filter-panel.compact {
+  margin-bottom: 16px;
+}
+
+.filter-header,
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-count,
+.empty-state {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.empty-state {
+  margin: 10px 0 0;
+}
+
+.filter-search,
+.filter-select,
+.filter-group {
+  display: grid;
+  gap: 8px;
+}
+
+.filter-search span,
+.filter-select span,
+.filter-label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--accent-deep);
+}
+
+.filter-search input,
+.filter-select select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(25, 50, 41, 0.14);
+  background: rgba(255, 255, 255, 0.84);
+  color: var(--text);
+}
+
+.filter-row {
+  align-items: end;
+}
+
+.filter-select {
+  flex: 1;
+}
+
+.filter-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(25, 50, 41, 0.12);
+  background: rgba(255, 255, 255, 0.68);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.filter-chip.active {
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.14), rgba(255, 250, 240, 0.98));
+  border-color: rgba(15, 118, 110, 0.42);
+  color: var(--accent-deep);
+  font-weight: 700;
+}
+
+.filter-chip:hover,
+.filter-chip:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.35);
+  outline: none;
 }
 
 .lesson-tab {
@@ -502,6 +598,30 @@ button {
 .controls-card {
   align-content: start;
   gap: 18px;
+}
+
+.visual-analogy {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid var(--line);
+}
+
+.control-meaning-card {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 6px;
+}
+
+.control-meaning-card strong {
+  color: var(--accent-deep);
+}
+
+.visual-story {
+  margin-bottom: 0;
 }
 
 .empty-controls {
@@ -856,5 +976,11 @@ svg {
 
   .problem-row {
     flex-direction: column;
+  }
+
+  .filter-header,
+  .filter-row {
+    flex-direction: column;
+    align-items: start;
   }
 }

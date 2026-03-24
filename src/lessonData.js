@@ -1829,6 +1829,19 @@ function directionText(x, y) {
 
 const lessonEnhancements = {
   functions: {
+    visualAnalogy: {
+      title: "Read The Sliders Like A Real Story",
+      intro:
+        "Use a simple gym-pricing story: the intercept is the sign-up fee, the slope is the cost per class, and x is how many classes you take.",
+      controls: [
+        { label: "Slope m", meaning: "Extra cost added each time you take one more class." },
+        { label: "Intercept c", meaning: "The starting fee before you take any classes." },
+        { label: "Input x", meaning: "How many classes you choose." }
+      ],
+      summary(values, result) {
+        return `If the sign-up fee is ${formatNumber(values.c)} and each class costs ${formatNumber(values.m)}, then taking ${values.x} classes gives a total cost of ${result.metrics[2].split(" = ")[1]}. That is exactly what the function is calculating.`;
+      }
+    },
     realLifeExamples: [
       "Taxi fare models often start with a fixed base charge plus a per-kilometer rate. That is function thinking.",
       "In ML, an activation function takes one input value and returns one output value using one clear rule."
@@ -1863,6 +1876,18 @@ const lessonEnhancements = {
     ]
   },
   vectors: {
+    visualAnalogy: {
+      title: "Read The Sliders Like A Map",
+      intro:
+        "Treat the vector like walking around a city grid: horizontal is east-west movement and vertical is north-south movement.",
+      controls: [
+        { label: "Horizontal x", meaning: "How far you move right or left." },
+        { label: "Vertical y", meaning: "How far you move up or down." }
+      ],
+      summary(values, result) {
+        return `If you move ${Math.abs(values.ax)} units ${Number(values.ax) >= 0 ? "right" : "left"} and ${Math.abs(values.ay)} units ${Number(values.ay) >= 0 ? "up" : "down"}, your path becomes one vector. In ML, a feature vector works the same way except each coordinate tracks one feature instead of map movement.`;
+      }
+    },
     realLifeExamples: [
       "A drone moving 4 meters east and 3 meters north can be described with one vector.",
       "In ML, a sentence embedding is just a very long vector representing many learned features at once."
@@ -1897,6 +1922,22 @@ const lessonEnhancements = {
     ]
   },
   matrices: {
+    visualAnalogy: {
+      title: "Read The Sliders Like A Feature Mixer",
+      intro:
+        "Imagine the input vector is a student's two raw strengths, and the matrix controls how a model mixes those two strengths into a new hidden representation.",
+      controls: [
+        { label: "a", meaning: "How much old x contributes to new x." },
+        { label: "b", meaning: "How much old y contributes to new x." },
+        { label: "c", meaning: "How much old x contributes to new y." },
+        { label: "d", meaning: "How much old y contributes to new y." },
+        { label: "Vector x", meaning: "The first input feature value." },
+        { label: "Vector y", meaning: "The second input feature value." }
+      ],
+      summary(values, result) {
+        return `The input profile (${values.vx}, ${values.vy}) gets remixed into ${result.metrics[1].split(" = ")[1]}. That is the same basic idea as a neural-network layer: old features go in, a transformed representation comes out.`;
+      }
+    },
     advancedExplanation:
       "At exam level, stop seeing a matrix as four disconnected entries. The columns tell you where the basis vectors go, the determinant tells you whether area is stretched, shrunk, or collapsed, and invertibility tells you whether the transformation can be undone. That is the frame that makes eigenvectors, regression, and neural layers much easier to read.",
     commonMistakes: [
@@ -1998,6 +2039,19 @@ const lessonEnhancements = {
     ]
   },
   transformations: {
+    visualAnalogy: {
+      title: "Read The Sliders Like Reshaping A Whole Map",
+      intro:
+        "Instead of one point moving, imagine a whole printed map being stretched or sheared. The matrix tells you what happens to the map's basic horizontal and vertical directions.",
+      controls: [
+        { label: "a, c", meaning: "Where the horizontal basis direction ends up." },
+        { label: "b, d", meaning: "Where the vertical basis direction ends up." },
+        { label: "Vector x, Vector y", meaning: "One sample point chosen from the whole space." }
+      ],
+      summary(values, result) {
+        return `The horizontal direction now behaves like ${result.metrics[0].split(" = ")[1]} and the vertical direction behaves like ${result.metrics[1].split(" = ")[1]}. Once you know that, you can picture how the whole space is being reshaped, not just one vector.`;
+      }
+    },
     advancedExplanation:
       "A linear transformation is a rule on the whole space, not just a trick for one vector. At exam level, you should connect three views instantly: the matrix entries, the moved basis vectors, and the geometric effect on every vector. This is the same viewpoint you need later for eigenvectors, PCA, and neural-network layers.",
     commonMistakes: [
@@ -2099,6 +2153,20 @@ const lessonEnhancements = {
     ]
   },
   dot: {
+    visualAnalogy: {
+      title: "Read The Sliders Like Matching A User To A Topic",
+      intro:
+        "Pretend vector A is a user's interests and vector B is the direction of one course or recommendation. The dot product tells how much they line up.",
+      controls: [
+        { label: "A horizontal / A vertical", meaning: "The user's current preference direction." },
+        { label: "B length", meaning: "How strong the topic signal is." },
+        { label: "B angle", meaning: "Which direction the topic points." }
+      ],
+      summary(values, result) {
+        const score = result.metrics[0].split(" = ")[1];
+        return `When the recommendation points in a similar direction to the user profile, the match score grows. Here the dot-product score is ${score}, so the system would read this as ${score.startsWith("-") ? "a poor match" : "some degree of alignment"}.`;
+      }
+    },
     realLifeExamples: [
       "If two people pull a sled in nearly the same direction, more of their effort adds together.",
       "Search systems often score how well a query vector matches a document vector using a dot product."
@@ -2984,7 +3052,8 @@ const defaultEnhancement = {
   extraMcqs: [],
   advancedExplanation: "",
   commonMistakes: [],
-  examAngles: []
+  examAngles: [],
+  visualAnalogy: null
 };
 
 export const lessons = baseLessons.map((lesson) => ({
