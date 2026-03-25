@@ -21,6 +21,7 @@ const sectionTabs = [
 
 const topicAreas = ["All", ...new Set(lessons.map((lesson) => lesson.stage))];
 const difficultyLevels = ["All", ...new Set(lessons.map((lesson) => lesson.difficulty))];
+const firstPythonLesson = lessons.find((entry) => entry.key === "python-basics") ?? lessons[0];
 
 export default function App() {
   const [screen, setScreen] = useState(() => {
@@ -99,6 +100,22 @@ export default function App() {
   function goHome() {
     startTransition(() => {
       setScreen("home");
+    });
+  }
+
+  function openPythonPractice(nextKey = firstPythonLesson.key) {
+    startTransition(() => {
+      setLessonKey(nextKey);
+      setStudyTab("python");
+      setScreen("study");
+      setMcqFeedback("");
+      setSelectedMcq(null);
+      setExtraMcqState({});
+      setRevealedPractice({});
+      setRevealedExamAnswers({});
+      setProblemAnswer("");
+      setProblemFeedback("");
+      setShowConceptAnswer(false);
     });
   }
 
@@ -208,6 +225,13 @@ export default function App() {
             <div className="home-actions">
               <button type="button" className="primary-button" onClick={enterStudyGuide}>
                 Enter Study Guide
+              </button>
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => openPythonPractice()}
+              >
+                Practice Python
               </button>
             </div>
           </div>
@@ -330,6 +354,13 @@ export default function App() {
           </p>
         </div>
         <div className="study-actions">
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => openPythonPractice(lesson.pythonCompanion ? lesson.key : firstPythonLesson.key)}
+          >
+            Practice Code
+          </button>
           <button type="button" className="secondary-button" onClick={goHome}>
             Home / Roadmap
           </button>
