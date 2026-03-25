@@ -65,8 +65,18 @@ export default function App() {
   const lesson = lessons.find((entry) => entry.key === lessonKey);
   const currentValues = controlState[lesson.key];
   const result = lesson.calculate(currentValues);
+  const linkedPythonLesson = lesson.pythonLessonKey
+    ? lessons.find((entry) => entry.key === lesson.pythonLessonKey) ?? null
+    : null;
+  const activePythonLesson = lesson.pythonCompanion ? lesson : linkedPythonLesson;
+  const activePythonCompanion = activePythonLesson?.pythonCompanion ?? null;
   const isPythonLesson = lesson.stage === "Python Programming";
-  const visibleSectionTabs = isPythonLesson ? pythonSectionTabs : sectionTabs;
+  const hasPythonContent = Boolean(activePythonCompanion);
+  const visibleSectionTabs = isPythonLesson
+    ? pythonSectionTabs
+    : hasPythonContent
+      ? sectionTabs
+      : sectionTabs.filter((tab) => tab.key !== "python");
 
   useEffect(() => {
     if (screen === "study" && typeof window !== "undefined") {
@@ -374,7 +384,7 @@ export default function App() {
           <button
             type="button"
             className="primary-button"
-            onClick={() => openPythonPractice(lesson.pythonCompanion ? lesson.key : firstPythonLesson.key)}
+            onClick={() => openPythonPractice(activePythonLesson?.key || firstPythonLesson.key)}
           >
             Practice Code
           </button>
@@ -875,30 +885,43 @@ export default function App() {
 
           {studyTab === "python" ? (
             <section className="lesson-grid">
-              {lesson.pythonCompanion ? (
+              {activePythonCompanion ? (
                 <>
+                  {activePythonLesson && activePythonLesson.key !== lesson.key ? (
+                    <article className="content-card wide">
+                      <p className="panel-label">Linked Python Lesson</p>
+                      <p>
+                        This topic uses the Python companion from <strong>{activePythonLesson.label}</strong>.
+                        The code below is the practical version of the math you are studying here.
+                      </p>
+                      <button type="button" onClick={() => openPythonPractice(activePythonLesson.key)}>
+                        Open full Python lesson
+                      </button>
+                    </article>
+                  ) : null}
+
                   <article className="content-card">
                     <p className="panel-label">Python Goal</p>
-                    <p>{lesson.pythonCompanion.goal}</p>
+                    <p>{activePythonCompanion.goal}</p>
                   </article>
 
                   <article className="content-card">
                     <p className="panel-label">Why This Matters In Exams</p>
-                    <p>{lesson.pythonCompanion.examUse}</p>
+                    <p>{activePythonCompanion.examUse}</p>
                   </article>
 
                   <article className="content-card wide">
-                    <p className="panel-label">{lesson.pythonCompanion.codeTitle}</p>
+                    <p className="panel-label">{activePythonCompanion.codeTitle}</p>
                     <div className="code-card">
                       <pre className="code-block">
-                        <code>{lesson.pythonCompanion.code}</code>
+                        <code>{activePythonCompanion.code}</code>
                       </pre>
                     </div>
-                    {lesson.pythonCompanion.output ? (
+                    {activePythonCompanion.output ? (
                       <div className="code-output">
                         <strong>Output</strong>
                         <pre className="code-block compact">
-                          <code>{lesson.pythonCompanion.output}</code>
+                          <code>{activePythonCompanion.output}</code>
                         </pre>
                       </div>
                     ) : null}
@@ -907,8 +930,8 @@ export default function App() {
                   <article className="content-card wide">
                     <p className="panel-label">Code Walkthrough</p>
                     <div className="steps">
-                      {lesson.pythonCompanion.explainSteps.map((step, index) => (
-                        <div key={`${lesson.key}-python-step-${index + 1}`} className="step">
+                      {activePythonCompanion.explainSteps.map((step, index) => (
+                        <div key={`${activePythonLesson.key}-python-step-${index + 1}`} className="step">
                           {index + 1}. {step}
                         </div>
                       ))}
@@ -918,7 +941,7 @@ export default function App() {
                   <article className="content-card">
                     <p className="panel-label">Common Python Traps</p>
                     <ul className="shortcut-list">
-                      {lesson.pythonCompanion.traps.map((item) => (
+                      {activePythonCompanion.traps.map((item) => (
                         <li key={item}>{item}</li>
                       ))}
                     </ul>
@@ -927,18 +950,18 @@ export default function App() {
                   <article className="content-card">
                     <p className="panel-label">Python Exam Tasks</p>
                     <ul className="shortcut-list">
-                      {lesson.pythonCompanion.examTasks.map((item) => (
+                      {activePythonCompanion.examTasks.map((item) => (
                         <li key={item}>{item}</li>
                       ))}
                     </ul>
                   </article>
 
-                  {(lesson.pythonCompanion.gradedQuestions?.length ?? 0) > 0 ? (
+                  {(activePythonCompanion.gradedQuestions?.length ?? 0) > 0 ? (
                     <article className="content-card wide">
                       <p className="panel-label">Graded-Style Coding Questions</p>
                       <div className="extra-mcq-list">
-                        {lesson.pythonCompanion.gradedQuestions.map((item, index) => (
-                          <div key={`${lesson.key}-graded-python-${index + 1}`} className="extra-mcq-card">
+                        {activePythonCompanion.gradedQuestions.map((item, index) => (
+                          <div key={`${activePythonLesson.key}-graded-python-${index + 1}`} className="extra-mcq-card">
                             <p className="question">
                               <strong>Q{index + 1}.</strong> {item.prompt}
                             </p>
@@ -983,8 +1006,8 @@ export default function App() {
                   ) : null}
 
                   <PythonPlayground
-                    lessonKey={lesson.key}
-                    initialCode={lesson.pythonCompanion.code}
+                    lessonKey={activePythonLesson.key}
+                    initialCode={activePythonCompanion.code}
                   />
                 </>
               ) : (
