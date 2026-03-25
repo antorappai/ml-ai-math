@@ -61,6 +61,21 @@ export const curriculumStages = [
     mlConnection:
       "Linear regression is the cleanest first example of linear algebra, calculus, and statistics working together.",
     topics: ["Linear Regression", "Gradient Descent", "Logistic Regression", "Backprop"]
+  },
+  {
+    key: "python",
+    title: "6. Python For Exams",
+    purpose:
+      "Practice the programming side of the same math topics so code questions feel connected instead of separate.",
+    mlConnection:
+      "Python is the working language for ML, and many exams test whether you can express math ideas with code.",
+    topics: [
+      "Python Basics For Math",
+      "NumPy Arrays, Vectors & Matrices",
+      "Linear Algebra In Python",
+      "Probability & Statistics In Python",
+      "Functions, Gradients & Plotting In Python"
+    ]
   }
 ];
 
@@ -2856,6 +2871,591 @@ const baseLessons = [
           b,
           z,
           a
+        }
+      };
+    }
+  },
+  {
+    key: "python-basics",
+    order: 99,
+    stage: "Python Programming",
+    difficulty: "Essential",
+    label: "Python Basics For Math",
+    navDescription: "Variables, lists, loops, and simple math in code.",
+    subtitle:
+      "This is the starting point if your exam expects Python, but you are still getting comfortable with the language itself.",
+    learningPurpose:
+      "Learn the minimum Python needed to express math ideas clearly and read simple code without panic.",
+    whyThisBefore:
+      "Study this first in the Python chapter because later NumPy and math code assume you understand variables, lists, indexing, and print output.",
+    prerequisites: ["Functions & Graphs"],
+    mlPurpose:
+      "Python is the main working language for ML, so even simple math ideas often show up in Python syntax first.",
+    visualTitle: "Read a tiny Python program like a story.",
+    visualDescription:
+      "The code window shows the kind of small math program you may be asked to understand or modify in an exam.",
+    beginnerNote:
+      "Do not think of Python as a separate monster. It is just a way to write down the same math steps in order.",
+    symbolGuide: [
+      { symbol: "=", meaning: "Assign a value to a variable." },
+      { symbol: "[]", meaning: "A list of items." },
+      { symbol: "for", meaning: "Repeat an action over items." }
+    ],
+    simpleExplanation:
+      "Python lets you store values, repeat steps, and print results. That is enough to start coding math ideas.",
+    formula: "result = m * x + c",
+    formulaMeaning:
+      "Meaning: Python can compute the same rule you already saw in algebra.",
+    mlUseCase:
+      "This is the language layer behind all later ML libraries and code questions.",
+    intuition:
+      "Ask: what values are being stored, what steps are being repeated, and what gets printed at the end?",
+    examShortcuts: [
+      "Variables store values you can reuse later.",
+      "Lists hold multiple values in one object.",
+      "Loops apply the same step repeatedly."
+    ],
+    bigPicture:
+      "Python basics turn static math into something you can compute, test, and inspect.",
+    examReadiness: [
+      "Read simple assignment statements.",
+      "Trace a small loop by hand.",
+      "Predict printed output from a short code block."
+    ],
+    mcq: {
+      question: "What does `x = 5` mean in Python?",
+      options: [
+        "Store the value 5 in the variable x",
+        "Check whether x equals 5 mathematically",
+        "Print the value 5",
+        "Create a loop of 5 steps"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. In Python, `=` assigns a value to a variable."
+    },
+    problem: {
+      prompt: "If `m = 2`, `x = 4`, and `c = 1`, what is `m * x + c`?",
+      answers: ["9"],
+      success: "Correct. Python would compute 2 * 4 + 1 = 9."
+    },
+    conceptQuestion: {
+      prompt: "Why is Python helpful when learning math for ML?",
+      answer:
+        "Because it lets you test examples, compute quickly, and see the same math ideas in the form used in real ML work."
+    },
+    controls: [],
+    codeExample: {
+      title: "Tiny Python Math Example",
+      code: "m = 2\nx = 4\nc = 1\nresult = m * x + c\nprint(result)",
+      output: "9",
+      explanation: "This is the algebra rule `mx + c`, written as Python steps."
+    },
+    pythonCompanion: {
+      goal: "Read and write very small Python programs that compute simple math expressions.",
+      examUse: "Many exams ask you to predict output, fix a line of code, or compute a formula with Python variables.",
+      codeTitle: "Python Companion Example",
+      code: "numbers = [2, 4, 6]\ntotal = 0\nfor n in numbers:\n    total += n\nmean = total / len(numbers)\nprint(mean)",
+      output: "4.0",
+      explainSteps: [
+        "A list called `numbers` stores three values.",
+        "The loop goes through the list one number at a time.",
+        "Each number is added into `total`.",
+        "At the end, Python divides by the list length to get the mean."
+      ],
+      traps: [
+        "Using `=` when you mean comparison in plain math thinking.",
+        "Forgetting indentation after a `for` loop.",
+        "Forgetting that list indexing in Python starts at 0."
+      ],
+      examTasks: [
+        "Trace the output of a small code block.",
+        "Compute a formula from stored variables.",
+        "Read a loop and explain what it is doing."
+      ]
+    },
+    calculate() {
+      return {
+        metrics: ["Variables", "Lists", "Loops"],
+        exampleSteps: [
+          "Store values in named variables.",
+          "Use operators like +, -, *, and /.",
+          "Group values into lists when needed.",
+          "Use loops to repeat the same operation across many values."
+        ],
+        insight:
+          "The first Python skill is not advanced syntax. It is learning to read the code as a sequence of math steps.",
+        drawing: {
+          type: "codePanel",
+          title: "python basics",
+          lines: ["m = 2", "x = 4", "c = 1", "print(m * x + c)"]
+        }
+      };
+    }
+  },
+  {
+    key: "python-numpy",
+    order: 100,
+    stage: "Python Programming",
+    difficulty: "Core",
+    label: "NumPy Arrays, Vectors & Matrices",
+    navDescription: "Use Python objects that behave like math objects.",
+    subtitle:
+      "This lesson connects vectors and matrices to the Python library most exams and ML code use: NumPy.",
+    learningPurpose:
+      "Understand how arrays represent vectors and matrices in Python.",
+    whyThisBefore:
+      "Study this before linear algebra coding because NumPy is the standard tool for vector and matrix operations.",
+    prerequisites: ["Python Basics For Math", "Vectors", "Matrix Basics & Types"],
+    mlPurpose:
+      "NumPy arrays are the direct coding version of the vectors and matrices used throughout ML.",
+    visualTitle: "See Python arrays as vectors and matrices.",
+    visualDescription:
+      "The code visual shows how a one-dimensional array acts like a vector and a two-dimensional array acts like a matrix.",
+    beginnerNote:
+      "A NumPy array is just a clean way to store many numbers together so Python can do math with them efficiently.",
+    symbolGuide: [
+      { symbol: "np.array([...])", meaning: "Create a NumPy array." },
+      { symbol: ".shape", meaning: "See the array dimensions." },
+      { symbol: "ndim", meaning: "See how many dimensions the array has." }
+    ],
+    simpleExplanation:
+      "NumPy lets Python treat lists of numbers as real math objects like vectors and matrices.",
+    formula: "A.shape = (rows, cols)",
+    formulaMeaning:
+      "Meaning: NumPy can tell you the matrix size directly.",
+    mlUseCase:
+      "Nearly every ML workflow uses arrays to store datasets, weights, and model outputs.",
+    intuition:
+      "Ask: is this a 1D vector, a 2D matrix, and what is its shape?",
+    examShortcuts: [
+      "1D array often acts like a vector.",
+      "2D array acts like a matrix.",
+      "Use `.shape` to avoid guessing dimensions."
+    ],
+    bigPicture:
+      "This lesson is where math notation turns into the actual data structure used in code.",
+    examReadiness: [
+      "Create arrays correctly.",
+      "Read array shape quickly.",
+      "Distinguish vector-like and matrix-like arrays."
+    ],
+    mcq: {
+      question: "What does `A.shape` usually tell you for a matrix-like NumPy array?",
+      options: [
+        "Its dimensions",
+        "Its determinant",
+        "Its inverse",
+        "Its gradient"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. `.shape` reports the array dimensions."
+    },
+    problem: {
+      prompt: "If `A = np.array([[1, 2, 3], [4, 5, 6]])`, what is `A.shape`?",
+      answers: ["(2,3)", "2,3", "[2,3]"],
+      success: "Correct. The array has 2 rows and 3 columns, so the shape is (2, 3)."
+    },
+    conceptQuestion: {
+      prompt: "Why is NumPy better than plain Python lists for ML math?",
+      answer:
+        "Because NumPy arrays are built for numerical operations, shapes, and vectorized math."
+    },
+    controls: [],
+    codeExample: {
+      title: "Create A Vector And Matrix In NumPy",
+      code: "import numpy as np\n\nv = np.array([1, 2, 3])\nA = np.array([[1, 2], [3, 4]])\nprint(v)\nprint(A.shape)",
+      output: "[1 2 3]\n(2, 2)",
+      explanation: "This is the Python version of a vector and a 2 × 2 matrix."
+    },
+    pythonCompanion: {
+      goal: "Use NumPy arrays to represent the same vectors and matrices you study in math lessons.",
+      examUse: "Exams often ask you to create arrays, read shapes, and tell whether something is a vector or matrix.",
+      codeTitle: "NumPy Companion Example",
+      code: "import numpy as np\n\nvector = np.array([4, -2])\nmatrix = np.array([[2, 0], [0, 3]])\nprint(vector.shape)\nprint(matrix.shape)",
+      output: "(2,)\n(2, 2)",
+      explainSteps: [
+        "The first array is one-dimensional, so it behaves like a vector.",
+        "The second array is two-dimensional, so it behaves like a matrix.",
+        "`.shape` tells you the dimensions directly.",
+        "This is the code form of reading matrix and vector sizes."
+      ],
+      traps: [
+        "Confusing `(2,)` with `(2, 1)`.",
+        "Using uneven row lengths when building a matrix.",
+        "Forgetting to import NumPy as `np`."
+      ],
+      examTasks: [
+        "Create a vector and matrix with `np.array`.",
+        "Read shape and dimension from code.",
+        "Spot when an array is malformed for matrix work."
+      ]
+    },
+    calculate() {
+      return {
+        metrics: ["np.array", "shape", "vector vs matrix"],
+        exampleSteps: [
+          "Import NumPy.",
+          "Create a 1D array for a vector.",
+          "Create a 2D array for a matrix.",
+          "Use `.shape` to read dimensions safely."
+        ],
+        insight:
+          "The coding version of linear algebra starts with representing the objects correctly.",
+        drawing: {
+          type: "codePanel",
+          title: "numpy arrays",
+          lines: ["import numpy as np", "v = np.array([1, 2])", "A = np.array([[1, 2], [3, 4]])", "print(A.shape)"]
+        }
+      };
+    }
+  },
+  {
+    key: "python-linear-algebra",
+    order: 101,
+    stage: "Python Programming",
+    difficulty: "Core",
+    label: "Linear Algebra In Python",
+    navDescription: "Dot product, matrix multiplication, inverse, eigenvalues.",
+    subtitle:
+      "This lesson connects the linear algebra chapter to the Python commands most likely to appear in coding questions.",
+    learningPurpose:
+      "Practice the standard Python operations for matrix multiplication, inverse, determinant, and eigen analysis.",
+    whyThisBefore:
+      "Study this after NumPy basics so the main linear algebra operations feel like direct translations of the math.",
+    prerequisites: ["NumPy Arrays, Vectors & Matrices", "Matrices & Multiplication", "Eigenvalues & PCA Intuition"],
+    mlPurpose:
+      "These are the exact operations behind many ML preprocessing, optimization, and decomposition steps.",
+    visualTitle: "See linear algebra operations as code commands.",
+    visualDescription:
+      "The code panel shows the standard NumPy or `numpy.linalg` operations used for matrix math.",
+    beginnerNote:
+      "Do not memorize random commands. Tie each one to a math idea you already know: multiply, invert, take determinant, find eigenvalues.",
+    symbolGuide: [
+      { symbol: "@", meaning: "Matrix multiplication in Python." },
+      { symbol: "np.linalg.inv", meaning: "Matrix inverse." },
+      { symbol: "np.linalg.eig", meaning: "Eigenvalues and eigenvectors." }
+    ],
+    simpleExplanation:
+      "Python gives direct commands for the same matrix operations you solve by hand in class.",
+    formula: "Av in math <=> A @ v in Python",
+    formulaMeaning:
+      "Meaning: the `@` operator performs matrix multiplication.",
+    mlUseCase:
+      "These operations appear in transformations, covariance analysis, PCA, and many matrix-based ML steps.",
+    intuition:
+      "Ask: which math operation am I trying to code, and which NumPy function matches it?",
+    examShortcuts: [
+      "Use `@` for matrix multiplication.",
+      "Use `np.linalg.det` for determinant.",
+      "Use `np.linalg.eig` for eigenvalues and eigenvectors."
+    ],
+    bigPicture:
+      "This is where linear algebra stops being a paper-only subject and becomes executable.",
+    examReadiness: [
+      "Read and write matrix multiplication code.",
+      "Use determinant, inverse, and eig commands correctly.",
+      "Interpret the returned Python output in math terms."
+    ],
+    mcq: {
+      question: "What does `A @ v` mean in NumPy-style Python?",
+      options: [
+        "Matrix multiplication",
+        "Elementwise multiplication only",
+        "Matrix transpose",
+        "Determinant"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. `@` is the matrix-multiplication operator."
+    },
+    problem: {
+      prompt: "If `A = np.array([[1, 2], [0, 1]])` and `v = np.array([3, 1])`, what is `A @ v`?",
+      answers: ["[5,1]", "(5,1)", "5,1"],
+      success: "Correct. Matrix multiplication gives (5, 1)."
+    },
+    conceptQuestion: {
+      prompt: "Why should you connect every NumPy command to a math meaning?",
+      answer:
+        "Because code questions become easier when you know what the command is doing mathematically instead of memorizing syntax blindly."
+    },
+    controls: [],
+    codeExample: {
+      title: "Matrix Operations In Python",
+      code: "import numpy as np\n\nA = np.array([[1, 2], [0, 1]])\nv = np.array([3, 1])\nprint(A @ v)\nprint(np.linalg.det(A))",
+      output: "[5 1]\n1.0",
+      explanation: "This computes a matrix-vector product and the determinant of the same matrix."
+    },
+    pythonCompanion: {
+      goal: "Translate matrix multiplication and eigenvalue questions into standard Python commands.",
+      examUse: "Coding exams often ask for one line of matrix math or ask you to interpret returned values.",
+      codeTitle: "Linear Algebra Python Companion",
+      code: "import numpy as np\n\nA = np.array([[1, 4], [2, 3]])\nvalues, vectors = np.linalg.eig(A)\nprint(values)\nprint(vectors)",
+      output: "[ 5. -1.]\n[[ 0.70710678 -0.89442719]\n [ 0.70710678  0.4472136 ]]",
+      explainSteps: [
+        "`np.linalg.eig(A)` returns eigenvalues and eigenvectors.",
+        "The eigenvalues come as a 1D array.",
+        "The eigenvectors appear as columns in the returned matrix.",
+        "This matches the eigendecomposition ideas from the math lessons."
+      ],
+      traps: [
+        "Using `*` when you really mean matrix multiplication with `@`.",
+        "Assuming eigenvectors come back as rows instead of columns.",
+        "Trying to invert a singular matrix."
+      ],
+      examTasks: [
+        "Use `@` for matrix products.",
+        "Use `np.linalg.det`, `inv`, and `eig` in the right setting.",
+        "Explain the math meaning of Python output."
+      ]
+    },
+    calculate() {
+      return {
+        metrics: ["@", "linalg.det", "linalg.eig"],
+        exampleSteps: [
+          "Represent the vector and matrix as arrays.",
+          "Use `@` for multiplication.",
+          "Use `numpy.linalg` for determinant, inverse, and eigendecomposition-related tools.",
+          "Interpret the outputs in math language."
+        ],
+        insight:
+          "The coding side becomes much simpler once each command is tied to one exact math operation.",
+        drawing: {
+          type: "codePanel",
+          title: "linear algebra in python",
+          lines: ["A @ v", "np.linalg.det(A)", "np.linalg.inv(A)", "np.linalg.eig(A)"]
+        }
+      };
+    }
+  },
+  {
+    key: "python-probability",
+    order: 102,
+    stage: "Python Programming",
+    difficulty: "Core",
+    label: "Probability & Statistics In Python",
+    navDescription: "Simulation, averages, and distributions in code.",
+    subtitle:
+      "This chapter turns probability questions into Python code you can simulate and inspect.",
+    learningPurpose:
+      "Use Python to compute means, simulate random outcomes, and work with simple probability distributions.",
+    whyThisBefore:
+      "Study this after the probability lessons so the code feels like a translation of the math, not a separate subject.",
+    prerequisites: ["Python Basics For Math", "Probability Basics", "Random Variables & Expected Value", "Binomial & Cumulative Probability"],
+    mlPurpose:
+      "Python probability code is used for simulations, summaries, and understanding uncertainty in data and models.",
+    visualTitle: "See simulation and averages as code.",
+    visualDescription:
+      "The code panel shows a small random experiment and the kind of statistical summary students are often asked to compute.",
+    beginnerNote:
+      "Simulation is useful because it lets you see probability ideas play out repeatedly instead of only as formulas.",
+    symbolGuide: [
+      { symbol: "np.mean", meaning: "Average of values." },
+      { symbol: "np.random", meaning: "Random number generation tools." },
+      { symbol: "np.sum", meaning: "Add values, useful in counting successes." }
+    ],
+    simpleExplanation:
+      "Python can simulate repeated trials and compute the same averages and probabilities you study in theory.",
+    formula: "sample_mean = np.mean(data)",
+    formulaMeaning:
+      "Meaning: Python can compute the average directly from a list or array of values.",
+    mlUseCase:
+      "This is how you inspect sampled data, estimate behavior, and summarize results in real workflows.",
+    intuition:
+      "Ask: what am I simulating, and what summary or probability do I want from the results?",
+    examShortcuts: [
+      "Use `np.mean` for the mean.",
+      "Use `np.random.binomial` for repeated success/failure trials.",
+      "Simulation helps check intuition for probability questions."
+    ],
+    bigPicture:
+      "Probability in Python makes uncertainty concrete because you can generate, count, and summarize outcomes directly.",
+    examReadiness: [
+      "Compute mean and variance-like summaries with Python tools.",
+      "Simulate a binomial process.",
+      "Explain what the code is estimating."
+    ],
+    mcq: {
+      question: "Which NumPy function is most direct for computing an average?",
+      options: [
+        "np.mean",
+        "np.linalg.eig",
+        "np.shape",
+        "np.eye"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. `np.mean` computes the average."
+    },
+    problem: {
+      prompt: "If `data = np.array([2, 4, 6])`, what is `np.mean(data)`?",
+      answers: ["4", "4.0"],
+      success: "Correct. The average of 2, 4, and 6 is 4."
+    },
+    conceptQuestion: {
+      prompt: "Why is simulation useful in probability learning?",
+      answer:
+        "Because it helps you see how repeated random experiments behave, which strengthens intuition for formulas and distributions."
+    },
+    controls: [],
+    codeExample: {
+      title: "Probability & Statistics Example",
+      code: "import numpy as np\n\ndata = np.array([2, 4, 6])\nprint(np.mean(data))\nprint(np.var(data))",
+      output: "4.0\n2.6666666666666665",
+      explanation: "This is the coding version of computing center and spread."
+    },
+    pythonCompanion: {
+      goal: "Use Python to simulate probability and compute simple statistics.",
+      examUse: "Exams may ask you to read output from a simulation or write a line that computes a mean or binomial sample.",
+      codeTitle: "Probability Python Companion",
+      code: "import numpy as np\n\ntrials = np.random.binomial(n=4, p=0.5, size=10)\nprint(trials)\nprint(np.mean(trials))",
+      output: "Example output: [1 2 2 3 1 4 2 2 1 3]\nExample mean: 2.1",
+      explainSteps: [
+        "`np.random.binomial` simulates repeated success counts.",
+        "Here each sample counts successes out of 4 trials.",
+        "`size=10` means ten simulated experiments.",
+        "`np.mean` summarizes the average success count."
+      ],
+      traps: [
+        "Thinking random output must match one exact fixed sequence.",
+        "Confusing the number of trials `n` with the number of simulated experiments `size`.",
+        "Reading one simulation as exact probability instead of as an estimate."
+      ],
+      examTasks: [
+        "Compute a mean with NumPy.",
+        "Read a simple simulation.",
+        "Explain what a binomial simulation line is doing."
+      ]
+    },
+    calculate() {
+      return {
+        metrics: ["np.mean", "np.var", "np.random.binomial"],
+        exampleSteps: [
+          "Store data in an array.",
+          "Use NumPy summary functions for mean and spread.",
+          "Use random-generation functions to simulate trials.",
+          "Interpret output in probability language."
+        ],
+        insight:
+          "Python lets you check probability intuition by simulating repeated trials instead of relying only on formulas.",
+        drawing: {
+          type: "codePanel",
+          title: "probability in python",
+          lines: ["np.mean(data)", "np.var(data)", "np.random.binomial(n=4, p=0.5, size=10)"]
+        }
+      };
+    }
+  },
+  {
+    key: "python-functions-gradients",
+    order: 103,
+    stage: "Python Programming",
+    difficulty: "Advanced Core",
+    label: "Functions, Gradients & Plotting In Python",
+    navDescription: "Write functions and inspect change with code.",
+    subtitle:
+      "This lesson connects the calculus side of the course to basic Python function definitions, loops, and plotting-style thinking.",
+    learningPurpose:
+      "Write simple functions in Python and connect them to slopes, arrays of values, and gradient-style updates.",
+    whyThisBefore:
+      "Study this after the function and gradient lessons so the code feels like the same math process written step by step.",
+    prerequisites: ["Python Basics For Math", "Derivatives", "Multivariable Calculus", "Gradient Descent"],
+    mlPurpose:
+      "Defining functions and updating values step by step is central to optimization, loss evaluation, and ML experimentation.",
+    visualTitle: "See a function and update rule as code.",
+    visualDescription:
+      "The code panel shows the exact kind of Python function and gradient-style update you may be expected to read in an exam.",
+    beginnerNote:
+      "A Python function is just a reusable rule. It is the programming version of the function notation you already study in math.",
+    symbolGuide: [
+      { symbol: "def", meaning: "Define a Python function." },
+      { symbol: "return", meaning: "Send a value back from the function." },
+      { symbol: "x = x - lr * grad", meaning: "One gradient-style update step." }
+    ],
+    simpleExplanation:
+      "Python functions let you code mathematical rules, and update lines let you code optimization steps.",
+    formula: "x = x - lr * grad",
+    formulaMeaning:
+      "Meaning: take one gradient-descent-style step in Python.",
+    mlUseCase:
+      "This is the coding shape behind loss functions, prediction functions, and simple optimization loops.",
+    intuition:
+      "Ask: what rule is the function coding, and how does the update line move the value?",
+    examShortcuts: [
+      "Use `def` to define a reusable rule.",
+      "Use `return` to give back the result.",
+      "A gradient update line is just algebra written in Python syntax."
+    ],
+    bigPicture:
+      "This lesson ties together the math of functions and gradients with the exact coding patterns used in ML work.",
+    examReadiness: [
+      "Read a small Python function.",
+      "Trace one or two update steps manually.",
+      "Explain a gradient-descent-style line of code."
+    ],
+    mcq: {
+      question: "What does `return` do inside a Python function?",
+      options: [
+        "It sends the result back",
+        "It repeats the loop",
+        "It imports NumPy",
+        "It creates a matrix"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. `return` gives the computed value back from the function."
+    },
+    problem: {
+      prompt: "If `x = 5`, `lr = 0.1`, and `grad = 2`, what is `x - lr * grad`?",
+      answers: ["4.8"],
+      success: "Correct. One update step gives 5 - 0.1 * 2 = 4.8."
+    },
+    conceptQuestion: {
+      prompt: "Why are Python functions useful in ML math?",
+      answer:
+        "Because they let you write reusable rules for predictions, losses, and updates instead of repeating calculations manually."
+    },
+    controls: [],
+    codeExample: {
+      title: "Function And Gradient Step Example",
+      code: "def f(x):\n    return x**2\n\nx = 5\nlr = 0.1\ngrad = 2 * x\nx = x - lr * grad\nprint(x)",
+      output: "4.0",
+      explanation: "This combines a Python function with one gradient-descent-style update."
+    },
+    pythonCompanion: {
+      goal: "Connect function definitions and gradient-style updates to the calculus ideas in the math chapter.",
+      examUse: "Coding exams often ask you to read a small function, compute its output, or trace an update line.",
+      codeTitle: "Functions & Gradients Python Companion",
+      code: "def predict(x, m, c):\n    return m * x + c\n\nprint(predict(3, 2, 1))\n\nx = 5\nlr = 0.1\ngrad = 2\nx = x - lr * grad\nprint(x)",
+      output: "7\n4.8",
+      explainSteps: [
+        "`predict` is a Python function version of the line formula mx + c.",
+        "Calling `predict(3, 2, 1)` computes 2 * 3 + 1.",
+        "The second part performs one gradient-style update.",
+        "This is the code version of the calculus update rule."
+      ],
+      traps: [
+        "Forgetting indentation inside a function body.",
+        "Mixing `^` with `**` for powers in Python.",
+        "Reading the update line backward."
+      ],
+      examTasks: [
+        "Define a simple function with `def`.",
+        "Trace one update step in code.",
+        "Connect the code to the underlying math rule."
+      ]
+    },
+    calculate() {
+      return {
+        metrics: ["def", "return", "gradient step"],
+        exampleSteps: [
+          "Write a function with `def`.",
+          "Return the computed value.",
+          "Compute a gradient or slope value.",
+          "Use it in a simple update line."
+        ],
+        insight:
+          "The code is not new mathematics. It is the same mathematics written as a reusable sequence of steps.",
+        drawing: {
+          type: "codePanel",
+          title: "functions & gradients",
+          lines: ["def f(x):", "    return x**2", "x = x - lr * grad", "print(x)"]
         }
       };
     }

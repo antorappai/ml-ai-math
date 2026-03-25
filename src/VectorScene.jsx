@@ -491,6 +491,29 @@ function networkScene(drawing) {
   `;
 }
 
+function codePanelScene(drawing) {
+  const lines = drawing.lines || [];
+  const renderedLines = lines
+    .map(
+      (line, index) =>
+        `<text class="code-scene-line" x="74" y="${116 + index * 34}">${escapeXml(line)}</text>`
+    )
+    .join("");
+
+  return `
+    <svg viewBox="0 0 420 420" aria-label="Python code panel">
+      <rect class="code-scene-shell" x="34" y="38" width="352" height="344" rx="28" />
+      <rect class="code-scene-top" x="34" y="38" width="352" height="54" rx="28" />
+      <circle cx="68" cy="65" r="7" fill="rgba(197,138,46,0.85)" />
+      <circle cx="92" cy="65" r="7" fill="rgba(15,118,110,0.85)" />
+      <circle cx="116" cy="65" r="7" fill="rgba(255,255,255,0.76)" />
+      <text class="code-scene-title" x="146" y="71">${escapeXml(drawing.title || "python")}</text>
+      <text class="code-scene-hint" x="74" y="350">Read the code as math written in steps.</text>
+      ${renderedLines}
+    </svg>
+  `;
+}
+
 function buildScene(drawing) {
   if (drawing.type === "vectors") {
     return vectorScene(drawing);
@@ -558,11 +581,21 @@ function buildScene(drawing) {
   if (drawing.type === "network") {
     return networkScene(drawing);
   }
+  if (drawing.type === "codePanel") {
+    return codePanelScene(drawing);
+  }
   return `<svg viewBox="0 0 420 420" aria-label="Concept visual">${baseGrid(28).join("")}</svg>`;
 }
 
 function formatNumber(value) {
   return Number(value).toFixed(2).replace(/\.00$/, "");
+}
+
+function escapeXml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 export default function VectorScene({ drawing }) {

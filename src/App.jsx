@@ -14,7 +14,8 @@ const sectionTabs = [
   { key: "explanation", label: "Explanation" },
   { key: "examples", label: "Examples" },
   { key: "practice", label: "Practice" },
-  { key: "exam", label: "Exam Prep" }
+  { key: "exam", label: "Exam Prep" },
+  { key: "python", label: "Python" }
 ];
 
 const topicAreas = ["All", ...new Set(lessons.map((lesson) => lesson.stage))];
@@ -324,7 +325,7 @@ export default function App() {
           <p className="eyebrow">Study Workspace</p>
           <h1 className="study-title">ML Math Studio</h1>
           <p className="study-subtitle">
-            Explanation first, then examples, then practice, then exam prep.
+            Explanation first, then examples, practice, exam prep, and Python.
           </p>
         </div>
         <div className="study-actions">
@@ -570,6 +571,26 @@ export default function App() {
                     </div>
                   </article>
                 ) : null}
+
+                {lesson.codeExample ? (
+                  <article className="content-card wide">
+                    <p className="panel-label">{lesson.codeExample.title}</p>
+                    <div className="code-card">
+                      <pre className="code-block">
+                        <code>{lesson.codeExample.code}</code>
+                      </pre>
+                    </div>
+                    {lesson.codeExample.output ? (
+                      <div className="code-output">
+                        <strong>Output</strong>
+                        <pre className="code-block compact">
+                          <code>{lesson.codeExample.output}</code>
+                        </pre>
+                      </div>
+                    ) : null}
+                    {lesson.codeExample.explanation ? <p>{lesson.codeExample.explanation}</p> : null}
+                  </article>
+                ) : null}
               </section>
             </>
           ) : null}
@@ -631,13 +652,21 @@ export default function App() {
                         {revealedPractice[index] ? (
                           <div className="revealed-solution">
                             <p className="feedback">{item.answer}</p>
-                            <div className="steps">
-                              {item.steps.map((step, stepIndex) => (
-                                <div key={`${lesson.key}-practice-step-${index + 1}-${stepIndex + 1}`} className="step">
-                                  {stepIndex + 1}. {step}
-                                </div>
-                              ))}
-                            </div>
+                            {(item.steps?.length ?? 0) > 0 ? (
+                              <div className="steps">
+                                {item.steps.map((step, stepIndex) => (
+                                  <div key={`${lesson.key}-practice-step-${index + 1}-${stepIndex + 1}`} className="step">
+                                    {stepIndex + 1}. {step}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="steps">
+                                <div className="step">1. Identify the concept the question is testing.</div>
+                                <div className="step">2. Apply the main rule carefully.</div>
+                                <div className="step">3. Check whether the final answer makes intuitive sense.</div>
+                              </div>
+                            )}
                           </div>
                         ) : null}
                       </div>
@@ -779,6 +808,78 @@ export default function App() {
                   </div>
                 </article>
               ) : null}
+            </section>
+          ) : null}
+
+          {studyTab === "python" ? (
+            <section className="lesson-grid">
+              {lesson.pythonCompanion ? (
+                <>
+                  <article className="content-card">
+                    <p className="panel-label">Python Goal</p>
+                    <p>{lesson.pythonCompanion.goal}</p>
+                  </article>
+
+                  <article className="content-card">
+                    <p className="panel-label">Why This Matters In Exams</p>
+                    <p>{lesson.pythonCompanion.examUse}</p>
+                  </article>
+
+                  <article className="content-card wide">
+                    <p className="panel-label">{lesson.pythonCompanion.codeTitle}</p>
+                    <div className="code-card">
+                      <pre className="code-block">
+                        <code>{lesson.pythonCompanion.code}</code>
+                      </pre>
+                    </div>
+                    {lesson.pythonCompanion.output ? (
+                      <div className="code-output">
+                        <strong>Output</strong>
+                        <pre className="code-block compact">
+                          <code>{lesson.pythonCompanion.output}</code>
+                        </pre>
+                      </div>
+                    ) : null}
+                  </article>
+
+                  <article className="content-card wide">
+                    <p className="panel-label">Code Walkthrough</p>
+                    <div className="steps">
+                      {lesson.pythonCompanion.explainSteps.map((step, index) => (
+                        <div key={`${lesson.key}-python-step-${index + 1}`} className="step">
+                          {index + 1}. {step}
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+
+                  <article className="content-card">
+                    <p className="panel-label">Common Python Traps</p>
+                    <ul className="shortcut-list">
+                      {lesson.pythonCompanion.traps.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </article>
+
+                  <article className="content-card">
+                    <p className="panel-label">Python Exam Tasks</p>
+                    <ul className="shortcut-list">
+                      {lesson.pythonCompanion.examTasks.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </article>
+                </>
+              ) : (
+                <article className="content-card wide">
+                  <p className="panel-label">Python Companion</p>
+                  <p>
+                    This lesson does not have a dedicated Python companion yet. The separate Python
+                    chapter in the roadmap covers exam-style programming practice directly.
+                  </p>
+                </article>
+              )}
             </section>
           ) : null}
         </section>

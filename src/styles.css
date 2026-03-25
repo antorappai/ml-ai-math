@@ -786,6 +786,38 @@ button {
   gap: 10px;
 }
 
+.code-card {
+  padding: 16px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #14251f 0%, #10201b 100%);
+  border: 1px solid rgba(15, 118, 110, 0.24);
+  overflow-x: auto;
+}
+
+.code-block {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: #edf8f5;
+}
+
+.code-block.compact {
+  font-size: 0.9rem;
+  color: #dff4ef;
+}
+
+.code-output {
+  margin-top: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.code-output strong {
+  color: var(--accent-deep);
+}
+
 .compact-steps {
   margin-top: 6px;
 }
@@ -893,6 +925,37 @@ svg {
 .chart-bg {
   fill: rgba(255, 255, 255, 0.72);
   stroke: rgba(25, 50, 41, 0.08);
+}
+
+.code-scene-shell {
+  fill: rgba(12, 31, 27, 0.98);
+  stroke: rgba(15, 118, 110, 0.24);
+}
+
+.code-scene-top {
+  fill: rgba(22, 50, 43, 0.96);
+}
+
+.code-scene-title,
+.code-scene-line,
+.code-scene-hint {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.code-scene-title {
+  font-size: 15px;
+  fill: #eff9f6;
+  font-weight: 600;
+}
+
+.code-scene-line {
+  font-size: 15px;
+  fill: #dff4ef;
+}
+
+.code-scene-hint {
+  font-size: 13px;
+  fill: rgba(223, 244, 239, 0.7);
 }
 
 .bar-a {
