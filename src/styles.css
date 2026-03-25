@@ -818,6 +818,89 @@ button {
   color: var(--accent-deep);
 }
 
+.playground-header,
+.playground-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.playground-copy {
+  margin: 0;
+}
+
+.playground-shell,
+.playground-output-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid var(--line);
+}
+
+.playground-shell {
+  margin-top: 6px;
+}
+
+.editor-label {
+  font-weight: 700;
+  color: var(--accent-deep);
+}
+
+.python-editor {
+  width: 100%;
+  min-height: 320px;
+  resize: vertical;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 118, 110, 0.2);
+  background: linear-gradient(180deg, #14251f 0%, #10201b 100%);
+  color: #edf8f5;
+  padding: 16px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.python-editor:focus-visible {
+  outline: 2px solid rgba(15, 118, 110, 0.35);
+  outline-offset: 2px;
+}
+
+.runtime-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(25, 50, 41, 0.12);
+  color: var(--accent-deep);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.runtime-pill.running,
+.runtime-pill.loading {
+  background: rgba(197, 138, 46, 0.12);
+  border-color: rgba(197, 138, 46, 0.24);
+}
+
+.runtime-pill.done,
+.runtime-pill.idle {
+  background: rgba(15, 118, 110, 0.1);
+  border-color: rgba(15, 118, 110, 0.24);
+}
+
+.runtime-pill.error {
+  background: rgba(197, 138, 46, 0.16);
+  border-color: rgba(197, 138, 46, 0.28);
+}
+
+.playground-output {
+  min-height: 120px;
+}
+
 .compact-steps {
   margin-top: 6px;
 }
@@ -1043,7 +1126,9 @@ svg {
   }
 
   .filter-header,
-  .filter-row {
+  .filter-row,
+  .playground-header,
+  .playground-actions {
     flex-direction: column;
     align-items: start;
   }

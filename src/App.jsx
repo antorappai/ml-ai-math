@@ -1,5 +1,6 @@
 import React, { startTransition, useEffect, useState } from "react";
 import { curriculumStages, futureModules, lessons } from "./lessonData.js";
+import PythonPlayground from "./PythonPlayground.jsx";
 import VectorScene from "./VectorScene.jsx";
 
 const starterGuide = [
@@ -870,6 +871,11 @@ export default function App() {
                       ))}
                     </ul>
                   </article>
+
+                  <PythonPlayground
+                    lessonKey={lesson.key}
+                    initialCode={lesson.pythonCompanion.code}
+                  />
                 </>
               ) : (
                 <article className="content-card wide">
