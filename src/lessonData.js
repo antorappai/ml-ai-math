@@ -5606,12 +5606,154 @@ const defaultEnhancement = {
   visualScenario: null
 };
 
+const pythonBridgeMap = {
+  functions: "python-basics",
+  vectors: "python-numpy",
+  "matrix-basics": "python-numpy",
+  matrices: "python-linear-algebra",
+  "linear-transformations": "python-linear-algebra",
+  "basis-coordinates": "python-linear-algebra",
+  "composition-powers": "python-linear-algebra",
+  "inverse-rank-spaces": "python-linear-algebra",
+  dot: "python-linear-algebra",
+  eigen: "python-linear-algebra",
+  decomposition: "python-linear-algebra",
+  derivatives: "python-functions-gradients",
+  multivariable: "python-functions-gradients",
+  "vector-valued": "python-functions-gradients",
+  probability: "python-probability",
+  "random-variables": "python-probability",
+  binomial: "python-probability",
+  statistics: "python-probability",
+  bayes: "python-probability",
+  distributions: "python-probability",
+  regression: "python-functions-gradients",
+  descent: "python-functions-gradients",
+  logistic: "python-functions-gradients",
+  backprop: "python-functions-gradients"
+};
+
+const pythonGradedQuestionMap = {
+  "python-basics": [
+    {
+      prompt: "Write Python code that stores the numbers 3, 5, and 7 in a list, then prints their sum.",
+      starterCode:
+        "# Store the values in a list\n# Find the total\n# Print the total",
+      explanation:
+        "The exam is checking whether you can build a list, use Python's sum logic, and print the final result clearly.",
+      solution: "numbers = [3, 5, 7]\ntotal = sum(numbers)\nprint(total)",
+      output: "15"
+    },
+    {
+      prompt: "Given `m = 4`, `x = 2`, and `c = -1`, write Python code that computes `m * x + c` and prints the result.",
+      starterCode:
+        "m = 4\nx = 2\nc = -1\n\n# Compute the expression\n# Print the result",
+      explanation:
+        "This is the coding version of a direct algebra substitution question.",
+      solution: "m = 4\nx = 2\nc = -1\nresult = m * x + c\nprint(result)",
+      output: "7"
+    }
+  ],
+  "python-numpy": [
+    {
+      prompt: "Create a NumPy vector `[4, -2, 1]` and print its shape.",
+      starterCode:
+        "import numpy as np\n\n# Create the vector\n# Print the shape",
+      explanation:
+        "The core skill is knowing how to represent a vector with `np.array` and inspect dimensions with `.shape`.",
+      solution: "import numpy as np\n\nv = np.array([4, -2, 1])\nprint(v.shape)",
+      output: "(3,)"
+    },
+    {
+      prompt: "Create the matrix `[[1, 2], [3, 4], [5, 6]]` and print its shape.",
+      starterCode:
+        "import numpy as np\n\n# Create the matrix\n# Print the shape",
+      explanation:
+        "This checks whether you can tell the difference between a vector-like 1D array and a 2D matrix array.",
+      solution: "import numpy as np\n\nA = np.array([[1, 2], [3, 4], [5, 6]])\nprint(A.shape)",
+      output: "(3, 2)"
+    }
+  ],
+  "python-linear-algebra": [
+    {
+      prompt: "Given `A = [[1, 2], [0, 1]]` and `v = [3, 1]`, write NumPy code that computes `A @ v` and prints the result.",
+      starterCode:
+        "import numpy as np\n\nA = np.array([[1, 2], [0, 1]])\nv = np.array([3, 1])\n\n# Compute the matrix-vector product\n# Print the result",
+      explanation:
+        "The exam is testing whether you know that matrix multiplication in Python uses `@`, not plain `*`.",
+      solution: "import numpy as np\n\nA = np.array([[1, 2], [0, 1]])\nv = np.array([3, 1])\nprint(A @ v)",
+      output: "[5 1]"
+    },
+    {
+      prompt: "Write Python code that finds the eigenvalues of `A = [[1, 4], [2, 3]]`.",
+      starterCode:
+        "import numpy as np\n\nA = np.array([[1, 4], [2, 3]])\n\n# Find the eigenvalues\n# Print them",
+      explanation:
+        "This is a direct translation of an eigenvalue question into the standard NumPy linear algebra command.",
+      solution: "import numpy as np\n\nA = np.array([[1, 4], [2, 3]])\nvalues, vectors = np.linalg.eig(A)\nprint(values)",
+      output: "[ 5. -1.]"
+    }
+  ],
+  "python-probability": [
+    {
+      prompt: "Write Python code that computes the mean of `[2, 4, 6, 8]` using NumPy.",
+      starterCode:
+        "import numpy as np\n\ndata = np.array([2, 4, 6, 8])\n\n# Compute the mean\n# Print it",
+      explanation:
+        "This is the coding form of a simple expected-value or average question.",
+      solution: "import numpy as np\n\ndata = np.array([2, 4, 6, 8])\nprint(np.mean(data))",
+      output: "5.0"
+    },
+    {
+      prompt: "Simulate 5 binomial outcomes with `n = 4` and `p = 0.5`, then print the sample array.",
+      starterCode:
+        "import numpy as np\n\n# Simulate the binomial outcomes\n# Print the result",
+      explanation:
+        "The exact numbers can vary, so the key skill is writing the correct simulation command, not memorizing one output.",
+      solution: "import numpy as np\n\nsamples = np.random.binomial(n=4, p=0.5, size=5)\nprint(samples)",
+      output: "Output will vary."
+    }
+  ],
+  "python-functions-gradients": [
+    {
+      prompt:
+        "Given f(x, y) = x**2 + y**2 + 2*x*y, write Python code that computes the gradient vector [df/dx, df/dy] at an input pair (x, y) and rounds each value to 2 decimal places.",
+      starterCode:
+        "x, y = 2.0, 3.0\n\n# Write the gradient code below\n# df_dx = ...\n# df_dy = ...\n# print([...])",
+      explanation:
+        "First compute the partial derivatives by hand: df/dx = 2x + 2y and df/dy = 2y + 2x. Then translate those two formulas directly into Python variables and print the rounded list.",
+      solution:
+        "x, y = 2.0, 3.0\n\ndf_dx = 2 * x + 2 * y\ndf_dy = 2 * y + 2 * x\n\nprint([round(df_dx, 2), round(df_dy, 2)])",
+      output: "[10.0, 10.0]"
+    },
+    {
+      prompt: "Write a Python function `predict(x, m, c)` that returns `m * x + c`, then print `predict(5, 2, 1)`.",
+      starterCode:
+        "# Define the function\n# Print the result for x = 5, m = 2, c = 1",
+      explanation:
+        "This is the programming version of writing a mathematical rule and then evaluating it at a specific input.",
+      solution:
+        "def predict(x, m, c):\n    return m * x + c\n\nprint(predict(5, 2, 1))",
+      output: "11"
+    }
+  ]
+};
+
 export const lessons = baseLessons.map((lesson, index) => ({
   ...defaultEnhancement,
   ...lesson,
   order: index + 1,
   ...(lessonEnhancements[lesson.key] || {}),
-  extraPractice: (lessonEnhancements[lesson.key]?.extraPractice || []).map(normalizeExtraPractice)
+  extraPractice: (lessonEnhancements[lesson.key]?.extraPractice || []).map(normalizeExtraPractice),
+  pythonLessonKey: pythonBridgeMap[lesson.key] || null,
+  pythonCompanion: lesson.pythonCompanion
+    ? {
+        ...lesson.pythonCompanion,
+        gradedQuestions:
+          pythonGradedQuestionMap[lesson.key] ||
+          (lesson.pythonCompanion.gradedQuestion ? [lesson.pythonCompanion.gradedQuestion] : [])
+      }
+    : lesson.pythonCompanion
 }));
 
 function normalizeExtraPractice(item) {

@@ -53,7 +53,7 @@ export default function App() {
   const [problemAnswer, setProblemAnswer] = useState("");
   const [problemFeedback, setProblemFeedback] = useState("");
   const [showConceptAnswer, setShowConceptAnswer] = useState(false);
-  const [showPythonSolution, setShowPythonSolution] = useState(false);
+  const [revealedPythonQuestions, setRevealedPythonQuestions] = useState({});
   const [filters, setFilters] = useState({
     topic: "All",
     difficulty: "All",
@@ -108,7 +108,7 @@ export default function App() {
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
-      setShowPythonSolution(false);
+      setRevealedPythonQuestions({});
     });
   }
 
@@ -131,7 +131,7 @@ export default function App() {
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
-      setShowPythonSolution(false);
+      setRevealedPythonQuestions({});
     });
   }
 
@@ -147,7 +147,7 @@ export default function App() {
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
-      setShowPythonSolution(false);
+      setRevealedPythonQuestions({});
     });
   }
 
@@ -578,6 +578,19 @@ export default function App() {
                   </article>
                 ) : null}
 
+                {lesson.pythonLessonKey ? (
+                  <article className="content-card">
+                    <p className="panel-label">Practice This In Python</p>
+                    <p>
+                      This math topic has a matching Python lesson. Use it when you want to turn
+                      the idea into actual exam-style code.
+                    </p>
+                    <button type="button" onClick={() => openPythonPractice(lesson.pythonLessonKey)}>
+                      Open linked Python lesson
+                    </button>
+                  </article>
+                ) : null}
+
                 <article className="content-card wide">
                   <p className="panel-label">Big Picture</p>
                   <p>{lesson.bigPicture}</p>
@@ -920,36 +933,52 @@ export default function App() {
                     </ul>
                   </article>
 
-                  {lesson.pythonCompanion.gradedQuestion ? (
+                  {(lesson.pythonCompanion.gradedQuestions?.length ?? 0) > 0 ? (
                     <article className="content-card wide">
-                      <p className="panel-label">Graded-Style Coding Question</p>
-                      <p className="question">{lesson.pythonCompanion.gradedQuestion.prompt}</p>
-                      <div className="code-card">
-                        <pre className="code-block">
-                          <code>{lesson.pythonCompanion.gradedQuestion.starterCode}</code>
-                        </pre>
-                      </div>
-                      <button type="button" onClick={() => setShowPythonSolution((current) => !current)}>
-                        {showPythonSolution ? "Hide solution" : "Reveal solution"}
-                      </button>
-                      {showPythonSolution ? (
-                        <div className="revealed-solution">
-                          <p>{lesson.pythonCompanion.gradedQuestion.explanation}</p>
-                          <div className="code-card">
-                            <pre className="code-block">
-                              <code>{lesson.pythonCompanion.gradedQuestion.solution}</code>
-                            </pre>
-                          </div>
-                          {lesson.pythonCompanion.gradedQuestion.output ? (
-                            <div className="code-output">
-                              <strong>Expected output</strong>
-                              <pre className="code-block compact">
-                                <code>{lesson.pythonCompanion.gradedQuestion.output}</code>
+                      <p className="panel-label">Graded-Style Coding Questions</p>
+                      <div className="extra-mcq-list">
+                        {lesson.pythonCompanion.gradedQuestions.map((item, index) => (
+                          <div key={`${lesson.key}-graded-python-${index + 1}`} className="extra-mcq-card">
+                            <p className="question">
+                              <strong>Q{index + 1}.</strong> {item.prompt}
+                            </p>
+                            <div className="code-card">
+                              <pre className="code-block">
+                                <code>{item.starterCode}</code>
                               </pre>
                             </div>
-                          ) : null}
-                        </div>
-                      ) : null}
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setRevealedPythonQuestions((current) => ({
+                                  ...current,
+                                  [index]: !current[index]
+                                }))
+                              }
+                            >
+                              {revealedPythonQuestions[index] ? "Hide solution" : "Reveal solution"}
+                            </button>
+                            {revealedPythonQuestions[index] ? (
+                              <div className="revealed-solution">
+                                <p>{item.explanation}</p>
+                                <div className="code-card">
+                                  <pre className="code-block">
+                                    <code>{item.solution}</code>
+                                  </pre>
+                                </div>
+                                {item.output ? (
+                                  <div className="code-output">
+                                    <strong>Expected output</strong>
+                                    <pre className="code-block compact">
+                                      <code>{item.output}</code>
+                                    </pre>
+                                  </div>
+                                ) : null}
+                              </div>
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
                     </article>
                   ) : null}
 
