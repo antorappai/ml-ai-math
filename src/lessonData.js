@@ -22,6 +22,7 @@ export const curriculumStages = [
       "Linear Transformations",
       "Basis & Coordinates",
       "Composition & Matrix Powers",
+      "Inverse, Rank & Spaces",
       "Dot Product",
       "Eigenvalues & PCA Intuition",
       "Eigen Decomposition"
@@ -34,7 +35,7 @@ export const curriculumStages = [
       "See how models improve by following slopes and gradients.",
     mlConnection:
       "Derivatives, partial derivatives, and gradients are the language of optimization and backpropagation.",
-    topics: ["Derivatives", "Multivariable Calculus"]
+    topics: ["Derivatives", "Multivariable Calculus", "Vector-Valued Functions"]
   },
   {
     key: "probability",
@@ -43,7 +44,14 @@ export const curriculumStages = [
       "Reason about uncertainty, averages, spread, and noisy data.",
     mlConnection:
       "Classification confidence, likelihood, model evaluation, and generalization all depend on probability and statistics.",
-    topics: ["Probability", "Statistics", "Bayes", "Distributions"]
+    topics: [
+      "Probability Basics",
+      "Random Variables & Expected Value",
+      "Binomial & Cumulative Probability",
+      "Statistics: Mean & Spread",
+      "Conditional Probability & Bayes",
+      "PDFs, Normal & Standard Normal"
+    ]
   },
   {
     key: "modeling",
@@ -871,8 +879,158 @@ const baseLessons = [
     }
   },
   {
-    key: "dot",
+    key: "inverse-spaces",
     order: 7,
+    stage: "Linear Algebra",
+    difficulty: "Advanced Core",
+    label: "Inverse, Rank & Spaces",
+    navDescription: "Know when a matrix loses information.",
+    subtitle:
+      "This topic ties together invertibility, rank, column space, and null space into one exam-ready picture.",
+    learningPurpose:
+      "Understand how a matrix can preserve information, collapse information, or fail to reverse cleanly.",
+    whyThisBefore:
+      "Study this before advanced eigendecomposition questions because invertibility and rank tell you what a matrix can and cannot do.",
+    prerequisites: ["Matrices & Multiplication", "Linear Transformations", "Basis & Coordinates"],
+    mlPurpose:
+      "Rank and invertibility matter for solving systems, understanding feature redundancy, and seeing when a transformation throws information away.",
+    visualTitle: "Change the matrix and watch whether space collapses.",
+    visualDescription:
+      "The basis vectors show whether the transformation keeps two independent directions or crushes them into fewer directions.",
+    beginnerNote:
+      "If a matrix crushes the plane onto a line, you cannot recover the original input uniquely. That is the heart of inverse and null-space intuition.",
+    symbolGuide: [
+      { symbol: "A^-1", meaning: "The inverse matrix, if it exists." },
+      { symbol: "rank(A)", meaning: "How many independent output directions remain." },
+      { symbol: "Null(A)", meaning: "Inputs sent to zero by A." }
+    ],
+    simpleExplanation:
+      "An inverse exists when the matrix does not lose information. Rank tells how many independent directions survive. Null space tells which directions get crushed away.",
+    formula: "det(A) ≠ 0 => A is invertible",
+    formulaMeaning:
+      "Meaning: for a 2 × 2 matrix, nonzero determinant means the transformation keeps two independent directions and can be reversed.",
+    mlUseCase:
+      "This helps explain why redundant features, collapsed dimensions, and singular covariance-like matrices are important in ML.",
+    intuition:
+      "Ask: does this matrix keep the space full, or does it flatten some directions away?",
+    examShortcuts: [
+      "det ≠ 0 means inverse exists for 2 × 2 matrices.",
+      "rank 2 means full 2D output, rank 1 means collapse to a line, rank 0 means zero map.",
+      "Nontrivial null space means some nonzero vectors are sent to zero."
+    ],
+    bigPicture:
+      "This lesson explains when a transformation preserves information and when it destroys it.",
+    examReadiness: [
+      "Check invertibility quickly in 2 × 2 cases.",
+      "Interpret rank geometrically.",
+      "Explain column space and null space in plain language."
+    ],
+    advancedExample: {
+      title: "Full rank versus collapsed rank.",
+      steps: [
+        "If A = [[1, 0], [0, 1]], the columns stay independent and rank is 2.",
+        "If A = [[1, 2], [2, 4]], the second column is a multiple of the first.",
+        "That means the output directions collapse to one line, so rank is 1.",
+        "A collapsed direction creates a nontrivial null space and destroys invertibility."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "What does it mean geometrically if rank(A) = 1 for a 2 × 2 matrix?",
+        answer: "The transformation collapses the plane onto a line.",
+        explanation: "Only one independent output direction survives, so the full 2D space is no longer preserved.",
+        steps: [
+          "Start in a 2D input space.",
+          "Ask how many independent output directions remain.",
+          "If only one remains, all outputs lie on one line.",
+          "That is geometric rank 1."
+        ]
+      },
+      {
+        prompt: "Why does a nontrivial null space block invertibility?",
+        answer: "Because different inputs can map to the same output, especially zero, so you cannot reverse the transformation uniquely.",
+        explanation: "An inverse needs one output to come from exactly one input.",
+        steps: [
+          "Suppose some nonzero vector v satisfies Av = 0.",
+          "But the zero vector also maps to 0.",
+          "So two different inputs give the same output.",
+          "That destroys one-to-one reversibility."
+        ]
+      }
+    ],
+    mcq: {
+      question: "What does a nonzero determinant suggest for a 2 × 2 matrix?",
+      options: [
+        "The matrix is invertible",
+        "The matrix is zero",
+        "The matrix has rank 0",
+        "The null space is the whole plane"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. In 2D, nonzero determinant means the transformation does not collapse area and is invertible."
+    },
+    problem: {
+      prompt: "If A = [[1, 0], [0, 1]], what is rank(A)?",
+      answers: ["2"],
+      success: "Correct. The identity keeps both independent directions, so rank(A) = 2."
+    },
+    conceptQuestion: {
+      prompt: "What is the plain-language difference between column space and null space?",
+      answer:
+        "Column space is what outputs the matrix can create. Null space is which input directions disappear to zero."
+    },
+    controls: [
+      { id: "a", label: "a", min: -2, max: 3, step: 1, value: 1 },
+      { id: "b", label: "b", min: -2, max: 3, step: 1, value: 0 },
+      { id: "c", label: "c", min: -2, max: 3, step: 1, value: 0 },
+      { id: "d", label: "d", min: -2, max: 3, step: 1, value: 1 }
+    ],
+    calculate(values) {
+      const a = Number(values.a);
+      const b = Number(values.b);
+      const c = Number(values.c);
+      const d = Number(values.d);
+      const det = a * d - b * c;
+      const isZero = a === 0 && b === 0 && c === 0 && d === 0;
+      const rank = isZero ? 0 : det !== 0 ? 2 : 1;
+      const invertible = det !== 0;
+      const e1 = { x: a, y: c };
+      const e2 = { x: b, y: d };
+      return {
+        metrics: [
+          `det = ${formatNumber(det)}`,
+          `rank ≈ ${rank}`,
+          invertible ? "Inverse exists" : "Not invertible"
+        ],
+        exampleSteps: [
+          `Read the columns as (${a}, ${c}) and (${b}, ${d}).`,
+          `Compute det = ${a}×${d} - ${b}×${c} = ${formatNumber(det)}.`,
+          invertible
+            ? "Because the determinant is nonzero, the columns stay independent and the matrix is invertible."
+            : rank === 1
+              ? "Because the determinant is zero but the matrix is not all zero, the columns collapse to one direction and rank is 1."
+              : "All entries are zero, so the output is always zero and rank is 0.",
+          `That means the current matrix has rank ${rank}.`
+        ],
+        insight:
+          invertible
+            ? "Both directions survive independently, so the transformation keeps full 2D information."
+            : "At least one direction is being crushed away, so some information is lost.",
+        drawing: {
+          type: "matrix",
+          matrix: { a, b, c, d },
+          v: { x: 1, y: 1 },
+          t: { x: a + b, y: c + d },
+          e1,
+          e2,
+          showBasis: true
+        }
+      };
+    }
+  },
+  {
+    key: "dot",
+    order: 8,
     stage: "Linear Algebra",
     difficulty: "Core",
     label: "Dot Product",
@@ -1172,6 +1330,131 @@ const baseLessons = [
     }
   },
   {
+    key: "vector-valued",
+    order: 14,
+    stage: "Calculus",
+    difficulty: "Advanced Core",
+    label: "Vector-Valued Functions",
+    navDescription: "Functions whose output is a vector.",
+    subtitle:
+      "Instead of outputting one number, these functions output a whole vector. That makes them ideal for describing paths and motion.",
+    learningPurpose:
+      "Understand that one input can trace a full path when the output is a vector of coordinates.",
+    whyThisBefore:
+      "Study this after multivariable calculus because gradients, trajectories, and many ML embeddings involve vector outputs instead of single numbers.",
+    prerequisites: ["Functions & Graphs", "Vectors", "Multivariable Calculus"],
+    mlPurpose:
+      "Vector-valued functions appear in trajectories, embeddings, feature maps, and any model that outputs multiple coordinates together.",
+    visualTitle: "Trace a vector-valued path as t changes.",
+    visualDescription:
+      "The curve is the full path. The highlighted point and arrow show the output vector at one chosen input value t.",
+    beginnerNote:
+      "A vector-valued function is still one rule. The only difference is that the output is a vector instead of one number.",
+    symbolGuide: [
+      { symbol: "r(t)", meaning: "A vector-valued function of t." },
+      { symbol: "(x(t), y(t))", meaning: "The output has coordinate functions." },
+      { symbol: "t", meaning: "The input parameter that moves you along the path." }
+    ],
+    simpleExplanation:
+      "A vector-valued function tells you where you are on a path for each input value t.",
+    formula: "r(t) = (x(t), y(t))",
+    formulaMeaning:
+      "Meaning: the horizontal and vertical coordinates both depend on the same input t.",
+    mlUseCase:
+      "This matters whenever a system outputs multiple related values together, such as coordinates, trajectories, or high-dimensional embeddings.",
+    intuition:
+      "Ask: as t changes, where does the output vector move in space?",
+    examShortcuts: [
+      "One input, many coordinated outputs.",
+      "Plug t into each component separately.",
+      "The full function traces a path, not just one number line."
+    ],
+    bigPicture:
+      "Vector-valued functions connect ordinary functions to motion, geometry, and higher-dimensional model outputs.",
+    examReadiness: [
+      "Evaluate a vector-valued function at a specific t.",
+      "Explain the difference between scalar output and vector output.",
+      "Interpret a path traced by a parameter."
+    ],
+    advancedExample: {
+      title: "Evaluate and interpret r(t) = (t, t^2).",
+      steps: [
+        "At t = 2, the output is (2, 4).",
+        "At t = -1, the output is (-1, 1).",
+        "As t changes, the outputs trace a parabola in the plane.",
+        "This shows how one parameter can control an entire geometric path."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "What is the output of r(t) = (t, t^2) at t = 3?",
+        answer: "(3, 9).",
+        explanation: "Plug the same t-value into both components.",
+        steps: [
+          "Take the first component x(t) = t and substitute t = 3 to get 3.",
+          "Take the second component y(t) = t^2 and substitute t = 3 to get 9.",
+          "Combine the component outputs.",
+          "So r(3) = (3, 9)."
+        ]
+      },
+      {
+        prompt: "Why is a vector-valued function more than just two separate functions?",
+        answer: "Because the components are tied together by the same input parameter and jointly describe one path or output object.",
+        explanation: "The power comes from coordinating the outputs, not just listing them separately.",
+        steps: [
+          "Notice one parameter feeds every component.",
+          "Each component changes together as that parameter moves.",
+          "The combined output is a vector or path point.",
+          "So the object is one coordinated function."
+        ]
+      }
+    ],
+    mcq: {
+      question: "What is different about a vector-valued function compared with an ordinary scalar-valued function?",
+      options: [
+        "Its output is a vector instead of one number",
+        "It has no input",
+        "It cannot be graphed",
+        "It is always linear"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. The main change is that the output has multiple coordinates together."
+    },
+    problem: {
+      prompt: "If r(t) = (t, t²), what is r(2)?",
+      answers: ["(2,4)", "[2,4]", "2,4"],
+      success: "Correct. Plug t = 2 into both components to get (2, 4)."
+    },
+    conceptQuestion: {
+      prompt: "Why are vector-valued functions useful?",
+      answer:
+        "Because one changing input can control a full multi-coordinate output, which is perfect for paths, geometry, and multi-output systems."
+    },
+    controls: [{ id: "t", label: "Parameter t", min: 0, max: 6.25, step: 0.25, value: 1 }],
+    calculate(values) {
+      const t = Number(values.t);
+      const x = Math.cos(t);
+      const y = Math.sin(t);
+      return {
+        metrics: [`t = ${formatNumber(t)}`, `x(t) ≈ ${formatNumber(x)}`, `y(t) ≈ ${formatNumber(y)}`],
+        exampleSteps: [
+          `Take r(t) = (cos t, sin t).`,
+          `At t = ${formatNumber(t)}, compute cos t ≈ ${formatNumber(x)}.`,
+          `Then compute sin t ≈ ${formatNumber(y)}.`,
+          `So r(${formatNumber(t)}) ≈ (${formatNumber(x)}, ${formatNumber(y)}).`
+        ],
+        insight:
+          "As t moves, the output vector traces a circle. The vector-valued function is describing a path, not just one value.",
+        drawing: {
+          type: "parametric",
+          t,
+          x,
+          y
+        }
+      };
+    }
+  },
+  {
     key: "probability",
     order: 8,
     stage: "Probability",
@@ -1256,6 +1539,266 @@ const baseLessons = [
           type: "probability",
           p,
           q
+        }
+      };
+    }
+  },
+  {
+    key: "random-variables",
+    order: 16,
+    stage: "Probability",
+    difficulty: "Core",
+    label: "Random Variables & Expected Value",
+    navDescription: "Turn uncertain outcomes into numbers.",
+    subtitle:
+      "This is where probability becomes more useful: outcomes are mapped to numbers, and expected value tells you the long-run average.",
+    learningPurpose:
+      "Understand what a random variable is and why expected value is a weighted average, not a guaranteed outcome.",
+    whyThisBefore:
+      "Study this before binomial and advanced distributions because those topics are all built from random-variable thinking.",
+    prerequisites: ["Probability Basics"],
+    mlPurpose:
+      "Expected value and random variables appear in losses, probabilistic models, reward functions, and uncertainty calculations.",
+    visualTitle: "See a simple discrete random variable and its average value.",
+    visualDescription:
+      "The bars show the probabilities of X = 0 and X = 1, and the vertical line marks the expected value.",
+    beginnerNote:
+      "A random variable is not a random number appearing from nowhere. It is a rule that assigns a number to each outcome.",
+    symbolGuide: [
+      { symbol: "X", meaning: "A random variable." },
+      { symbol: "P(X = x)", meaning: "Probability that X takes value x." },
+      { symbol: "E[X]", meaning: "Expected value, the probability-weighted average." }
+    ],
+    simpleExplanation:
+      "A random variable assigns numbers to uncertain outcomes. Expected value tells you the average value you would expect over many repeats.",
+    formula: "E[X] = Σ x P(X = x)",
+    formulaMeaning:
+      "Meaning: multiply each possible value by its probability and add the results.",
+    mlUseCase:
+      "Expected value appears in expected loss, expected reward, and many probability-based model calculations.",
+    intuition:
+      "Ask: if I repeated this many times, what average number would I keep seeing?",
+    examShortcuts: [
+      "Expected value is a weighted average.",
+      "Expected value does not need to be one of the actual outcomes.",
+      "A random variable is a function from outcomes to numbers."
+    ],
+    bigPicture:
+      "This is the step from basic chance language into the real machinery of probability and statistics.",
+    examReadiness: [
+      "Identify a random variable from a story.",
+      "Compute simple expected values.",
+      "Explain why expectation is an average, not a guaranteed result."
+    ],
+    advancedExample: {
+      title: "Expected value of a Bernoulli random variable.",
+      steps: [
+        "Let X = 1 for success and X = 0 for failure.",
+        "Suppose P(X = 1) = p and P(X = 0) = 1 - p.",
+        "Then E[X] = 1·p + 0·(1 - p) = p.",
+        "So the expected value equals the success probability."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "If X takes values 0 and 1 with probabilities 0.3 and 0.7, what is E[X]?",
+        answer: "0.7.",
+        explanation: "This is the Bernoulli weighted average: 0·0.3 + 1·0.7.",
+        steps: [
+          "Write E[X] = Σ xP(X = x).",
+          "Multiply 0 by 0.3.",
+          "Multiply 1 by 0.7.",
+          "Add to get 0.7."
+        ]
+      },
+      {
+        prompt: "Why can expected value be different from the most likely outcome?",
+        answer: "Because expectation averages all outcomes using their probabilities, instead of choosing the single most likely one.",
+        explanation: "Expectation summarizes the long-run average, not the most common single event.",
+        steps: [
+          "List all outcomes and probabilities.",
+          "Weight every outcome by its probability.",
+          "Average across the whole distribution.",
+          "Compare that with just picking the most likely outcome."
+        ]
+      }
+    ],
+    mcq: {
+      question: "What does expected value represent best?",
+      options: [
+        "The long-run weighted average",
+        "The guaranteed outcome",
+        "The largest outcome only",
+        "The number of trials"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. Expected value is the probability-weighted average over many repeats."
+    },
+    problem: {
+      prompt: "If X = 1 with probability 0.7 and X = 0 with probability 0.3, what is E[X]?",
+      answers: ["0.7", ".7"],
+      success: "Correct. E[X] = 1·0.7 + 0·0.3 = 0.7."
+    },
+    conceptQuestion: {
+      prompt: "Why is expected value useful even if that exact number never occurs in one trial?",
+      answer:
+        "Because it summarizes the average behavior of the random variable across many repetitions."
+    },
+    controls: [{ id: "p", label: "P(X = 1)", min: 0.05, max: 0.95, step: 0.05, value: 0.6 }],
+    calculate(values) {
+      const p = Number(values.p);
+      const expectation = p;
+      const variance = p * (1 - p);
+      return {
+        metrics: [`P(X = 1) = ${formatNumber(p)}`, `E[X] = ${formatNumber(expectation)}`, `Var(X) ≈ ${formatNumber(variance)}`],
+        exampleSteps: [
+          "Treat X as a Bernoulli random variable taking values 0 and 1.",
+          `Write E[X] = 0·${formatNumber(1 - p)} + 1·${formatNumber(p)}.`,
+          `That simplifies to ${formatNumber(p)}.`,
+          `So the expected value is ${formatNumber(expectation)}.`
+        ],
+        insight:
+          "The expected value moves with the success probability because the long-run average reward goes up as success becomes more likely.",
+        drawing: {
+          type: "discreteRV",
+          p
+        }
+      };
+    }
+  },
+  {
+    key: "binomial",
+    order: 17,
+    stage: "Probability",
+    difficulty: "Advanced Core",
+    label: "Binomial & Cumulative Probability",
+    navDescription: "Count successes across repeated trials.",
+    subtitle:
+      "This is the standard exam topic for repeated yes/no experiments and cumulative chance questions.",
+    learningPurpose:
+      "Understand how binomial probability models repeated independent trials and how cumulative probability adds ranges of outcomes.",
+    whyThisBefore:
+      "Study this after random variables because the binomial distribution is a structured random variable counting successes.",
+    prerequisites: ["Probability Basics", "Random Variables & Expected Value"],
+    mlPurpose:
+      "Binomial-style reasoning appears whenever you count repeated successes, estimate event frequencies, or reason about classification outcomes over many trials.",
+    visualTitle: "See the binomial bars and cumulative probability together.",
+    visualDescription:
+      "The bars show the probability of each possible number of successes. The highlighted bars are the cumulative probability up to k.",
+    beginnerNote:
+      "Binomial does not mean 'hard formula first'. It means repeated trials with the same success probability and a count of how many successes happened.",
+    symbolGuide: [
+      { symbol: "X ~ Bin(n, p)", meaning: "X counts successes in n independent trials with success chance p." },
+      { symbol: "P(X = x)", meaning: "Probability of exactly x successes." },
+      { symbol: "P(X ≤ k)", meaning: "Cumulative probability up to k successes." }
+    ],
+    simpleExplanation:
+      "A binomial random variable counts how many successes happen in a fixed number of repeated yes/no trials.",
+    formula: "P(X = x) = nCx p^x (1 - p)^(n - x)",
+    formulaMeaning:
+      "Meaning: choose which trials succeed, then multiply by the probability pattern for that number of successes and failures.",
+    mlUseCase:
+      "This helps when reasoning about repeated classification successes, sampling behavior, and confidence across repeated events.",
+    intuition:
+      "Ask: how likely is exactly x successes, and how likely is up to or at least some threshold of successes?",
+    examShortcuts: [
+      "Exactly means one binomial term.",
+      "Cumulative means add multiple terms.",
+      "Check that trials are independent and success probability stays the same."
+    ],
+    bigPicture:
+      "This lesson turns raw repeated-trial questions into a clean probability model you can solve systematically.",
+    examReadiness: [
+      "Recognize binomial setups quickly.",
+      "Compute an exact binomial probability.",
+      "Compute a cumulative probability by summing relevant bars."
+    ],
+    advancedExample: {
+      title: "Exact and cumulative probability for four trials.",
+      steps: [
+        "Suppose X counts successes in 4 trials with success probability p = 0.5.",
+        "Compute exact probabilities for X = 0, 1, 2, 3, 4 using the binomial formula.",
+        "To get P(X ≤ 2), add the bars for X = 0, X = 1, and X = 2.",
+        "Cumulative probability is a sum of exact probabilities."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "In 4 fair trials, what is P(X = 2) for the number of successes?",
+        answer: "6/16 = 0.375.",
+        explanation: "Use nCx p^x (1 - p)^(n - x) with n = 4, x = 2, and p = 0.5.",
+        steps: [
+          "Compute 4C2 = 6.",
+          "Use p^2 = 0.25 and (1 - p)^2 = 0.25.",
+          "Multiply 6 × 0.25 × 0.25.",
+          "That gives 0.375."
+        ]
+      },
+      {
+        prompt: "What does cumulative probability P(X ≤ k) mean in words?",
+        answer: "The probability of getting k or fewer successes.",
+        explanation: "It adds all exact probabilities from 0 successes up through k successes.",
+        steps: [
+          "Write the exact outcomes included.",
+          "Start at X = 0.",
+          "Add every exact probability up to X = k.",
+          "Interpret the sum as 'k or fewer'."
+        ]
+      }
+    ],
+    mcq: {
+      question: "What does binomial probability require?",
+      options: [
+        "Independent repeated trials with the same success probability",
+        "Different probabilities every trial",
+        "Only one trial",
+        "A continuous random variable"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. That repeated independent same-p setup is what makes the binomial model work."
+    },
+    problem: {
+      prompt: "If X ~ Bin(4, 0.5), what is P(X = 2)?",
+      answers: ["0.375", ".375", "3/8"],
+      success: "Correct. P(X = 2) = 4C2(0.5)^2(0.5)^2 = 6/16 = 0.375."
+    },
+    conceptQuestion: {
+      prompt: "Why is cumulative probability often more useful than one exact probability?",
+      answer:
+        "Because many practical questions ask for thresholds or ranges, like at most k or at least k, not exactly one count."
+    },
+    controls: [
+      { id: "p", label: "Success probability p", min: 0.1, max: 0.9, step: 0.1, value: 0.5 },
+      { id: "k", label: "Cumulative cutoff k", min: 0, max: 4, step: 1, value: 2 }
+    ],
+    calculate(values) {
+      const p = Number(values.p);
+      const k = Number(values.k);
+      const n = 4;
+      const exactTwo = binomialProbability(n, 2, p);
+      let cumulative = 0;
+      for (let x = 0; x <= k; x += 1) {
+        cumulative += binomialProbability(n, x, p);
+      }
+      return {
+        metrics: [
+          `n = ${n}, p = ${formatNumber(p)}`,
+          `P(X = 2) ≈ ${formatNumber(exactTwo)}`,
+          `P(X ≤ ${k}) ≈ ${formatNumber(cumulative)}`
+        ],
+        exampleSteps: [
+          `Treat X as Bin(${n}, ${formatNumber(p)}).`,
+          `For exact probability, use the binomial formula for X = 2.`,
+          `For cumulative probability, add the probabilities from X = 0 up to X = ${k}.`,
+          `That gives P(X ≤ ${k}) ≈ ${formatNumber(cumulative)}.`
+        ],
+        insight:
+          "Cumulative probability grows as you include more bars, because you are adding more allowed outcomes.",
+        drawing: {
+          type: "binomial",
+          n,
+          p,
+          k
         }
       };
     }
@@ -1611,10 +2154,10 @@ const baseLessons = [
     order: 12,
     stage: "Probability",
     difficulty: "Advanced Core",
-    label: "Distributions",
+    label: "PDFs, Normal & Standard Normal",
     navDescription: "How uncertainty is shaped, not just how large it is.",
     subtitle:
-      "A distribution tells you how probability mass or density is spread across possible values.",
+      "This is the course-style probability block: probability density functions, normal distribution, and standard normal thinking.",
     learningPurpose:
       "Move from single-event probabilities to full uncertainty profiles over many possible outcomes.",
     whyThisBefore:
@@ -1626,14 +2169,15 @@ const baseLessons = [
     visualDescription:
       "The center moves with the mean and the curve widens or narrows with the standard deviation.",
     beginnerNote:
-      "A distribution answers more than 'how likely is one event?'. It answers 'how is uncertainty spread across all possible values?'",
+      "A distribution answers more than 'how likely is one event?'. It answers 'how is uncertainty spread across all possible values?'. For continuous variables, the curve is a density, not the probability of one exact point.",
     symbolGuide: [
       { symbol: "μ", meaning: "Mean, the center of the distribution." },
       { symbol: "σ", meaning: "Standard deviation, the spread." },
-      { symbol: "N(μ, σ²)", meaning: "Normal distribution with mean μ and variance σ²." }
+      { symbol: "N(μ, σ²)", meaning: "Normal distribution with mean μ and variance σ²." },
+      { symbol: "N(0, 1)", meaning: "Standard normal distribution." }
     ],
     simpleExplanation:
-      "A distribution is a map of where values are likely to appear and how tightly or loosely they cluster.",
+      "A distribution is a map of where values are likely to appear and how tightly or loosely they cluster. The normal distribution is the most famous example, and standard normal is its cleaned-up z-score version.",
     formula: "z = (x - μ) / σ",
     formulaMeaning:
       "Meaning: z-score tells you how many standard deviations a value is from the mean.",
@@ -1651,7 +2195,8 @@ const baseLessons = [
     examReadiness: [
       "Compute z-scores.",
       "Read the effect of μ and σ on curve shape.",
-      "Interpret how unusual a value is."
+      "Interpret how unusual a value is.",
+      "Know that standard normal means μ = 0 and σ = 1."
     ],
     advancedExample: {
       title: "Use z-scores to compare values from different scales.",
@@ -2325,6 +2870,14 @@ function curveSlope(x) {
   return 0.36 * x - 0.8;
 }
 
+function binomialProbability(n, x, p) {
+  let combination = 1;
+  for (let i = 1; i <= x; i += 1) {
+    combination = (combination * (n - (x - i))) / i;
+  }
+  return combination * p ** x * (1 - p) ** (n - x);
+}
+
 function formatNumber(value) {
   return Number(value).toFixed(2).replace(/\.00$/, "");
 }
@@ -2981,6 +3534,88 @@ const lessonEnhancements = {
       }
     ]
   },
+  "inverse-spaces": {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a photo-editing tool that sometimes keeps all details and sometimes crushes the whole image into a line-like blur.",
+      graphMeaning:
+        "The basis arrows show whether two independent output directions survive. If they collapse together, rank drops and invertibility is lost.",
+      mlBridge:
+        "This is the same reason singular matrices, redundant features, and collapsed representations matter in ML.",
+      summary(values, result) {
+        return `For this matrix, the graph says ${result.metrics[1]} and currently ${result.metrics[2].toLowerCase()}.`;
+      }
+    },
+    visualAnalogy: {
+      title: "Read The Sliders Like Information Flow",
+      intro:
+        "The four matrix entries control whether the transformation keeps two independent directions or crushes them together.",
+      controls: [
+        { label: "a, c", meaning: "First output column direction." },
+        { label: "b, d", meaning: "Second output column direction." }
+      ],
+      summary(values, result) {
+        return `If the two columns become dependent, information collapses and the matrix stops being fully reversible. Right now: ${result.metrics[2]}.`;
+      }
+    },
+    advancedExplanation:
+      "This topic looks abstract until you translate it geometrically. Column space is the set of outputs you can produce. Null space is the set of directions you completely lose. Rank counts how many independent output directions survive. Inverse exists only when no information is lost.",
+    commonMistakes: [
+      "Thinking determinant, rank, null space, and inverse are unrelated ideas.",
+      "Assuming rank 1 still means the matrix is reversible.",
+      "Forgetting that null space is about inputs, not outputs."
+    ],
+    examAngles: [
+      "You may be asked to read rank from geometry or determinant in 2 × 2 cases.",
+      "You may be asked to describe column space and null space in words.",
+      "You should be able to explain why singular means non-invertible."
+    ],
+    realLifeExamples: [
+      "A camera projection can crush 3D depth into a 2D image and lose information.",
+      "Redundant features in ML can create rank issues and unstable inverses."
+    ],
+    goDeeper: [
+      "Link determinant zero to geometric collapse.",
+      "Remember: output directions belong to column space, vanished input directions belong to null space."
+    ],
+    extraPractice: [
+      {
+        prompt: "If det(A) = 0 for a 2 × 2 matrix, what can you say about invertibility?",
+        answer: "It is not invertible.",
+        steps: [
+          "For 2 × 2 matrices, nonzero determinant means invertible.",
+          "Here the determinant is zero.",
+          "So the matrix collapses area.",
+          "That makes it non-invertible."
+        ]
+      },
+      {
+        prompt: "What does rank 1 mean geometrically in 2D?",
+        answer: "All outputs lie on one line.",
+        steps: [
+          "Start with a 2D plane.",
+          "Only one independent output direction survives.",
+          "So every output becomes a multiple of that one direction.",
+          "That means the output set is a line."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does null space contain?",
+        options: ["Inputs sent to zero", "All possible outputs", "All eigenvalues", "Only inverse matrices"],
+        correctIndex: 0,
+        explanation: "Correct. Null space is the set of input vectors the matrix maps to the zero vector."
+      },
+      {
+        question: "If a 2 × 2 matrix has rank 2, what is true?",
+        options: ["It keeps two independent directions", "It must be the zero matrix", "Its null space is the whole plane", "It cannot have an inverse"],
+        correctIndex: 0,
+        explanation: "Correct. Rank 2 means full independent output directions remain in 2D."
+      }
+    ]
+  },
   dot: {
     visualScenario: {
       title: "Scenario Behind The Graph",
@@ -3200,6 +3835,85 @@ const lessonEnhancements = {
       }
     ]
   },
+  "vector-valued": {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a drone moving around a circular track. One input parameter t tells you exactly where the drone is at that moment.",
+      graphMeaning:
+        "The path is the full curve and the arrow is the current output vector at one chosen parameter value.",
+      mlBridge:
+        "This matters any time one model input controls several outputs together, including trajectories and embedding paths.",
+      summary(values, result) {
+        return `At t = ${formatNumber(values.t)}, the current output vector is approximately (${result.metrics[1].split('≈ ')[1]}, ${result.metrics[2].split('≈ ')[1]}).`;
+      }
+    },
+    visualAnalogy: {
+      title: "Read The Slider Like A Time Parameter",
+      intro:
+        "The slider is not changing one coordinate directly. It is moving one master parameter that updates every output coordinate together.",
+      controls: [{ label: "Parameter t", meaning: "The shared input that moves the point along the whole path." }],
+      summary(values) {
+        return `Changing t changes every component of the vector together, which is why the output traces a path instead of a single number line.`;
+      }
+    },
+    advancedExplanation:
+      "This topic matters because many advanced math and ML objects are naturally vector-valued. Once the output becomes a vector, you stop thinking about one graph y = f(x) and start thinking about a moving point or path in space.",
+    commonMistakes: [
+      "Treating each component as unrelated instead of as one coordinated output.",
+      "Forgetting to plug the same parameter into every component.",
+      "Thinking the path is separate from the function rather than produced by it."
+    ],
+    examAngles: [
+      "You may be asked to evaluate a vector-valued function at a specific parameter.",
+      "You may be asked to explain what geometric path the function traces.",
+      "You should be able to compare scalar-valued and vector-valued outputs clearly."
+    ],
+    realLifeExamples: [
+      "A moving particle has one time input but a 2D or 3D position output.",
+      "Trajectory prediction and path planning naturally use vector-valued functions."
+    ],
+    goDeeper: [
+      "Treat the parameter like a timeline or controller.",
+      "Remember that the curve is traced by outputs of one function, not by disconnected points."
+    ],
+    extraPractice: [
+      {
+        prompt: "If r(t) = (t, t²), what is r(-1)?",
+        answer: "(-1, 1).",
+        steps: [
+          "Plug t = -1 into the first component to get -1.",
+          "Plug t = -1 into the second component to get 1.",
+          "Combine the results.",
+          "So r(-1) = (-1, 1)."
+        ]
+      },
+      {
+        prompt: "What does the parameter do in a vector-valued function?",
+        answer: "It controls all output coordinates together.",
+        steps: [
+          "Start with one input parameter t.",
+          "Each component depends on the same t.",
+          "As t changes, the whole output vector changes.",
+          "That is why a path gets traced."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does r(t) usually describe geometrically?",
+        options: ["A path or moving point", "Only one fixed number", "A probability table", "A matrix inverse"],
+        correctIndex: 0,
+        explanation: "Correct. A vector-valued function often traces a path in space."
+      },
+      {
+        question: "Why is r(t) = (x(t), y(t)) still one function?",
+        options: ["Because one input parameter controls the full output vector", "Because x(t) and y(t) must be equal", "Because it has no graph", "Because it is always linear"],
+        correctIndex: 0,
+        explanation: "Correct. One shared input controls the whole vector output."
+      }
+    ]
+  },
   probability: {
     visualScenario: {
       title: "Scenario Behind The Graph",
@@ -3243,6 +3957,167 @@ const lessonEnhancements = {
         options: ["Moderate uncertainty", "Impossible event", "Guaranteed event", "Negative chance"],
         correctIndex: 0,
         explanation: "Correct. 0.5 is a balanced uncertain case, not certainty."
+      }
+    ]
+  },
+  "random-variables": {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a quiz with pass = 1 and fail = 0. The random variable turns those uncertain outcomes into numbers.",
+      graphMeaning:
+        "The bars show the possible values of X and the expected-value line shows the long-run average score over many repeats.",
+      mlBridge:
+        "Expected value is everywhere in ML: expected loss, expected reward, and average predicted behavior.",
+      summary(values, result) {
+        return `With P(X = 1) = ${formatNumber(values.p)}, the long-run average becomes ${result.metrics[1].split(' = ')[1]}.`;
+      }
+    },
+    visualAnalogy: {
+      title: "Read The Graph Like A Weighted Average",
+      intro:
+        "The random variable assigns numbers to outcomes, and expectation averages those numbers using the probabilities as weights.",
+      controls: [{ label: "P(X = 1)", meaning: "How often the success outcome happens in the long run." }],
+      summary(values, result) {
+        return `As success becomes more likely, the expected value shifts toward 1. Right now it is ${result.metrics[1].split(' = ')[1]}.`;
+      }
+    },
+    advancedExplanation:
+      "Students often understand probability of an event but not yet the idea of a random variable. A random variable is the bridge that lets probability talk about numbers, averages, variance, and later distributions in a rigorous way.",
+    commonMistakes: [
+      "Thinking the random variable is the same thing as the event itself.",
+      "Treating expected value like a guaranteed one-shot result.",
+      "Forgetting that probabilities act as weights in the expectation formula."
+    ],
+    examAngles: [
+      "You may be asked to define a random variable from a story.",
+      "You may be asked to compute a simple expected value.",
+      "You should be able to explain why expectation is an average, not a certain outcome."
+    ],
+    realLifeExamples: [
+      "Pass/fail coded as 1 and 0 is a simple random variable.",
+      "In reinforcement learning, expected reward is a core idea."
+    ],
+    goDeeper: [
+      "Separate the outcome space from the number assigned to each outcome.",
+      "Read expectation as a weighted center of the distribution."
+    ],
+    extraPractice: [
+      {
+        prompt: "If X = 2 with probability 0.4 and X = 5 with probability 0.6, what is E[X]?",
+        answer: "3.8.",
+        steps: [
+          "Write E[X] = 2(0.4) + 5(0.6).",
+          "Compute 0.8 + 3.0.",
+          "Add them together.",
+          "So E[X] = 3.8."
+        ]
+      },
+      {
+        prompt: "Can E[X] be a value the random variable never actually takes in one trial?",
+        answer: "Yes.",
+        steps: [
+          "Expectation is a weighted average over many repeats.",
+          "Averages need not match any single outcome.",
+          "Think of the average of 0 and 1.",
+          "That average can be 0.6 even if one trial is only 0 or 1."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does a random variable do?",
+        options: ["Assigns numbers to outcomes", "Creates new outcomes", "Removes probabilities", "Always equals the mean"],
+        correctIndex: 0,
+        explanation: "Correct. A random variable maps outcomes to numbers."
+      },
+      {
+        question: "What is expected value closest to?",
+        options: ["A weighted average", "The maximum outcome", "The number of samples", "A matrix rank"],
+        correctIndex: 0,
+        explanation: "Correct. Expectation is the probability-weighted average."
+      }
+    ]
+  },
+  binomial: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine taking four independent quiz attempts where each one can be a success or failure.",
+      graphMeaning:
+        "Each bar is the probability of getting exactly that many successes, and the highlighted bars add up to a cumulative probability.",
+      mlBridge:
+        "This mirrors repeated independent classification outcomes and many repeated-event probability questions.",
+      summary(values, result) {
+        return `For the current setup, the exact middle probability is ${result.metrics[1].split('≈ ')[1]} and the cumulative probability is ${result.metrics[2].split('≈ ')[1]}.`;
+      }
+    },
+    visualAnalogy: {
+      title: "Read The Bars Like Success Counts",
+      intro:
+        "The x-axis is not a raw value. It is counting how many successes happened out of the repeated trials.",
+      controls: [
+        { label: "Success probability p", meaning: "Chance of success on each trial." },
+        { label: "Cumulative cutoff k", meaning: "How many bars are included in P(X ≤ k)." }
+      ],
+      summary(values) {
+        return `The highlighted bars answer 'k or fewer successes', while one single bar answers 'exactly x successes'.`;
+      }
+    },
+    advancedExplanation:
+      "Binomial probability is a major exam topic because it combines model recognition with calculation. First recognize the setup: fixed number of trials, same success probability, independence. Then decide whether the question asks for an exact count or a cumulative range.",
+    commonMistakes: [
+      "Using the binomial formula when trials are not independent or p changes.",
+      "Mixing up exact probability with cumulative probability.",
+      "Forgetting to sum several terms for a cumulative question."
+    ],
+    examAngles: [
+      "You may be asked to identify whether a scenario is binomial.",
+      "You may be asked for an exact probability like P(X = 2).",
+      "You may be asked for a cumulative probability like P(X ≤ 2) or P(X ≥ 3)."
+    ],
+    realLifeExamples: [
+      "Counting how many of four coin tosses land heads is a binomial setup.",
+      "Counting successful classifications across repeated independent trials follows the same logic."
+    ],
+    goDeeper: [
+      "Train yourself to separate exact versus at-most/at-least wording.",
+      "Use symmetry when p = 0.5 to sanity-check results."
+    ],
+    extraPractice: [
+      {
+        prompt: "If X ~ Bin(4, 0.5), what is P(X ≤ 1)?",
+        answer: "0.3125.",
+        steps: [
+          "Compute P(X = 0) = 0.0625.",
+          "Compute P(X = 1) = 0.25.",
+          "Add them for the cumulative probability.",
+          "So P(X ≤ 1) = 0.3125."
+        ]
+      },
+      {
+        prompt: "What phrase in a question should make you think cumulative probability?",
+        answer: "Words like at most, at least, no more than, or up to.",
+        steps: [
+          "Read the wording carefully.",
+          "Look for range-style language.",
+          "Recognize that one exact bar is not enough.",
+          "That means a sum of probabilities is needed."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does P(X ≤ 2) mean?",
+        options: ["At most 2 successes", "Exactly 2 successes", "At least 2 successes", "More than 2 successes only"],
+        correctIndex: 0,
+        explanation: "Correct. P(X ≤ 2) means 0, 1, or 2 successes."
+      },
+      {
+        question: "Which condition is needed for a binomial model?",
+        options: ["Same success probability on each trial", "Different p every time", "Continuous outcomes only", "No fixed trial count"],
+        correctIndex: 0,
+        explanation: "Correct. Same p on independent repeated trials is a core binomial condition."
       }
     ]
   },
@@ -3717,7 +4592,8 @@ const lessonEnhancements = {
     ],
     goDeeper: [
       "Connect eigendecomposition to change of basis, not as a separate isolated topic.",
-      "Notice that diagonal matrices are easy because they act independently on each coordinate."
+      "Notice that diagonal matrices are easy because they act independently on each coordinate.",
+      "Memorize the basic algorithm: find eigenvalues, find matching eigenvectors, build C, build D, then compute C^-1 if needed."
     ],
     extraPractice: [
       {
@@ -3738,6 +4614,16 @@ const lessonEnhancements = {
           "Solve to get eigenvalues 5 and -1.",
           "Place them on the diagonal.",
           "Match the order to the eigenvectors in C."
+        ]
+      },
+      {
+        prompt: "What is the basic algorithm for building an eigendecomposition?",
+        answer: "Find eigenvalues, find their eigenvectors, place eigenvectors in C, place eigenvalues in D in the same order, then use A = C D C^-1 if diagonalization is possible.",
+        steps: [
+          "Solve det(A - λI) = 0 to get the eigenvalues.",
+          "For each eigenvalue, solve (A - λI)x = 0 to get an eigenvector.",
+          "Put the eigenvectors as columns of C.",
+          "Put the matching eigenvalues on the diagonal of D in the same order."
         ]
       }
     ],

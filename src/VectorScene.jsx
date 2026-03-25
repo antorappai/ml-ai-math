@@ -214,6 +214,26 @@ function probabilityScene(drawing) {
   `;
 }
 
+function discreteRvScene(drawing) {
+  const zeroHeight = 240 * (1 - drawing.p);
+  const oneHeight = 240 * drawing.p;
+  const expectedX = 120 + drawing.p * 160;
+  return `
+    <svg viewBox="0 0 420 420" aria-label="Discrete random variable">
+      <rect class="chart-bg" x="40" y="40" width="340" height="320" rx="22" />
+      <line class="axis-line" x1="90" y1="320" x2="330" y2="320" />
+      <rect class="bar-b" x="118" y="${320 - zeroHeight}" width="62" height="${zeroHeight}" rx="12" />
+      <rect class="bar-a" x="238" y="${320 - oneHeight}" width="62" height="${oneHeight}" rx="12" />
+      <text class="label-text" x="142" y="348">X = 0</text>
+      <text class="label-text" x="262" y="348">X = 1</text>
+      <text class="label-text" x="124" y="${320 - zeroHeight - 12}">${formatNumber(1 - drawing.p)}</text>
+      <text class="label-text" x="250" y="${320 - oneHeight - 12}">${formatNumber(drawing.p)}</text>
+      <line class="mean-line" x1="${expectedX}" y1="90" x2="${expectedX}" y2="320" />
+      <text class="label-text" x="${expectedX - 18}" y="84">E[X]</text>
+    </svg>
+  `;
+}
+
 function meanScene(drawing) {
   const min = 0;
   const max = 10;
@@ -321,6 +341,41 @@ function distributionScene(drawing) {
   `;
 }
 
+function binomialCoeff(n, r) {
+  let top = 1;
+  let bottom = 1;
+  for (let i = 1; i <= r; i += 1) {
+    top *= n - (r - i);
+    bottom *= i;
+  }
+  return top / bottom;
+}
+
+function binomialScene(drawing) {
+  const values = [];
+  for (let x = 0; x <= drawing.n; x += 1) {
+    values.push(binomialCoeff(drawing.n, x) * drawing.p ** x * (1 - drawing.p) ** (drawing.n - x));
+  }
+  const maxValue = Math.max(...values, 0.001);
+  const left = 70;
+  const bottom = 330;
+  const width = 270;
+  const barWidth = 38;
+  const gap = 16;
+  const elements = [];
+  elements.push(`<rect class="chart-bg" x="40" y="40" width="340" height="320" rx="22" />`);
+  elements.push(`<line class="axis-line" x1="${left}" y1="${bottom}" x2="${left + width}" y2="${bottom}" />`);
+  values.forEach((value, x) => {
+    const height = 190 * (value / maxValue);
+    const xPos = left + x * (barWidth + gap);
+    const barClass = x <= drawing.k ? "bar-a" : "bar-b";
+    elements.push(`<rect class="${barClass}" x="${xPos}" y="${bottom - height}" width="${barWidth}" height="${height}" rx="10" />`);
+    elements.push(`<text class="label-text" x="${xPos + 12}" y="${bottom + 20}">${x}</text>`);
+  });
+  elements.push(`<text class="label-text" x="70" y="88">P(X ≤ ${drawing.k}) highlighted</text>`);
+  return `<svg viewBox="0 0 420 420" aria-label="Binomial distribution">${elements.join("")}</svg>`;
+}
+
 function pcaScene() {
   return `
     <svg viewBox="0 0 420 420" aria-label="PCA intuition">
@@ -354,6 +409,24 @@ function decompositionScene() {
       <text class="label-text" x="70" y="324">D is simple because it only scales along eigen directions</text>
     </svg>
   `;
+}
+
+function parametricScene(drawing) {
+  const elements = baseGrid(28);
+  elements.push(defsBlock());
+  const commands = [];
+  for (let t = 0; t <= Math.PI * 2 + 0.001; t += 0.05) {
+    const x = Math.cos(t);
+    const y = Math.sin(t);
+    const point = pointToCanvas(x * 4, y * 4, 28);
+    commands.push(`${commands.length === 0 ? "M" : "L"} ${point.x} ${point.y}`);
+  }
+  elements.push(`<path class="curve-line" d="${commands.join(" ")}" />`);
+  const point = pointToCanvas(drawing.x * 4, drawing.y * 4, 28);
+  elements.push(`<line class="vector-a" x1="${CENTER}" y1="${CENTER}" x2="${point.x}" y2="${point.y}" marker-end="url(#marker-a)" />`);
+  elements.push(`<circle class="highlight-dot" cx="${point.x}" cy="${point.y}" r="5" />`);
+  elements.push(`<text class="label-text" x="${point.x + 10}" y="${point.y - 10}">r(t)</text>`);
+  return elements.join("");
 }
 
 function descentScene(drawing) {
@@ -449,6 +522,9 @@ function buildScene(drawing) {
   if (drawing.type === "probability") {
     return probabilityScene(drawing);
   }
+  if (drawing.type === "discreteRV") {
+    return discreteRvScene(drawing);
+  }
   if (drawing.type === "mean") {
     return meanScene(drawing);
   }
@@ -461,11 +537,17 @@ function buildScene(drawing) {
   if (drawing.type === "distribution") {
     return distributionScene(drawing);
   }
+  if (drawing.type === "binomial") {
+    return binomialScene(drawing);
+  }
   if (drawing.type === "pca") {
     return pcaScene(drawing);
   }
   if (drawing.type === "decomposition") {
     return decompositionScene(drawing);
+  }
+  if (drawing.type === "parametric") {
+    return parametricScene(drawing);
   }
   if (drawing.type === "descent") {
     return descentScene(drawing);
