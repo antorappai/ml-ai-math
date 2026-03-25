@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 const PYODIDE_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.3/full/pyodide.js";
 
 let pyodideReadyPromise = null;
+const loadedPackages = new Set();
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -37,6 +38,23 @@ async function getPyodideInstance() {
   }
 
   return pyodideReadyPromise;
+}
+
+async function ensurePackages(pyodide, sourceCode) {
+  const neededPackages = [];
+
+  if (/\bimport\s+numpy\b|\bfrom\s+numpy\b/.test(sourceCode) && !loadedPackages.has("numpy")) {
+    neededPackages.push("numpy");
+  }
+
+  if (/\bimport\s+matplotlib\b|\bfrom\s+matplotlib\b/.test(sourceCode) && !loadedPackages.has("matplotlib")) {
+    neededPackages.push("matplotlib");
+  }
+
+  if (neededPackages.length > 0) {
+    await pyodide.loadPackage(neededPackages);
+    neededPackages.forEach((item) => loadedPackages.add(item));
+  }
 }
 
 export default function PythonPlayground({ lessonKey, initialCode }) {
@@ -96,6 +114,7 @@ export default function PythonPlayground({ lessonKey, initialCode }) {
       setLoadError("");
 
       const pyodide = await getPyodideInstance();
+      await ensurePackages(pyodide, code);
       const stdoutLines = [];
       const stderrLines = [];
 
@@ -174,6 +193,14 @@ export default function PythonPlayground({ lessonKey, initialCode }) {
           <button type="button" className="secondary-button" onClick={resetCode}>
             Reset code
           </button>
+          <a
+            className="secondary-button button-link"
+            href="https://www.programiz.com/python-programming/online-compiler/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open external editor
+          </a>
         </div>
       </div>
 

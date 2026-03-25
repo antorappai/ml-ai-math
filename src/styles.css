@@ -897,6 +897,13 @@ button {
   border-color: rgba(197, 138, 46, 0.28);
 }
 
+.button-link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .playground-output {
   min-height: 120px;
 }
