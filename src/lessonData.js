@@ -3439,7 +3439,18 @@ const baseLessons = [
         "Define a simple function with `def`.",
         "Trace one update step in code.",
         "Connect the code to the underlying math rule."
-      ]
+      ],
+      gradedQuestion: {
+        prompt:
+          "Given f(x, y) = x**2 + y**2 + 2*x*y, write Python code that computes the gradient vector [df/dx, df/dy] at an input pair (x, y) and rounds each value to 2 decimal places.",
+        starterCode:
+          "x, y = 2.0, 3.0\n\n# Write the gradient code below\n# df_dx = ...\n# df_dy = ...\n# print([...])",
+        explanation:
+          "First compute the partial derivatives by hand: df/dx = 2x + 2y and df/dy = 2y + 2x. Then translate those two formulas directly into Python variables and print the rounded list.",
+        solution:
+          "x, y = 2.0, 3.0\n\ndf_dx = 2 * x + 2 * y\ndf_dy = 2 * y + 2 * x\n\nprint([round(df_dx, 2), round(df_dy, 2)])",
+        output: "[10.0, 10.0]"
+      }
     },
     calculate() {
       return {

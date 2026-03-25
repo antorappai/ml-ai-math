@@ -18,6 +18,11 @@ const sectionTabs = [
   { key: "exam", label: "Exam Prep" },
   { key: "python", label: "Python" }
 ];
+const pythonSectionTabs = [
+  { key: "explanation", label: "Explanation" },
+  { key: "python", label: "Python Code" },
+  { key: "exam", label: "Exam Prep" }
+];
 
 const topicAreas = ["All", ...new Set(lessons.map((lesson) => lesson.stage))];
 const difficultyLevels = ["All", ...new Set(lessons.map((lesson) => lesson.difficulty))];
@@ -48,6 +53,7 @@ export default function App() {
   const [problemAnswer, setProblemAnswer] = useState("");
   const [problemFeedback, setProblemFeedback] = useState("");
   const [showConceptAnswer, setShowConceptAnswer] = useState(false);
+  const [showPythonSolution, setShowPythonSolution] = useState(false);
   const [filters, setFilters] = useState({
     topic: "All",
     difficulty: "All",
@@ -59,6 +65,8 @@ export default function App() {
   const lesson = lessons.find((entry) => entry.key === lessonKey);
   const currentValues = controlState[lesson.key];
   const result = lesson.calculate(currentValues);
+  const isPythonLesson = lesson.stage === "Python Programming";
+  const visibleSectionTabs = isPythonLesson ? pythonSectionTabs : sectionTabs;
 
   useEffect(() => {
     if (screen === "study" && typeof window !== "undefined") {
@@ -74,6 +82,12 @@ export default function App() {
       setLessonKey(filteredLessons[0].key);
     }
   }, [filters.topic, filters.difficulty, filters.search, lessonKey, filteredLessons]);
+
+  useEffect(() => {
+    if (!visibleSectionTabs.some((tab) => tab.key === studyTab)) {
+      setStudyTab("explanation");
+    }
+  }, [studyTab, visibleSectionTabs]);
 
   function enterStudyGuide() {
     startTransition(() => {
@@ -94,6 +108,7 @@ export default function App() {
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
+      setShowPythonSolution(false);
     });
   }
 
@@ -116,6 +131,7 @@ export default function App() {
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
+      setShowPythonSolution(false);
     });
   }
 
@@ -131,6 +147,7 @@ export default function App() {
       setProblemAnswer("");
       setProblemFeedback("");
       setShowConceptAnswer(false);
+      setShowPythonSolution(false);
     });
   }
 
@@ -350,7 +367,7 @@ export default function App() {
           <p className="eyebrow">Study Workspace</p>
           <h1 className="study-title">ML Math Studio</h1>
           <p className="study-subtitle">
-            Explanation first, then examples, practice, exam prep, and Python.
+            Explanation first, then examples, practice, exam prep, and Python when needed.
           </p>
         </div>
         <div className="study-actions">
@@ -427,7 +444,7 @@ export default function App() {
           </div>
 
           <div className="section-tabs">
-            {sectionTabs.map((tab) => (
+            {visibleSectionTabs.map((tab) => (
               <button
                 key={tab.key}
                 type="button"
@@ -902,6 +919,39 @@ export default function App() {
                       ))}
                     </ul>
                   </article>
+
+                  {lesson.pythonCompanion.gradedQuestion ? (
+                    <article className="content-card wide">
+                      <p className="panel-label">Graded-Style Coding Question</p>
+                      <p className="question">{lesson.pythonCompanion.gradedQuestion.prompt}</p>
+                      <div className="code-card">
+                        <pre className="code-block">
+                          <code>{lesson.pythonCompanion.gradedQuestion.starterCode}</code>
+                        </pre>
+                      </div>
+                      <button type="button" onClick={() => setShowPythonSolution((current) => !current)}>
+                        {showPythonSolution ? "Hide solution" : "Reveal solution"}
+                      </button>
+                      {showPythonSolution ? (
+                        <div className="revealed-solution">
+                          <p>{lesson.pythonCompanion.gradedQuestion.explanation}</p>
+                          <div className="code-card">
+                            <pre className="code-block">
+                              <code>{lesson.pythonCompanion.gradedQuestion.solution}</code>
+                            </pre>
+                          </div>
+                          {lesson.pythonCompanion.gradedQuestion.output ? (
+                            <div className="code-output">
+                              <strong>Expected output</strong>
+                              <pre className="code-block compact">
+                                <code>{lesson.pythonCompanion.gradedQuestion.output}</code>
+                              </pre>
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </article>
+                  ) : null}
 
                   <PythonPlayground
                     lessonKey={lesson.key}

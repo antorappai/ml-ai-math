@@ -857,6 +857,7 @@ button {
   border: 1px solid rgba(15, 118, 110, 0.2);
   background: linear-gradient(180deg, #14251f 0%, #10201b 100%);
   color: #edf8f5;
+  caret-color: #f7fffd;
   padding: 16px;
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.95rem;
@@ -906,6 +907,10 @@ button {
 
 .playground-output {
   min-height: 120px;
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #14251f 0%, #10201b 100%);
+  color: #edf8f5;
 }
 
 .compact-steps {
