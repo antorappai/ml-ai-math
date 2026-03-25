@@ -116,6 +116,34 @@ function basisScene(drawing) {
   return elements.join("");
 }
 
+function matrixTypesScene() {
+  return `
+    <svg viewBox="0 0 420 420" aria-label="Matrix types overview">
+      <rect class="chart-bg" x="36" y="36" width="348" height="348" rx="24" />
+      <text class="label-text" x="62" y="82">Identity</text>
+      <text class="label-text" x="210" y="82">Diagonal</text>
+      <text class="label-text" x="64" y="230">Zero</text>
+      <text class="label-text" x="206" y="230">Rectangular</text>
+
+      <rect x="60" y="98" width="92" height="92" rx="14" fill="rgba(15,118,110,0.08)" stroke="rgba(15,118,110,0.35)" />
+      <rect x="190" y="98" width="92" height="92" rx="14" fill="rgba(197,138,46,0.10)" stroke="rgba(197,138,46,0.45)" />
+      <rect x="60" y="246" width="92" height="92" rx="14" fill="rgba(25,50,41,0.06)" stroke="rgba(25,50,41,0.30)" />
+      <rect x="190" y="246" width="132" height="92" rx="14" fill="rgba(15,118,110,0.06)" stroke="rgba(15,118,110,0.30)" />
+
+      <text class="label-text" x="88" y="135">[1 0]</text>
+      <text class="label-text" x="88" y="165">[0 1]</text>
+      <text class="label-text" x="215" y="135">[2 0]</text>
+      <text class="label-text" x="215" y="165">[0 5]</text>
+      <text class="label-text" x="90" y="283">[0 0]</text>
+      <text class="label-text" x="90" y="313">[0 0]</text>
+      <text class="label-text" x="217" y="283">[1 2 3]</text>
+      <text class="label-text" x="217" y="313">[4 5 6]</text>
+
+      <text class="label-text" x="58" y="360">Read shape first: rows × columns</text>
+    </svg>
+  `;
+}
+
 function projectionScene(drawing) {
   const elements = baseGrid(28);
   elements.push(defsBlock());
@@ -402,6 +430,9 @@ function buildScene(drawing) {
   }
   if (drawing.type === "matrix") {
     return matrixScene(drawing);
+  }
+  if (drawing.type === "matrixTypes") {
+    return matrixTypesScene();
   }
   if (drawing.type === "basis") {
     return basisScene(drawing);

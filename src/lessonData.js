@@ -17,6 +17,7 @@ export const curriculumStages = [
       "Vectors, matrices, dot products, and linear transformations show up everywhere in ML.",
     topics: [
       "Vectors",
+      "Matrix Basics & Types",
       "Matrices & Multiplication",
       "Linear Transformations",
       "Basis & Coordinates",
@@ -263,8 +264,127 @@ const baseLessons = [
     }
   },
   {
-    key: "matrices",
+    key: "matrix-basics",
     order: 3,
+    stage: "Linear Algebra",
+    difficulty: "Core",
+    label: "Matrix Basics & Types",
+    navDescription: "Learn what matrices are before what they do.",
+    subtitle:
+      "This lesson covers the matrix language that exam questions assume you already know: rows, columns, size, and common matrix types.",
+    learningPurpose:
+      "Understand the basic structure of matrices so multiplication and transformations stop feeling like a jump.",
+    whyThisBefore:
+      "Study this before matrix multiplication because exam questions often start with dimensions and matrix types before asking for calculations.",
+    prerequisites: ["Vectors"],
+    mlPurpose:
+      "Matrices store parameters, data blocks, covariance information, and transformation rules throughout ML.",
+    visualTitle: "See common matrix types side by side.",
+    visualDescription:
+      "The visual compares a few common matrix types so the structure becomes recognizable on sight.",
+    beginnerNote:
+      "A matrix is just a rectangular arrangement of numbers. The hard part is not the box itself. The hard part is learning what that box is being used for.",
+    symbolGuide: [
+      { symbol: "m × n", meaning: "m rows and n columns." },
+      { symbol: "square matrix", meaning: "Same number of rows and columns." },
+      { symbol: "I", meaning: "Identity matrix, the do-nothing square matrix." }
+    ],
+    simpleExplanation:
+      "A matrix is like a well-organized table of numbers. Different table shapes and patterns have different mathematical meanings.",
+    formula: "A is m × n",
+    formulaMeaning:
+      "Meaning: A has m rows and n columns.",
+    mlUseCase:
+      "Weights in a neural layer, data arranged by samples and features, and covariance tables are all naturally stored as matrices.",
+    intuition:
+      "Ask: how many rows and columns are there, and what kind of matrix pattern am I seeing?",
+    examShortcuts: [
+      "Rows go horizontally, columns go vertically.",
+      "Diagonal entries run from top-left to bottom-right.",
+      "Identity leaves vectors unchanged when dimensions match."
+    ],
+    bigPicture:
+      "You need this lesson so later matrix operations feel like acting on a familiar object, not a mystery box.",
+    examReadiness: [
+      "Identify matrix dimensions quickly.",
+      "Recognize identity, diagonal, zero, and square matrices.",
+      "Know when two matrices can even be multiplied."
+    ],
+    advancedExample: {
+      title: "Read a matrix before operating on it.",
+      steps: [
+        "Take A = [[2, 0], [0, 3]].",
+        "It has 2 rows and 2 columns, so it is a 2 × 2 square matrix.",
+        "Its only nonzero entries are on the diagonal, so it is diagonal.",
+        "That pattern already tells you it scales coordinates instead of mixing them."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "What type of matrix is [[1, 0], [0, 1]] and why is it important?",
+        answer: "It is the identity matrix, and it acts like the do-nothing transformation.",
+        explanation: "Identity is the neutral matrix for multiplication when dimensions match.",
+        steps: [
+          "Notice the diagonal entries are 1.",
+          "Notice all off-diagonal entries are 0.",
+          "That is the standard identity pattern.",
+          "It leaves vectors unchanged when multiplied."
+        ]
+      },
+      {
+        prompt: "Why can a 2 × 3 matrix not be added to a 3 × 2 matrix?",
+        answer: "Because matrix addition requires the same shape.",
+        explanation: "Addition combines matching entries, so the row-column layout must match exactly.",
+        steps: [
+          "Read the first matrix shape as 2 × 3.",
+          "Read the second matrix shape as 3 × 2.",
+          "Compare row and column counts.",
+          "Because the shapes differ, entrywise addition is not defined."
+        ]
+      }
+    ],
+    mcq: {
+      question: "What does it mean if a matrix is 2 × 3?",
+      options: [
+        "It has 2 rows and 3 columns",
+        "It has 2 columns and 3 rows",
+        "It has 5 entries only",
+        "It must be diagonal"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. Matrix size is read as rows × columns."
+    },
+    problem: {
+      prompt: "What are the dimensions of [[1, 2, 3], [4, 5, 6]]?",
+      answers: ["2x3", "2×3", "2 x 3"],
+      success: "Correct. There are 2 rows and 3 columns, so the matrix is 2 × 3."
+    },
+    conceptQuestion: {
+      prompt: "Why do matrix types matter before multiplication?",
+      answer:
+        "Because the shape and pattern of a matrix often tell you what operations make sense and what geometric effect to expect."
+    },
+    controls: [],
+    calculate() {
+      return {
+        metrics: ["Rows × columns", "Identity, diagonal, zero", "Shape controls operations"],
+        exampleSteps: [
+          "Count rows first, then columns.",
+          "Check if the matrix is square.",
+          "Look for diagonal or identity patterns.",
+          "Use that structure to predict what the matrix is likely to do."
+        ],
+        insight:
+          "Many exam mistakes come from skipping the basic step of reading a matrix's shape and type before calculating.",
+        drawing: {
+          type: "matrixTypes"
+        }
+      };
+    }
+  },
+  {
+    key: "matrices",
+    order: 4,
     stage: "Linear Algebra",
     difficulty: "Core",
     label: "Matrices & Multiplication",
@@ -274,8 +394,8 @@ const baseLessons = [
     learningPurpose:
       "See matrix multiplication as a transformation rule, not just a grid of numbers to memorize.",
     whyThisBefore:
-      "Study matrices before linear transformations and regression because they encode how models change inputs.",
-    prerequisites: ["Functions & Graphs", "Vectors"],
+      "Study multiplication after basic matrix language so rows, columns, and dimensions already feel normal.",
+    prerequisites: ["Vectors", "Matrix Basics & Types"],
     mlPurpose:
       "A dense neural-network layer is basically matrix multiplication plus a bias and nonlinearity.",
     visualTitle: "Change the matrix and see how the vector moves.",
@@ -2347,6 +2467,85 @@ const lessonEnhancements = {
       }
     ]
   },
+  "matrix-basics": {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine a spreadsheet where rows represent students and columns represent features like marks, attendance, or project scores.",
+      graphMeaning:
+        "The visual is teaching you how to read the shape and type of a matrix before doing any operations.",
+      mlBridge:
+        "ML constantly stores data and parameters in matrix form, so reading the matrix itself is a basic survival skill.",
+      summary() {
+        return "Before solving anything, ask: how many rows, how many columns, and what special pattern do I see?";
+      }
+    },
+    visualAnalogy: {
+      title: "Read The Matrix Like A Table",
+      intro:
+        "Think of a matrix like a clean data table. The type tells you what kind of table it is, and the shape tells you what operations are allowed.",
+      controls: [],
+      summary() {
+        return "This lesson is about recognition first: if you can identify the matrix shape and type quickly, the later calculations become much easier.";
+      }
+    },
+    advancedExplanation:
+      "A lot of matrix difficulty is fake difficulty caused by weak basics. If you can read dimensions, recognize common types, and remember shape rules for addition and multiplication, then many exam questions become routine instead of confusing. This is the language layer of matrix algebra.",
+    commonMistakes: [
+      "Mixing up rows and columns.",
+      "Thinking any two matrices can be added or multiplied.",
+      "Not recognizing diagonal, identity, or zero matrices on sight."
+    ],
+    examAngles: [
+      "You may be asked to state the dimension of a matrix immediately.",
+      "You may be asked to identify whether a matrix is square, diagonal, identity, or zero.",
+      "You should know the shape rule for matrix multiplication: inner dimensions must match."
+    ],
+    realLifeExamples: [
+      "A spreadsheet of students and features is naturally a matrix.",
+      "A table of pairwise similarities or covariances in ML is also a matrix."
+    ],
+    goDeeper: [
+      "Train yourself to read matrix shape before reading the entries.",
+      "Notice how special patterns like diagonal or identity already hint at the matrix's behavior."
+    ],
+    extraPractice: [
+      {
+        prompt: "Is [[2, 0], [0, 5]] square, diagonal, both, or neither?",
+        answer: "Both square and diagonal.",
+        steps: [
+          "Count rows and columns: it is 2 × 2, so it is square.",
+          "Check off-diagonal entries.",
+          "They are both 0, so the matrix is diagonal.",
+          "Therefore it is both square and diagonal."
+        ]
+      },
+      {
+        prompt: "Can a 2 × 3 matrix multiply a 3 × 1 matrix?",
+        answer: "Yes, because the inner dimensions match.",
+        steps: [
+          "Write the shapes as 2 × 3 and 3 × 1.",
+          "Compare the inner dimensions: 3 and 3.",
+          "Because they match, multiplication is defined.",
+          "The result will have outer shape 2 × 1."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "Which matrix type leaves a vector unchanged when multiplied?",
+        options: ["Identity matrix", "Zero matrix", "Random matrix", "Triangular matrix"],
+        correctIndex: 0,
+        explanation: "Correct. The identity matrix acts like the do-nothing matrix."
+      },
+      {
+        question: "If A is 2 × 3 and B is 3 × 4, what is the shape of AB?",
+        options: ["2 × 4", "3 × 3", "2 × 3", "4 × 2"],
+        correctIndex: 0,
+        explanation: "Correct. The inner 3s match, and the result keeps the outer dimensions 2 and 4."
+      }
+    ]
+  },
   matrices: {
     visualScenario: {
       title: "Scenario Behind The Graph",
@@ -2386,7 +2585,8 @@ const lessonEnhancements = {
     examAngles: [
       "You may be asked to compute Av and then interpret the output geometrically.",
       "You may be asked to identify the action of a diagonal, identity, or shear matrix from its entries.",
-      "You should be able to explain what determinant sign and size say about the transformation."
+      "You should be able to explain what determinant sign and size say about the transformation.",
+      "You may be asked to do matrix-by-matrix multiplication before applying the result to a vector."
     ],
     advancedExample: {
       title: "Build a matrix from transformed basis vectors.",
@@ -2423,11 +2623,13 @@ const lessonEnhancements = {
     ],
     realLifeExamples: [
       "An image filter can be thought of as a matrix-like transformation on pixel values.",
-      "In ML, one dense layer of a neural network is matrix multiplication followed by a bias and activation."
+      "In ML, one dense layer of a neural network is matrix multiplication followed by a bias and activation.",
+      "Stacking multiple linear layers is matrix-by-matrix multiplication in disguise."
     ],
     goDeeper: [
       "Think of a matrix as a transformation machine, not a table to memorize.",
-      "Practice seeing matrix multiplication as mixing input coordinates into new coordinates."
+      "Practice seeing matrix multiplication as mixing input coordinates into new coordinates.",
+      "Remember that matrix-by-matrix multiplication means composing two transformation machines."
     ],
     extraPractice: [
       {
@@ -2458,6 +2660,16 @@ const lessonEnhancements = {
           "Compute the second coordinate: 3×1 + 4×(-1) = -1.",
           "Write the result as a vector.",
           "So Av = (-1, -1)."
+        ]
+      },
+      {
+        prompt: "Compute AB if A = [[1, 2], [0, 1]] and B = [[2, 0], [1, 3]].",
+        answer: "AB = [[4, 6], [1, 3]].",
+        steps: [
+          "Use row-by-column multiplication.",
+          "First row with first column: 1×2 + 2×1 = 4.",
+          "First row with second column: 1×0 + 2×3 = 6.",
+          "Second row gives 0×2 + 1×1 = 1 and 0×0 + 1×3 = 3, so AB = [[4, 6], [1, 3]]."
         ]
       }
     ],
