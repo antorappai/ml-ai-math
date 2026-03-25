@@ -845,14 +845,16 @@ function VisualPanel({ lesson, result, currentValues, updateControl }) {
             <div className="visual-analogy">
               <p className="panel-label">{visualAnalogy.title}</p>
               <p>{visualAnalogy.intro}</p>
-              <div className="control-meaning-list">
-                {visualAnalogy.controls.map((item) => (
-                  <div key={`${lesson.key}-${item.label}`} className="control-meaning-card">
-                    <strong>{item.label}</strong>
-                    <span>{item.meaning}</span>
-                  </div>
-                ))}
-              </div>
+              {visualAnalogy.controls.length ? (
+                <div className="control-meaning-list">
+                  {visualAnalogy.controls.map((item) => (
+                    <div key={`${lesson.key}-${item.label}`} className="control-meaning-card">
+                      <strong>{item.label}</strong>
+                      <span>{item.meaning}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
               <p className="visual-story">{visualAnalogy.summary(currentValues, result)}</p>
             </div>
           ) : null}

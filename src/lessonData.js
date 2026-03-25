@@ -15,7 +15,16 @@ export const curriculumStages = [
       "Understand how data, embeddings, and model weights are represented and transformed.",
     mlConnection:
       "Vectors, matrices, dot products, and linear transformations show up everywhere in ML.",
-    topics: ["Vectors", "Matrices", "Dot Product", "Linear Transformations"]
+    topics: [
+      "Vectors",
+      "Matrices & Multiplication",
+      "Linear Transformations",
+      "Basis & Coordinates",
+      "Composition & Matrix Powers",
+      "Dot Product",
+      "Eigenvalues & PCA Intuition",
+      "Eigen Decomposition"
+    ]
   },
   {
     key: "calculus",
@@ -468,8 +477,282 @@ const baseLessons = [
     }
   },
   {
-    key: "dot",
+    key: "basis",
     order: 5,
+    stage: "Linear Algebra",
+    difficulty: "Advanced Core",
+    label: "Basis & Coordinates",
+    navDescription: "Same vector, different descriptions.",
+    subtitle:
+      "This is where many exam questions stop being scary: a vector can stay the same while its coordinates change with the basis.",
+    learningPurpose:
+      "Understand basis vectors as the reference directions used to describe every other vector.",
+    whyThisBefore:
+      "Study this before eigendecomposition because diagonalization and change-of-basis ideas depend on reading vectors in different coordinate systems.",
+    prerequisites: ["Vectors", "Linear Transformations"],
+    mlPurpose:
+      "Change of basis is the language behind diagonalization, PCA coordinates, and many representation-learning ideas in ML.",
+    visualTitle: "See one vector described in a different basis.",
+    visualDescription:
+      "The teal arrow is the actual vector. The gold and olive arrows are the basis directions used to describe it.",
+    beginnerNote:
+      "A basis is just a set of building directions. Coordinates tell you how much of each building direction you need.",
+    symbolGuide: [
+      { symbol: "e1, e2", meaning: "Standard basis directions (1, 0) and (0, 1)." },
+      { symbol: "b1, b2", meaning: "A different basis chosen for the same space." },
+      { symbol: "v = c1b1 + c2b2", meaning: "The vector is built from basis vectors with coordinates c1 and c2." }
+    ],
+    simpleExplanation:
+      "Coordinates are not the vector itself. They are just the instructions for rebuilding that vector from the chosen basis.",
+    formula: "v = c1b1 + c2b2",
+    formulaMeaning:
+      "Meaning: use c1 copies of the first basis vector and c2 copies of the second basis vector to rebuild v.",
+    mlUseCase:
+      "Many ML methods become easier after moving data into a better basis, especially when directions become more informative or easier to separate.",
+    intuition:
+      "Ask: what building directions am I allowed to use, and how much of each one do I need?",
+    examShortcuts: [
+      "In standard basis, the coordinates are the usual x and y values.",
+      "Same vector, different basis means the geometry stays the same but the coordinates can change.",
+      "Solve for coordinates by writing the vector as a combination of the basis vectors."
+    ],
+    bigPicture:
+      "This is the doorway to understanding change of basis, diagonalization, and why eigenvectors can simplify a transformation.",
+    examReadiness: [
+      "Read standard-basis coordinates instantly.",
+      "Solve simple non-standard basis coordinate questions.",
+      "Explain why coordinates depend on the basis choice."
+    ],
+    advancedExample: {
+      title: "Coordinates of (2, 0) in the basis {(1, 1), (1, -1)}.",
+      steps: [
+        "Write (2, 0) = a(1, 1) + b(1, -1).",
+        "That gives the system a + b = 2 and a - b = 0.",
+        "Solve to get a = 1 and b = 1.",
+        "So the coordinates in that basis are (1, 1)."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "What are the coordinates of (4, -2) in the standard basis {(1, 0), (0, 1)}?",
+        answer: "(4, -2).",
+        explanation: "In the standard basis, the coordinates are already the usual horizontal and vertical components.",
+        steps: [
+          "Standard basis uses e1 = (1, 0) and e2 = (0, 1).",
+          "The vector already says how much of e1 and e2 you need.",
+          "That is 4 copies of e1 and -2 copies of e2.",
+          "So the coordinates are (4, -2)."
+        ]
+      },
+      {
+        prompt: "Why can the same vector have different coordinates in a different basis?",
+        answer: "Because coordinates describe the vector relative to the chosen basis, not absolutely.",
+        explanation: "Changing the basis changes the building directions, so the rebuilding instructions change too.",
+        steps: [
+          "Fix the geometric vector in space.",
+          "Change the basis directions used to describe it.",
+          "Recompute how much of each new basis vector is needed.",
+          "The vector stays the same, but the coordinate description changes."
+        ]
+      }
+    ],
+    mcq: {
+      question: "What changes when you switch to a different basis?",
+      options: [
+        "The coordinate description",
+        "The actual geometric vector",
+        "The dimension of the plane",
+        "The meaning of addition"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. The vector stays the same, but its coordinates depend on the basis."
+    },
+    problem: {
+      prompt: "In the basis {(1, 1), (1, -1)}, what are the coordinates of (2, 0)?",
+      answers: ["(1,1)", "[1,1]", "1,1"],
+      success: "Correct. (2, 0) = 1(1, 1) + 1(1, -1)."
+    },
+    conceptQuestion: {
+      prompt: "Why is standard basis not the only valid basis?",
+      answer:
+        "Because any set of independent vectors that spans the space can be used as building directions."
+    },
+    controls: [
+      { id: "vx", label: "Vector x", min: -4, max: 4, step: 1, value: 2 },
+      { id: "vy", label: "Vector y", min: -4, max: 4, step: 1, value: 0 }
+    ],
+    calculate(values) {
+      const vx = Number(values.vx);
+      const vy = Number(values.vy);
+      const c1 = (vx + vy) / 2;
+      const c2 = (vx - vy) / 2;
+      return {
+        metrics: [
+          `Vector = (${vx}, ${vy})`,
+          `Std coords = (${vx}, ${vy})`,
+          `Tilted basis coords = (${formatNumber(c1)}, ${formatNumber(c2)})`
+        ],
+        exampleSteps: [
+          `Use the tilted basis b1 = (1, 1) and b2 = (1, -1).`,
+          `Write (${vx}, ${vy}) = c1(1, 1) + c2(1, -1).`,
+          `That gives c1 + c2 = ${vx} and c1 - c2 = ${vy}.`,
+          `Solving gives c1 = ${formatNumber(c1)} and c2 = ${formatNumber(c2)}.`
+        ],
+        insight:
+          `The vector stays (${vx}, ${vy}), but in the tilted basis its coordinates become (${formatNumber(c1)}, ${formatNumber(c2)}).`,
+        drawing: {
+          type: "basis",
+          v: { x: vx, y: vy },
+          b1: { x: 1, y: 1 },
+          b2: { x: 1, y: -1 }
+        }
+      };
+    }
+  },
+  {
+    key: "composition",
+    order: 6,
+    stage: "Linear Algebra",
+    difficulty: "Advanced Core",
+    label: "Composition & Matrix Powers",
+    navDescription: "Apply one transformation after another.",
+    subtitle:
+      "This is where transformations become processes: one map after another, or the same map repeated many times.",
+    learningPurpose:
+      "Understand that composition means stacking transformations, and matrix powers mean repeating the same one.",
+    whyThisBefore:
+      "Study this before eigendecomposition because one major use of diagonalization is making repeated matrix powers easier.",
+    prerequisites: ["Matrices & Multiplication", "Linear Transformations"],
+    mlPurpose:
+      "Deep models compose many transformations, and repeated matrix action appears in iterative systems, graph methods, and dynamical updates.",
+    visualTitle: "Repeat the same scaling transformation.",
+    visualDescription:
+      "The original vector is shown first, then the transformed vector after applying the same matrix multiple times.",
+    beginnerNote:
+      "Composition is just doing one operation and then feeding the result into the next one.",
+    symbolGuide: [
+      { symbol: "T2(T1(v))", meaning: "Apply T1 first, then apply T2 to the result." },
+      { symbol: "(BA)v", meaning: "Matrix B acts after matrix A, so order matters." },
+      { symbol: "A^n", meaning: "Apply the same matrix A repeatedly n times." }
+    ],
+    simpleExplanation:
+      "Matrix composition is like a chain of filters. Matrix powers are the special case where the same filter is used again and again.",
+    formula: "T2(T1(v)) = (BA)v",
+    formulaMeaning:
+      "Meaning: do A first, then B. Repeating the same transformation gives A^2, A^3, and so on.",
+    mlUseCase:
+      "Layered models, iterative optimization steps, and repeated transition rules all depend on composition.",
+    intuition:
+      "Ask: what happens after one step, and what keeps happening if I repeat the rule?",
+    examShortcuts: [
+      "Order matters: BA is usually not the same as AB.",
+      "A^2 means A·A and A^3 means A·A·A.",
+      "For a scaling matrix sI, repeating it n times gives s^n I."
+    ],
+    bigPicture:
+      "Composition turns single transformations into systems. This is the linear algebra version of building a multi-step model.",
+    examReadiness: [
+      "Multiply two matrices in the right order.",
+      "Compute simple matrix powers.",
+      "Describe the geometric effect of repeated scaling."
+    ],
+    advancedExample: {
+      title: "Scale first, then shear.",
+      steps: [
+        "Let A = [[2, 0], [0, 2]] and B = [[1, 1], [0, 1]].",
+        "Apply A first to double the vector in every direction.",
+        "Then apply B to shear the doubled output.",
+        "That combined transformation is BA, not AB."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "If A = [[2, 0], [0, 2]], what are A^2 and A^3?",
+        answer: "A^2 = [[4, 0], [0, 4]] and A^3 = [[8, 0], [0, 8]].",
+        explanation: "Each multiplication doubles the scaling again, so the scale factor becomes 2^2 and 2^3.",
+        steps: [
+          "Recognize A as 2I.",
+          "Square the scale factor to get A^2 = 4I.",
+          "Cube the scale factor to get A^3 = 8I.",
+          "Write those as diagonal matrices."
+        ]
+      },
+      {
+        prompt: "What is the geometric effect of applying A = [[2, 0], [0, 2]] three times?",
+        answer: "Every vector is scaled by 8, so the whole space expands uniformly by a factor of 8.",
+        explanation: "Each application doubles lengths, so three applications multiply lengths by 2 × 2 × 2.",
+        steps: [
+          "After one step, lengths double.",
+          "After two steps, lengths are multiplied by 4.",
+          "After three steps, lengths are multiplied by 8.",
+          "The effect is uniform scaling by 8."
+        ]
+      }
+    ],
+    mcq: {
+      question: "What does A^3 mean for a matrix A?",
+      options: [
+        "Apply A three times",
+        "Add A to itself three times only",
+        "Take the determinant three times",
+        "Transpose A and multiply once"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. A^3 means A·A·A, so the same transformation is applied three times."
+    },
+    problem: {
+      prompt: "If A = [[2, 0], [0, 2]] and v = (1, 1), what is A^3v?",
+      answers: ["(8,8)", "[8,8]", "8,8"],
+      success: "Correct. A^3 = 8I, so A^3(1, 1) = (8, 8)."
+    },
+    conceptQuestion: {
+      prompt: "Why does order matter in composition?",
+      answer:
+        "Because the output of the first transformation becomes the input of the second, so switching the order usually changes the final result."
+    },
+    controls: [
+      { id: "scale", label: "Scale factor", min: 1, max: 3, step: 0.5, value: 2 },
+      { id: "power", label: "Repeat count", min: 1, max: 3, step: 1, value: 2 },
+      { id: "vx", label: "Vector x", min: -3, max: 3, step: 1, value: 1 },
+      { id: "vy", label: "Vector y", min: -3, max: 3, step: 1, value: 1 }
+    ],
+    calculate(values) {
+      const scale = Number(values.scale);
+      const power = Number(values.power);
+      const vx = Number(values.vx);
+      const vy = Number(values.vy);
+      const totalScale = scale ** power;
+      const tx = totalScale * vx;
+      const ty = totalScale * vy;
+      return {
+        metrics: [
+          `A = ${formatNumber(scale)}I`,
+          `A^${power} scale = ${formatNumber(totalScale)}`,
+          `A^${power}v = (${formatNumber(tx)}, ${formatNumber(ty)})`
+        ],
+        exampleSteps: [
+          `Start with A = ${formatNumber(scale)}I, so one application scales every vector by ${formatNumber(scale)}.`,
+          `Repeating A ${power} times gives A^${power} = ${formatNumber(totalScale)}I.`,
+          `Apply that to v = (${vx}, ${vy}).`,
+          `So the final output is (${formatNumber(tx)}, ${formatNumber(ty)}).`
+        ],
+        insight:
+          `Repeating a scaling matrix multiplies the scale factor, so ${formatNumber(scale)} used ${power} times becomes ${formatNumber(totalScale)}.`,
+        drawing: {
+          type: "matrix",
+          matrix: { a: totalScale, b: 0, c: 0, d: totalScale },
+          v: { x: vx, y: vy },
+          t: { x: tx, y: ty },
+          e1: { x: totalScale, y: 0 },
+          e2: { x: 0, y: totalScale },
+          showBasis: true
+        }
+      };
+    }
+  },
+  {
+    key: "dot",
+    order: 7,
     stage: "Linear Algebra",
     difficulty: "Core",
     label: "Dot Product",
@@ -1425,6 +1708,125 @@ const baseLessons = [
     }
   },
   {
+    key: "eigendecomp",
+    order: 16,
+    stage: "Linear Algebra",
+    difficulty: "Advanced Core",
+    label: "Eigen Decomposition",
+    navDescription: "Turn a hard matrix into an easier one.",
+    subtitle:
+      "This is the exam-level step where eigenvalues and eigenvectors combine into a structured factorization.",
+    learningPurpose:
+      "Understand why A = C D C^-1 is useful and what the matrices C and D mean.",
+    whyThisBefore:
+      "Study this after eigenvalues and eigenvectors because decomposition packages those ideas into a tool for simplifying repeated matrix action.",
+    prerequisites: ["Basis & Coordinates", "Eigenvalues & PCA Intuition"],
+    mlPurpose:
+      "Diagonalization helps explain PCA, repeated linear updates, and why special coordinate systems can simplify a transformation.",
+    visualTitle: "Rewrite a matrix using its eigen directions.",
+    visualDescription:
+      "The visual shows the idea of moving into an eigenvector basis, scaling there, and then moving back.",
+    beginnerNote:
+      "Eigen decomposition does not create new geometry. It rewrites the same transformation in a basis where it becomes easier to understand.",
+    symbolGuide: [
+      { symbol: "A = C D C^-1", meaning: "Rewrite A using eigenvectors and eigenvalues." },
+      { symbol: "C", meaning: "Matrix whose columns are eigenvectors." },
+      { symbol: "D", meaning: "Diagonal matrix of eigenvalues." }
+    ],
+    simpleExplanation:
+      "Eigen decomposition changes into a smart basis where the matrix just scales along special directions.",
+    formula: "A = C D C^-1",
+    formulaMeaning:
+      "Meaning: move into the eigenvector basis, scale by the eigenvalues, then move back to the original basis.",
+    mlUseCase:
+      "This is the algebra behind why covariance matrices become easier to understand in PCA.",
+    intuition:
+      "Ask: can I describe this transformation more simply if I choose better coordinate directions?",
+    examShortcuts: [
+      "D contains the eigenvalues on the diagonal.",
+      "Columns of C are the matching eigenvectors.",
+      "A^n becomes easier because D^n is easy to compute."
+    ],
+    bigPicture:
+      "This is the bridge from solving isolated eigen problems to using them as a serious tool.",
+    examReadiness: [
+      "State what C and D represent.",
+      "Build D from known eigenvalues.",
+      "Explain why matrix powers become easier after diagonalization."
+    ],
+    advancedExample: {
+      title: "Build D for A = [[1, 4], [2, 3]].",
+      steps: [
+        "Find the characteristic polynomial: det(A - λI) = (1 - λ)(3 - λ) - 8.",
+        "That simplifies to λ^2 - 4λ - 5 = 0.",
+        "Solve to get eigenvalues 5 and -1.",
+        "So D can be written as diag(5, -1), assuming the eigenvectors are placed in C in that same order."
+      ]
+    },
+    examQuestions: [
+      {
+        prompt: "If A = C D C^-1, what does D contain?",
+        answer: "D contains the eigenvalues, usually on the diagonal.",
+        explanation: "The whole point of the decomposition is that the complicated action of A becomes simple scaling inside D.",
+        steps: [
+          "Write the decomposition A = C D C^-1.",
+          "Interpret C as the change into the eigenvector basis.",
+          "Interpret D as pure scaling in that basis.",
+          "Those scaling values are the eigenvalues."
+        ]
+      },
+      {
+        prompt: "Why is A^n easier to compute when A = C D C^-1?",
+        answer: "Because A^n = C D^n C^-1, and D^n is easy since D is diagonal.",
+        explanation: "Diagonal matrices are easy to raise to powers because you just raise each diagonal entry.",
+        steps: [
+          "Write A^2, A^3, and notice the middle C^-1C terms cancel.",
+          "Generalize to A^n = C D^n C^-1.",
+          "Use the fact that D is diagonal.",
+          "Raise each diagonal eigenvalue to the nth power."
+        ]
+      }
+    ],
+    mcq: {
+      question: "In A = C D C^-1, what is usually stored in C?",
+      options: [
+        "The eigenvectors",
+        "The probabilities",
+        "The gradients",
+        "The matrix powers"
+      ],
+      correctIndex: 0,
+      explanation: "Correct. The columns of C are the eigenvectors."
+    },
+    problem: {
+      prompt: "If a matrix has eigenvalues 5 and -1, what can D be in its eigendecomposition?",
+      answers: ["[[5,0],[0,-1]]", "[[ -1,0],[0,5]]", "diag(5,-1)", "diag(-1,5)"],
+      success: "Correct. D is diagonal with the eigenvalues, in an order matching the eigenvectors in C."
+    },
+    conceptQuestion: {
+      prompt: "Why does eigendecomposition feel like a change-of-basis idea?",
+      answer:
+        "Because it rewrites the matrix in the eigenvector basis, where the action becomes simple diagonal scaling."
+    },
+    controls: [],
+    calculate() {
+      return {
+        metrics: ["C = eigenvectors", "D = eigenvalues", "A^n becomes easier"],
+        exampleSteps: [
+          "Find eigenvalues and eigenvectors of A.",
+          "Place the eigenvectors as columns of C.",
+          "Place the matching eigenvalues on the diagonal of D.",
+          "Use A = C D C^-1 to analyze powers and behavior more easily."
+        ],
+        insight:
+          "A complicated transformation can become simple diagonal scaling after moving into the right basis.",
+        drawing: {
+          type: "decomposition"
+        }
+      };
+    }
+  },
+  {
     key: "gradient-descent",
     order: 14,
     stage: "Calculus",
@@ -2105,12 +2507,14 @@ const lessonEnhancements = {
     commonMistakes: [
       "Describing the action on one sample vector and thinking that fully explains the transformation.",
       "Forgetting that linear transformations preserve the origin and map lines to lines.",
-      "Not using transformed basis vectors to reconstruct the entire map."
+      "Not using transformed basis vectors to reconstruct the entire map.",
+      "Mistaking a shifted rule like T(x1, x2) = (x1 + 1, x2 + 2) for a linear transformation when it is actually affine."
     ],
     examAngles: [
       "You may be asked to identify a transformation from the images of e1 and e2.",
       "You may be asked whether a rule is linear by checking additivity and scaling behavior.",
-      "You should be able to recognize scaling, shear, reflection, and projection patterns."
+      "You should be able to recognize scaling, shear, reflection, and projection patterns.",
+      "You may be asked to explain why adding a constant shift breaks linearity."
     ],
     advancedExample: {
       title: "Decide the transformation from basis images.",
@@ -2197,6 +2601,171 @@ const lessonEnhancements = {
         options: ["Shear", "Taking a median", "Sorting values", "Random sampling"],
         correctIndex: 0,
         explanation: "Correct. Shear is a standard linear transformation."
+      }
+    ]
+  },
+  basis: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine giving walking instructions on a city map using normal east-north streets, then switching to a map where the streets run diagonally.",
+      graphMeaning:
+        "The teal arrow is the same trip, but the gold and olive arrows are the directions used to describe that trip.",
+      mlBridge:
+        "Change-of-basis ideas show up whenever ML rewrites data in more useful coordinates, such as principal-component coordinates.",
+      summary(values, result) {
+        return `The same vector (${values.vx}, ${values.vy}) now has tilted-basis coordinates ${result.metrics[2].split(" = ")[1]}.`;
+      }
+    },
+    visualAnalogy: {
+      title: "Read The Sliders Like Street Directions",
+      intro:
+        "The input sliders pick one actual trip, but the basis arrows change the language used to describe that trip.",
+      controls: [
+        { label: "Vector x", meaning: "How far the trip goes in the standard horizontal direction." },
+        { label: "Vector y", meaning: "How far the trip goes in the standard vertical direction." }
+      ],
+      summary(values, result) {
+        return `The actual trip stays (${values.vx}, ${values.vy}), but the rebuilding instructions in the tilted basis become ${result.metrics[2].split(" = ")[1]}.`;
+      }
+    },
+    advancedExplanation:
+      "Basis questions are exam favorites because they test whether you understand that coordinates depend on the chosen reference directions. In standard basis, the coordinates are obvious. In a different basis, you must solve for the coefficients that rebuild the same geometric vector. This is the mindset you need before diagonalization and eigendecomposition.",
+    commonMistakes: [
+      "Thinking the vector changes when only the basis changes.",
+      "Mixing up the basis vectors with the coordinates.",
+      "Forgetting to solve for coefficients when the basis is non-standard."
+    ],
+    examAngles: [
+      "You may be asked to give standard-basis coordinates immediately.",
+      "You may be asked to express a vector in a different basis by solving a small system.",
+      "You should be able to explain the phrase 'same vector, different representation'."
+    ],
+    realLifeExamples: [
+      "A route can be described in normal north-east directions or in diagonal street directions without changing the actual trip.",
+      "In ML, PCA describes the same data point in a new coordinate system built from principal directions."
+    ],
+    goDeeper: [
+      "Practice separating the geometry from the coordinate description.",
+      "Treat a basis as a language for describing vectors."
+    ],
+    extraPractice: [
+      {
+        prompt: "What are the coordinates of (4, -2) in the standard basis?",
+        answer: "(4, -2).",
+        steps: [
+          "Standard basis uses e1 = (1, 0) and e2 = (0, 1).",
+          "Read the vector directly as horizontal and vertical components.",
+          "That gives 4 in the first coordinate and -2 in the second.",
+          "So the coordinates are (4, -2)."
+        ]
+      },
+      {
+        prompt: "In the basis {(1, 1), (1, -1)}, what are the coordinates of (2, 0)?",
+        answer: "(1, 1).",
+        steps: [
+          "Write (2, 0) = a(1, 1) + b(1, -1).",
+          "Solve a + b = 2 and a - b = 0.",
+          "That gives a = 1 and b = 1.",
+          "So the coordinates are (1, 1)."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does a basis do?",
+        options: ["Provides building directions for all vectors", "Changes the dimension of the space", "Removes vector length", "Forces all coordinates to be positive"],
+        correctIndex: 0,
+        explanation: "Correct. A basis provides the directions used to build and describe every vector in the space."
+      },
+      {
+        question: "If only the basis changes, what stays the same?",
+        options: ["The geometric vector", "Its coordinates", "The coefficients in every basis", "The matrix entries"],
+        correctIndex: 0,
+        explanation: "Correct. The vector in space stays the same even if the coordinate description changes."
+      }
+    ]
+  },
+  composition: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine editing a photo by first enlarging it and then applying another effect, or repeating the same enlargement several times.",
+      graphMeaning:
+        "The graph shows the original vector and the result after repeating the same transformation multiple times.",
+      mlBridge:
+        "Deep learning layers are compositions of transformations, and repeated updates appear in iterative ML algorithms.",
+      summary(values, result) {
+        return `With scale ${formatNumber(values.scale)} repeated ${values.power} times, the vector ends at ${result.metrics[2].split(" = ")[1]}.`;
+      }
+    },
+    visualAnalogy: {
+      title: "Read The Sliders Like Repeated Filters",
+      intro:
+        "Think of the same filter being applied over and over again. Each repetition changes the result from the previous step.",
+      controls: [
+        { label: "Scale factor", meaning: "How much one application stretches every vector." },
+        { label: "Repeat count", meaning: "How many times the same transformation is applied." },
+        { label: "Vector x / Vector y", meaning: "The starting vector before repeated transformation." }
+      ],
+      summary(values, result) {
+        return `One step scales by ${formatNumber(values.scale)}, but ${values.power} repeated steps scale by ${result.metrics[1].split(" = ")[1]}.`;
+      }
+    },
+    advancedExplanation:
+      "Composition is where linear algebra starts behaving like a process. Exams often test whether you can keep the order straight, since BA means 'do A first, then B'. Matrix powers are the repeated-transformation version of this idea, and they matter because diagonalization later turns hard repeated multiplication into easy diagonal powers.",
+    commonMistakes: [
+      "Reversing the order of matrix multiplication in a composition question.",
+      "Thinking A^2 means doubling every entry instead of multiplying A by itself.",
+      "Forgetting that repeated scaling multiplies factors, not adds them."
+    ],
+    examAngles: [
+      "You may be asked to compute A^2 or A^3 for a simple matrix.",
+      "You may be asked to describe the geometry of repeated scaling.",
+      "You should be able to explain why BA and AB usually differ."
+    ],
+    realLifeExamples: [
+      "Applying the same zoom filter to an image three times is like a matrix power.",
+      "A deep model composes one transformation after another instead of stopping after one step."
+    ],
+    goDeeper: [
+      "Think carefully about what happens after one step versus many steps.",
+      "Treat order as part of the meaning, not just as notation."
+    ],
+    extraPractice: [
+      {
+        prompt: "If A = [[2, 0], [0, 2]], what are A^2 and A^3?",
+        answer: "A^2 = [[4, 0], [0, 4]] and A^3 = [[8, 0], [0, 8]].",
+        steps: [
+          "Recognize A = 2I.",
+          "Square the factor 2 to get A^2 = 4I.",
+          "Cube the factor 2 to get A^3 = 8I.",
+          "Write each as a diagonal matrix."
+        ]
+      },
+      {
+        prompt: "What is the effect of applying A = [[2, 0], [0, 2]] three times?",
+        answer: "Uniform scaling by 8.",
+        steps: [
+          "Each application doubles every length.",
+          "Three applications give 2 × 2 × 2 = 8.",
+          "Every direction keeps its line.",
+          "So the whole space scales uniformly by 8."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does order BA mean?",
+        options: ["Apply A first, then B", "Apply B first, then A", "Add A and B", "Square both matrices"],
+        correctIndex: 0,
+        explanation: "Correct. The matrix closest to the vector acts first, so BA means A acts first and then B."
+      },
+      {
+        question: "What does A^3 mainly represent geometrically?",
+        options: ["Repeating the same transformation three times", "Adding three vectors", "Taking three determinants", "Changing basis once"],
+        correctIndex: 0,
+        explanation: "Correct. A power means repeated application of the same matrix transformation."
       }
     ]
   },
@@ -2896,6 +3465,85 @@ const lessonEnhancements = {
       }
     ]
   },
+  eigendecomp: {
+    visualScenario: {
+      title: "Scenario Behind The Graph",
+      scenario:
+        "Imagine translating a messy machine manual into a clearer language, doing the simple work there, and then translating back.",
+      graphMeaning:
+        "The visual shows the idea of entering the eigenvector basis, scaling cleanly on the diagonal, and returning to the original coordinates.",
+      mlBridge:
+        "PCA and many spectral ML methods use exactly this kind of smarter coordinate system.",
+      summary() {
+        return "Eigen decomposition is about choosing the coordinate system where the transformation becomes easiest to read.";
+      }
+    },
+    visualAnalogy: {
+      title: "Read The Formula Like A Basis Switch",
+      intro:
+        "C changes into the eigenvector basis, D does the easy scaling work there, and C^-1 changes back.",
+      controls: [],
+      summary() {
+        return "No sliders are needed here because the key idea is structural: move into the right basis, simplify the action, then move back.";
+      }
+    },
+    advancedExplanation:
+      "Eigendecomposition is where coordinate change and eigen analysis finally merge. Exams usually want you to know what C and D mean, how to build D from eigenvalues, and why powers like A^n become manageable after diagonalization. This is also the clean conceptual link to PCA, where the 'right basis' matters enormously.",
+    commonMistakes: [
+      "Putting eigenvalues into D without matching their order to the eigenvectors in C.",
+      "Thinking every matrix is diagonalizable without checking.",
+      "Forgetting that the whole point is a basis change, not just a new formula to memorize."
+    ],
+    examAngles: [
+      "You may be asked what C and D represent in A = C D C^-1.",
+      "You may be asked to build D from known eigenvalues.",
+      "You should be able to explain why A^n becomes easier after diagonalization."
+    ],
+    realLifeExamples: [
+      "A messy process can become easier when you describe it in the right coordinate system.",
+      "In ML, PCA is valuable because it rewrites data in a basis that highlights the most informative directions."
+    ],
+    goDeeper: [
+      "Connect eigendecomposition to change of basis, not as a separate isolated topic.",
+      "Notice that diagonal matrices are easy because they act independently on each coordinate."
+    ],
+    extraPractice: [
+      {
+        prompt: "If A = C D C^-1, what does D contain?",
+        answer: "The eigenvalues on the diagonal.",
+        steps: [
+          "Interpret C as eigenvectors.",
+          "Interpret D as the action in the eigenbasis.",
+          "That action is pure scaling along eigenvector directions.",
+          "So D stores the eigenvalues on the diagonal."
+        ]
+      },
+      {
+        prompt: "For A = [[1, 4], [2, 3]], what diagonal matrix D can appear in an eigendecomposition?",
+        answer: "D can be diag(5, -1) or diag(-1, 5), depending on the order of eigenvectors in C.",
+        steps: [
+          "Find det(A - λI) = λ^2 - 4λ - 5.",
+          "Solve to get eigenvalues 5 and -1.",
+          "Place them on the diagonal.",
+          "Match the order to the eigenvectors in C."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "Why is D easier to work with than A in a diagonalization?",
+        options: ["Because diagonal matrices are easy to power and interpret", "Because D has no numbers", "Because D removes the eigenvectors", "Because D is always the identity"],
+        correctIndex: 0,
+        explanation: "Correct. Diagonal matrices are much easier to analyze, especially for repeated powers."
+      },
+      {
+        question: "What is the main role of C^-1 in A = C D C^-1?",
+        options: ["It changes into the eigenbasis or back depending on convention", "It computes probabilities", "It removes the diagonal entries", "It finds the determinant automatically"],
+        correctIndex: 0,
+        explanation: "Correct. The decomposition works by changing coordinate systems, doing diagonal scaling, and changing back."
+      }
+    ]
+  },
   "gradient-descent": {
     visualScenario: {
       title: "Scenario Behind The Graph",
@@ -3249,9 +3897,10 @@ const defaultEnhancement = {
   visualScenario: null
 };
 
-export const lessons = baseLessons.map((lesson) => ({
+export const lessons = baseLessons.map((lesson, index) => ({
   ...defaultEnhancement,
   ...lesson,
+  order: index + 1,
   ...(lessonEnhancements[lesson.key] || {}),
   extraPractice: (lessonEnhancements[lesson.key]?.extraPractice || []).map(normalizeExtraPractice)
 }));

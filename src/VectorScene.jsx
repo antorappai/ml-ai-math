@@ -106,6 +106,16 @@ function matrixScene(drawing) {
   return elements.join("");
 }
 
+function basisScene(drawing) {
+  const scale = 28;
+  const elements = baseGrid(scale);
+  elements.push(defsBlock());
+  elements.push(vectorMarkup(drawing.b1, "basis-a", "marker-a", "b1", scale));
+  elements.push(vectorMarkup(drawing.b2, "basis-b", "marker-b", "b2", scale));
+  elements.push(vectorMarkup(drawing.v, "vector-a", "marker-p", "v", scale));
+  return elements.join("");
+}
+
 function projectionScene(drawing) {
   const elements = baseGrid(28);
   elements.push(defsBlock());
@@ -296,6 +306,28 @@ function pcaScene() {
   `;
 }
 
+function decompositionScene() {
+  return `
+    <svg viewBox="0 0 420 420" aria-label="Eigen decomposition idea">
+      ${defsBlock()}
+      <rect class="chart-bg" x="40" y="40" width="340" height="320" rx="22" />
+      <rect x="66" y="150" width="58" height="58" rx="12" fill="rgba(197,138,46,0.18)" stroke="rgba(197,138,46,0.55)" />
+      <rect x="182" y="150" width="58" height="58" rx="12" fill="rgba(15,118,110,0.12)" stroke="rgba(15,118,110,0.55)" />
+      <rect x="298" y="150" width="58" height="58" rx="12" fill="rgba(25,50,41,0.10)" stroke="rgba(25,50,41,0.45)" />
+      <text class="label-text" x="88" y="184">C</text>
+      <text class="label-text" x="204" y="184">D</text>
+      <text class="label-text" x="308" y="184">C^-1</text>
+      <line class="gradient-line" x1="126" y1="179" x2="175" y2="179" marker-end="url(#marker-a)" />
+      <line class="gradient-line" x1="242" y1="179" x2="291" y2="179" marker-end="url(#marker-a)" />
+      <text class="label-text" x="72" y="110">change into eigenvector basis</text>
+      <text class="label-text" x="192" y="110">scale diagonally</text>
+      <text class="label-text" x="268" y="250">change back</text>
+      <text class="label-text" x="70" y="296">A = C D C^-1</text>
+      <text class="label-text" x="70" y="324">D is simple because it only scales along eigen directions</text>
+    </svg>
+  `;
+}
+
 function descentScene(drawing) {
   const elements = baseGrid(28);
   elements.push(defsBlock());
@@ -371,6 +403,9 @@ function buildScene(drawing) {
   if (drawing.type === "matrix") {
     return matrixScene(drawing);
   }
+  if (drawing.type === "basis") {
+    return basisScene(drawing);
+  }
   if (drawing.type === "functionLine") {
     return functionScene(drawing);
   }
@@ -397,6 +432,9 @@ function buildScene(drawing) {
   }
   if (drawing.type === "pca") {
     return pcaScene(drawing);
+  }
+  if (drawing.type === "decomposition") {
+    return decompositionScene(drawing);
   }
   if (drawing.type === "descent") {
     return descentScene(drawing);
