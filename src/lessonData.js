@@ -185,6 +185,69 @@ export const prepOutcomes = [
   "Recognize what each topic is actually doing in ML."
 ];
 
+export const notationStarterKit = [
+  {
+    symbol: "||v||",
+    readAs: "Read as: magnitude or length of v",
+    meaning: "This tells you how long the vector is. It is about size, not direction."
+  },
+  {
+    symbol: "v / ||v||",
+    readAs: "Read as: normalize v",
+    meaning: "This rescales a vector to length 1 while keeping the same direction."
+  },
+  {
+    symbol: "A^T",
+    readAs: "Read as: A transpose",
+    meaning: "Rows become columns. This is one of the most common matrix notations in ML."
+  },
+  {
+    symbol: "det(A)",
+    readAs: "Read as: determinant of A",
+    meaning: "This helps you tell whether a transformation stretches, flips, or collapses space."
+  },
+  {
+    symbol: "P(A | B)",
+    readAs: "Read as: probability of A given B",
+    meaning: "This means you are updating your probability after learning that B happened."
+  },
+  {
+    symbol: "E[X]",
+    readAs: "Read as: expected value of X",
+    meaning: "This is the weighted average or long-run average of a random variable."
+  },
+  {
+    symbol: "N(μ, σ²)",
+    readAs: "Read as: normal with mean mu and variance sigma squared",
+    meaning: "This names a normal distribution by its center and spread."
+  },
+  {
+    symbol: "∂f/∂x",
+    readAs: "Read as: partial derivative of f with respect to x",
+    meaning: "This asks how f changes when x moves and the other variables stay fixed."
+  },
+  {
+    symbol: "∇f",
+    readAs: "Read as: gradient of f",
+    meaning: "This collects all partial derivatives into one vector showing steepest increase."
+  },
+  {
+    symbol: "Av = λv",
+    readAs: "Read as: A v equals lambda v",
+    meaning: "This says v keeps its direction under A and only gets scaled by lambda."
+  },
+  {
+    symbol: "A = C D C^-1",
+    readAs: "Read as: A equals C D C inverse",
+    meaning: "This is eigendecomposition: change basis, scale simply, then change back."
+  },
+  {
+    symbol: "η",
+    readAs: "Read as: eta, the learning rate",
+    meaning: "This controls how big each gradient-descent step is."
+  }
+];
+
 const baseLessons = [
   {
     key: "functions",
@@ -5984,11 +6047,13 @@ const defaultEnhancement = {
   goDeeper: [],
   extraPractice: [],
   extraMcqs: [],
+  examQuestions: [],
   advancedExplanation: "",
   commonMistakes: [],
   examAngles: [],
   importantFoundations: [],
   foundationTags: [],
+  notationGuide: [],
   inlinePythonCompanion: null,
   visualAnalogy: null,
   visualScenario: null
@@ -6260,6 +6325,637 @@ const lessonMicroFoundationMap = {
       "Each local derivative controls how strongly error information flows backward."
     ],
     foundationTags: ["gradient-basics"]
+  }
+};
+
+const lessonNotationGuideMap = {
+  vectors: [
+    {
+      symbol: "||v||",
+      readAs: "Read as: length of vector v",
+      meaning: "This is the size of the vector measured from the origin to the tip of the arrow.",
+      whyItShowsUp: "It appears in magnitude, distance, normalization, cosine similarity, and gradient size."
+    },
+    {
+      symbol: "u = v / ||v||",
+      readAs: "Read as: unit vector in the direction of v",
+      meaning: "This keeps the same direction but rescales the length to 1.",
+      whyItShowsUp: "It matters when you care about direction more than raw size."
+    },
+    {
+      symbol: "d(a, b) = ||a - b||",
+      readAs: "Read as: distance between a and b",
+      meaning: "Subtract first to get the difference vector, then take its length.",
+      whyItShowsUp: "Distance shows up in clustering, nearest-neighbor methods, and error measurement."
+    }
+  ],
+  matrices: [
+    {
+      symbol: "A_{ij}",
+      readAs: "Read as: entry in row i, column j",
+      meaning: "The first index tells you the row and the second tells you the column.",
+      whyItShowsUp: "It is the standard way to talk about one exact matrix entry."
+    },
+    {
+      symbol: "AB",
+      readAs: "Read as: A times B",
+      meaning: "This means matrix multiplication, not entrywise multiplication.",
+      whyItShowsUp: "It represents composition of transformations and layered feature mixing."
+    },
+    {
+      symbol: "A^T",
+      readAs: "Read as: transpose of A",
+      meaning: "Rows become columns and columns become rows.",
+      whyItShowsUp: "Transpose appears in covariance, dot-product style formulas, and linear algebra identities."
+    },
+    {
+      symbol: "det(A)",
+      readAs: "Read as: determinant of A",
+      meaning: "This tells you whether the matrix collapses space and whether an inverse is possible.",
+      whyItShowsUp: "It is a quick test for invertibility and geometric collapse."
+    }
+  ],
+  transformations: [
+    {
+      symbol: "T(v)",
+      readAs: "Read as: the output of transformation T on vector v",
+      meaning: "This is function notation, but now the input and output are vectors.",
+      whyItShowsUp: "It helps you think of a matrix as a rule on the whole space."
+    },
+    {
+      symbol: "T(e1), T(e2)",
+      readAs: "Read as: images of the basis vectors",
+      meaning: "These tell you where the basic horizontal and vertical directions go.",
+      whyItShowsUp: "Knowing them is enough to reconstruct the whole linear transformation."
+    },
+    {
+      symbol: "T(0) = 0",
+      readAs: "Read as: the origin stays fixed",
+      meaning: "Every linear transformation sends the zero vector to itself.",
+      whyItShowsUp: "It is a fast exam test for whether a rule can be linear."
+    }
+  ],
+  basis: [
+    {
+      symbol: "{b1, b2}",
+      readAs: "Read as: a basis made of vectors b1 and b2",
+      meaning: "A basis is a coordinate language for describing vectors.",
+      whyItShowsUp: "Change-of-basis questions depend on separating the vector from its coordinates."
+    },
+    {
+      symbol: "[v]_B",
+      readAs: "Read as: coordinates of v in basis B",
+      meaning: "This is not a new vector. It is the same vector written in a different basis language.",
+      whyItShowsUp: "It appears whenever the exam asks for coordinates in a nonstandard basis."
+    },
+    {
+      symbol: "Bc = v",
+      readAs: "Read as: basis matrix times coordinates equals the vector",
+      meaning: "The columns of B are basis vectors and c stores the coefficients.",
+      whyItShowsUp: "This is the clean algebraic form of coordinate-finding."
+    }
+  ],
+  "inverse-spaces": [
+    {
+      symbol: "A^-1",
+      readAs: "Read as: inverse of A",
+      meaning: "This is the matrix that undoes the action of A when it exists.",
+      whyItShowsUp: "It appears in solving systems, change of basis, and reversible transformations."
+    },
+    {
+      symbol: "rank(A)",
+      readAs: "Read as: rank of A",
+      meaning: "This counts how many independent output directions survive after the transformation.",
+      whyItShowsUp: "Rank tells you whether information was preserved or collapsed."
+    },
+    {
+      symbol: "Null(A)",
+      readAs: "Read as: null space of A",
+      meaning: "These are the vectors sent to zero by A.",
+      whyItShowsUp: "Null space explains exactly which directions get lost."
+    }
+  ],
+  derivatives: [
+    {
+      symbol: "f'(x)",
+      readAs: "Read as: derivative of f at x",
+      meaning: "This is the slope or local rate of change at that point.",
+      whyItShowsUp: "It is the entry point to optimization and gradient ideas."
+    },
+    {
+      symbol: "df/dx",
+      readAs: "Read as: derivative of f with respect to x",
+      meaning: "This is another notation for the same slope idea.",
+      whyItShowsUp: "Exams often switch notation without warning."
+    }
+  ],
+  multivariable: [
+    {
+      symbol: "∂f/∂x",
+      readAs: "Read as: partial derivative with respect to x",
+      meaning: "Only x is allowed to move while the other variables are held fixed.",
+      whyItShowsUp: "This is the standard notation in multivariable optimization."
+    },
+    {
+      symbol: "∇f(x, y)",
+      readAs: "Read as: gradient of f at x, y",
+      meaning: "This bundles the partial derivatives into one vector.",
+      whyItShowsUp: "Gradients drive gradient descent and backpropagation."
+    }
+  ],
+  probability: [
+    {
+      symbol: "P(A)",
+      readAs: "Read as: probability of event A",
+      meaning: "This is the chance that event A occurs.",
+      whyItShowsUp: "It is the base notation for all probability questions."
+    },
+    {
+      symbol: "P(A^c)",
+      readAs: "Read as: probability of not A",
+      meaning: "This is the complement event.",
+      whyItShowsUp: "Complement logic is one of the fastest exam shortcuts."
+    }
+  ],
+  "random-variables": [
+    {
+      symbol: "X",
+      readAs: "Read as: random variable X",
+      meaning: "This is a rule that assigns a number to each outcome.",
+      whyItShowsUp: "It lets probability questions become numerical and statistical."
+    },
+    {
+      symbol: "E[X]",
+      readAs: "Read as: expected value of X",
+      meaning: "This is the weighted average or long-run center of X.",
+      whyItShowsUp: "It is used in loss functions, average reward, and basic statistics."
+    }
+  ],
+  statistics: [
+    {
+      symbol: "μ",
+      readAs: "Read as: mu, the mean",
+      meaning: "This is the center of the data or distribution.",
+      whyItShowsUp: "It is the reference point for spread and z-scores."
+    },
+    {
+      symbol: "σ",
+      readAs: "Read as: sigma, the standard deviation",
+      meaning: "This measures typical spread around the mean in the original units.",
+      whyItShowsUp: "It tells you whether a value is ordinary or unusually far from the center."
+    },
+    {
+      symbol: "z = (x - μ) / σ",
+      readAs: "Read as: z-score of x",
+      meaning: "This standardizes a value by showing how many standard deviations it is from the mean.",
+      whyItShowsUp: "It appears in standard normal questions and comparison across scales."
+    }
+  ],
+  bayes: [
+    {
+      symbol: "P(A | B)",
+      readAs: "Read as: probability of A given B",
+      meaning: "This means we are working under the condition that B has already happened.",
+      whyItShowsUp: "Conditional direction is the main place students get Bayes questions wrong."
+    },
+    {
+      symbol: "P(B | A)",
+      readAs: "Read as: probability of B given A",
+      meaning: "This reverses the condition and is usually not equal to P(A | B).",
+      whyItShowsUp: "Bayes theorem is largely about moving between these two directions."
+    }
+  ],
+  distributions: [
+    {
+      symbol: "N(μ, σ²)",
+      readAs: "Read as: normal with mean mu and variance sigma squared",
+      meaning: "This names a normal distribution using its center and spread.",
+      whyItShowsUp: "It is the standard notation for normal-distribution questions."
+    },
+    {
+      symbol: "f(x)",
+      readAs: "Read as: density at x",
+      meaning: "For a continuous variable, this is a density value, not the probability at exactly one point.",
+      whyItShowsUp: "Students often confuse density height with direct probability."
+    }
+  ],
+  eigen: [
+    {
+      symbol: "Av = λv",
+      readAs: "Read as: A v equals lambda v",
+      meaning: "The matrix acts on v without changing its line, only its scale or sign.",
+      whyItShowsUp: "This is the core statement of eigenvectors and eigenvalues."
+    },
+    {
+      symbol: "det(A - λI) = 0",
+      readAs: "Read as: determinant of A minus lambda I equals zero",
+      meaning: "This is the characteristic equation used to find eigenvalues.",
+      whyItShowsUp: "It is the standard exam starting point for eigenvalue problems."
+    }
+  ],
+  eigendecomp: [
+    {
+      symbol: "A = C D C^-1",
+      readAs: "Read as: A equals C D C inverse",
+      meaning: "This rewrites A in the eigenvector basis where the action becomes diagonal.",
+      whyItShowsUp: "It is the main decomposition formula for powers, PCA intuition, and diagonalization."
+    },
+    {
+      symbol: "D = diag(λ1, λ2, ...)",
+      readAs: "Read as: diagonal matrix of eigenvalues",
+      meaning: "The diagonal stores the scaling factors in the eigenbasis.",
+      whyItShowsUp: "This is what makes repeated powers easier."
+    }
+  ],
+  "gradient-descent": [
+    {
+      symbol: "x_new = x_old - η ∇f",
+      readAs: "Read as: new x equals old x minus eta times gradient",
+      meaning: "Move opposite the gradient because the gradient points uphill.",
+      whyItShowsUp: "This is the main update pattern in optimization."
+    },
+    {
+      symbol: "η",
+      readAs: "Read as: eta, learning rate",
+      meaning: "This sets step size, not direction.",
+      whyItShowsUp: "It controls slow progress versus overshooting."
+    }
+  ],
+  logistic: [
+    {
+      symbol: "z = wx + b",
+      readAs: "Read as: score z equals w x plus b",
+      meaning: "This is the raw linear score before probability conversion.",
+      whyItShowsUp: "It separates the score from the sigmoid output."
+    },
+    {
+      symbol: "σ(z)",
+      readAs: "Read as: sigmoid of z",
+      meaning: "This maps the score into a value between 0 and 1.",
+      whyItShowsUp: "It turns raw score into probability-like output for classification."
+    }
+  ],
+  backprop: [
+    {
+      symbol: "dL/dw",
+      readAs: "Read as: derivative of loss with respect to w",
+      meaning: "This tells you how the loss changes if weight w changes a little.",
+      whyItShowsUp: "It is the quantity used for weight updates."
+    },
+    {
+      symbol: "dL/dw = dL/da · da/dz · dz/dw",
+      readAs: "Read as: chain rule path for the gradient",
+      meaning: "Multiply local derivatives along the path from the weight to the loss.",
+      whyItShowsUp: "This is the local mechanics of backpropagation."
+    }
+  ]
+};
+
+const lessonExamExpansionMap = {
+  vectors: {
+    examQuestions: [
+      {
+        prompt: "Find the magnitude of v = (3, 4) and explain why this vector is a standard exam favorite.",
+        answer: "The magnitude is 5.",
+        explanation: "This is the classic 3-4-5 right triangle, so the vector length is easy to compute and recognize.",
+        steps: [
+          "Use ||v|| = sqrt(x^2 + y^2).",
+          "Substitute x = 3 and y = 4.",
+          "Compute sqrt(9 + 16) = sqrt(25).",
+          "So the magnitude is 5."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does normalizing a vector do?",
+        options: ["Keeps direction and changes length to 1", "Keeps length and changes direction", "Always makes coordinates positive", "Turns a vector into a matrix"],
+        correctIndex: 0,
+        explanation: "Correct. Normalization keeps direction but rescales the vector to unit length."
+      }
+    ]
+  },
+  matrices: {
+    examQuestions: [
+      {
+        prompt: "If A is 2 × 3 and B is 3 × 2, what is the shape of AB and why?",
+        answer: "AB is 2 × 2.",
+        explanation: "The inner dimensions match at 3, so multiplication is defined, and the result keeps the outer dimensions.",
+        steps: [
+          "Write the shapes clearly: 2 × 3 and 3 × 2.",
+          "Check the inner dimensions 3 and 3.",
+          "Because they match, multiplication is allowed.",
+          "Keep the outer dimensions 2 and 2, so AB is 2 × 2."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What happens to the shape of a 2 × 5 matrix after transpose?",
+        options: ["It becomes 5 × 2", "It stays 2 × 5", "It becomes 2 × 2", "It becomes 5 × 5"],
+        correctIndex: 0,
+        explanation: "Correct. Transpose swaps rows and columns."
+      }
+    ]
+  },
+  transformations: {
+    examQuestions: [
+      {
+        prompt: "Is T(x, y) = (x + 1, y + 2) linear? Explain the fastest test.",
+        answer: "No. It is affine, not linear.",
+        explanation: "A linear transformation must keep the origin fixed, but this rule sends (0, 0) to (1, 2).",
+        steps: [
+          "Test the origin first.",
+          "Compute T(0, 0) = (1, 2).",
+          "A linear map must satisfy T(0, 0) = (0, 0).",
+          "So this rule is not linear."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "Which rule is most likely a shear?",
+        options: ["One basis vector stays fixed while the other tilts", "Both basis vectors shrink to zero", "Every vector rotates by exactly 90 degrees", "All points move by the same translation"],
+        correctIndex: 0,
+        explanation: "Correct. A shear keeps one basis direction fixed while slanting the other."
+      }
+    ]
+  },
+  basis: {
+    examQuestions: [
+      {
+        prompt: "Why can the same vector have different coordinates in different bases?",
+        answer: "Because coordinates depend on the chosen reference directions, not on changing the vector itself.",
+        explanation: "The geometric object stays the same while the description language changes.",
+        steps: [
+          "Separate the vector from its coordinate description.",
+          "Change the basis vectors used as references.",
+          "Recompute the coefficients needed in that new basis.",
+          "The vector stays the same, but the coordinates change."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does [v]_B mean?",
+        options: ["Coordinates of v in basis B", "The magnitude of v in basis B", "The transpose of v", "The determinant of the basis"],
+        correctIndex: 0,
+        explanation: "Correct. The brackets with a subscript basis denote coordinates in that basis."
+      }
+    ]
+  },
+  "inverse-spaces": {
+    examQuestions: [
+      {
+        prompt: "Why can a matrix with determinant 0 not have an inverse?",
+        answer: "Because it collapses space and loses information, so there is no unique way to recover the input.",
+        explanation: "An inverse requires one-to-one behavior, but collapse means different inputs can map to the same output.",
+        steps: [
+          "Interpret determinant 0 as geometric collapse.",
+          "Collapsed maps lose at least one independent direction.",
+          "Losing information breaks one-to-one behavior.",
+          "Without one-to-one behavior, an inverse cannot exist."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "If rank(A) is less than the number of columns, what must be true?",
+        options: ["Some input directions are lost", "A is automatically orthogonal", "A must be diagonal", "Every vector is an eigenvector"],
+        correctIndex: 0,
+        explanation: "Correct. Reduced rank means some independent input directions collapse together."
+      }
+    ]
+  },
+  multivariable: {
+    examQuestions: [
+      {
+        prompt: "For f(x, y) = x^2 + y^2, find the gradient at (1, -2).",
+        answer: "The gradient is (2, -4).",
+        explanation: "Differentiate with respect to each variable separately, then evaluate at the point.",
+        steps: [
+          "Compute ∂f/∂x = 2x and ∂f/∂y = 2y.",
+          "Substitute x = 1 and y = -2.",
+          "That gives (2, -4).",
+          "This vector points in the direction of steepest increase."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does the gradient point toward?",
+        options: ["Steepest increase", "Steepest decrease", "Always the x-axis", "The origin only"],
+        correctIndex: 0,
+        explanation: "Correct. The negative gradient points toward steepest decrease, so the gradient itself points uphill."
+      }
+    ]
+  },
+  "random-variables": {
+    examQuestions: [
+      {
+        prompt: "Why can expected value be 2.5 even if the random variable never actually outputs 2.5?",
+        answer: "Because expectation is a weighted average, not a guaranteed one-shot outcome.",
+        explanation: "It describes the long-run center of the outcomes, not a necessarily observed single value.",
+        steps: [
+          "List the possible values and their probabilities.",
+          "Multiply each value by its probability.",
+          "Add the weighted contributions.",
+          "The result can fall between actual possible outcomes."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What is the best way to think of E[X]?",
+        options: ["Long-run weighted average", "Most likely single outcome always", "Largest value of X", "A probability between 0 and 1"],
+        correctIndex: 0,
+        explanation: "Correct. Expected value is the weighted average over outcomes."
+      }
+    ]
+  },
+  statistics: {
+    examQuestions: [
+      {
+        prompt: "What does a z-score of -2 tell you in plain English?",
+        answer: "The value is two standard deviations below the mean.",
+        explanation: "The sign tells direction from the mean and the size tells standardized distance.",
+        steps: [
+          "Read the sign first: negative means below the mean.",
+          "Read the magnitude next: 2 means two standard deviations away.",
+          "Put both together.",
+          "So the value is two standard deviations below the mean."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "Why is standard deviation often easier to interpret than variance?",
+        options: ["It is in the original units", "It is always smaller than the mean", "It removes all outliers", "It equals the median"],
+        correctIndex: 0,
+        explanation: "Correct. Standard deviation is the square root of variance, so it returns to the original units."
+      }
+    ]
+  },
+  bayes: {
+    examQuestions: [
+      {
+        prompt: "Why do students often confuse P(disease | positive) with P(positive | disease)?",
+        answer: "Because the words sound similar, but the conditioning direction is reversed.",
+        explanation: "Bayes questions are mostly about keeping the conditioning event and the target event in the right order.",
+        steps: [
+          "Read the event after the vertical bar first.",
+          "That is the condition you already know happened.",
+          "Then read the event before the bar as the thing you want the probability of.",
+          "Reversing those roles changes the meaning completely."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "In a Bayes question, what is the denominator usually counting?",
+        options: ["All ways the observed evidence can happen", "Only the true-positive path", "Only the prior probability", "Only the false-negative path"],
+        correctIndex: 0,
+        explanation: "Correct. The denominator totals all ways the observed evidence could occur."
+      }
+    ]
+  },
+  distributions: {
+    examQuestions: [
+      {
+        prompt: "Why is the height of a probability density function not itself the probability at one exact point?",
+        answer: "Because for continuous variables, probability comes from area under the curve over an interval, not from one exact point height.",
+        explanation: "A density can be high without the probability of one exact point being nonzero.",
+        steps: [
+          "Separate density from probability.",
+          "For a continuous variable, one exact point has probability 0.",
+          "Probability is computed over intervals using area under the curve.",
+          "So the graph height alone is not the probability."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does a z-score help you do?",
+        options: ["Compare values across different scales", "Find eigenvectors directly", "Transpose a matrix", "Guarantee normality"],
+        correctIndex: 0,
+        explanation: "Correct. Z-scores put values onto the same standardized scale."
+      }
+    ]
+  },
+  eigen: {
+    examQuestions: [
+      {
+        prompt: "For A = [[3, 0], [0, 2]], why are the coordinate axes already eigenvector directions?",
+        answer: "Because the matrix scales each axis independently without mixing coordinates.",
+        explanation: "Diagonal matrices act directly along the coordinate axes, which makes those axes eigenvector directions.",
+        steps: [
+          "Look at the matrix shape: it is diagonal.",
+          "The x-coordinate gets scaled by 3 and the y-coordinate by 2.",
+          "Neither axis gets mixed into the other.",
+          "So each axis direction stays on its own line and is an eigenvector direction."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What is an eigenvalue telling you?",
+        options: ["How much the matching eigenvector direction is scaled", "Which basis to choose always", "The determinant only", "The matrix rank only"],
+        correctIndex: 0,
+        explanation: "Correct. The eigenvalue gives the scale or sign flip along its eigenvector direction."
+      }
+    ]
+  },
+  eigendecomp: {
+    examQuestions: [
+      {
+        prompt: "Why does diagonalization make A^n easier to compute?",
+        answer: "Because D^n is easy to compute: you just raise each diagonal eigenvalue to the power n.",
+        explanation: "The hard matrix action becomes simple independent scaling once you are in the eigenbasis.",
+        steps: [
+          "Rewrite A as C D C^-1.",
+          "Then A^n becomes C D^n C^-1.",
+          "For diagonal D, powers act entry by entry on the diagonal.",
+          "So repeated matrix powers become much simpler."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What must match between C and D in A = C D C^-1?",
+        options: ["Eigenvector order and eigenvalue order", "Only the determinant", "Only the trace", "Nothing needs to match"],
+        correctIndex: 0,
+        explanation: "Correct. Each eigenvalue in D must correspond to the matching eigenvector column in C."
+      }
+    ]
+  },
+  "gradient-descent": {
+    examQuestions: [
+      {
+        prompt: "If the gradient is positive at the current point, which way does gradient descent move in one dimension?",
+        answer: "It moves left, toward smaller x values.",
+        explanation: "The update subtracts a positive gradient, so the parameter decreases.",
+        steps: [
+          "Start with x_new = x_old - η f'(x_old).",
+          "If f'(x_old) is positive, the quantity being subtracted is positive.",
+          "Subtracting a positive value makes x smaller.",
+          "So the update moves left."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What is the biggest risk of choosing η too large?",
+        options: ["Overshooting the minimum", "Forcing determinant to zero", "Making the gradient positive", "Removing the bias term"],
+        correctIndex: 0,
+        explanation: "Correct. A step size that is too large can keep jumping over the low region."
+      }
+    ]
+  },
+  logistic: {
+    examQuestions: [
+      {
+        prompt: "Why is a negative score z enough to say the model leans toward class 0 before even computing the exact sigmoid value?",
+        answer: "Because sigmoid(z) is below 0.5 whenever z is negative.",
+        explanation: "The sign of the score already tells which side of the decision boundary you are on.",
+        steps: [
+          "Use the decision boundary z = 0.",
+          "Check the sign of the score.",
+          "Negative means the score is on the class-0 side of the boundary.",
+          "So the predicted probability is below 0.5."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What does the bias term b mainly do in z = wx + b?",
+        options: ["Shift the decision boundary", "Normalize the data automatically", "Compute the gradient", "Set the batch size"],
+        correctIndex: 0,
+        explanation: "Correct. The bias shifts the score and therefore shifts the decision boundary."
+      }
+    ]
+  },
+  backprop: {
+    examQuestions: [
+      {
+        prompt: "Why does the input value x1 appear inside dL/dw1 for z = w1x1 + w2x2 + b?",
+        answer: "Because z changes with w1 at a rate equal to x1, so chain rule carries that factor into the gradient.",
+        explanation: "The local derivative dz/dw1 is exactly x1.",
+        steps: [
+          "Write z = w1x1 + w2x2 + b.",
+          "Differentiate z with respect to w1.",
+          "The derivative is x1.",
+          "Then chain rule multiplies this local derivative into dL/dw1."
+        ]
+      }
+    ],
+    extraMcqs: [
+      {
+        question: "What happens if one local derivative in a chain-rule path is zero?",
+        options: ["The whole product along that path becomes zero", "The final gradient becomes 1", "Backprop stops using chain rule", "The weight disappears from the model"],
+        correctIndex: 0,
+        explanation: "Correct. Multiplying by zero kills that path's gradient contribution."
+      }
+    ]
   }
 };
 
@@ -7034,24 +7730,58 @@ const inlinePythonCompanionMap = {
   }
 };
 
-export const lessons = baseLessons.map((lesson, index) => ({
-  ...defaultEnhancement,
-  ...lesson,
-  order: index + 1,
-  ...(lessonEnhancements[lesson.key] || {}),
-  extraPractice: (lessonEnhancements[lesson.key]?.extraPractice || []).map(normalizeExtraPractice),
-  ...(lessonMicroFoundationMap[lesson.key] || {}),
-  pythonLessonKey: pythonBridgeMap[lesson.key] || null,
-  inlinePythonCompanion: inlinePythonCompanionMap[lesson.key] || null,
-  pythonCompanion: lesson.pythonCompanion
-    ? {
-        ...lesson.pythonCompanion,
-        gradedQuestions:
-          pythonGradedQuestionMap[lesson.key] ||
-          (lesson.pythonCompanion.gradedQuestion ? [lesson.pythonCompanion.gradedQuestion] : [])
-      }
-    : lesson.pythonCompanion
-}));
+export const lessons = baseLessons.map((lesson, index) => {
+  const enhancement = lessonEnhancements[lesson.key] || {};
+  const microFoundations = lessonMicroFoundationMap[lesson.key] || {};
+  const examExpansion = lessonExamExpansionMap[lesson.key] || {};
+  const notationGuide = lessonNotationGuideMap[lesson.key] || [];
+
+  return {
+    ...defaultEnhancement,
+    ...lesson,
+    order: index + 1,
+    ...enhancement,
+    ...microFoundations,
+    notationGuide: [...notationGuide],
+    extraPractice: [
+      ...(lesson.extraPractice || []),
+      ...(enhancement.extraPractice || []),
+      ...(examExpansion.extraPractice || [])
+    ].map(normalizeExtraPractice),
+    extraMcqs: [
+      ...(lesson.extraMcqs || []),
+      ...(enhancement.extraMcqs || []),
+      ...(examExpansion.extraMcqs || [])
+    ],
+    examQuestions: [
+      ...(lesson.examQuestions || []),
+      ...(enhancement.examQuestions || []),
+      ...(examExpansion.examQuestions || [])
+    ],
+    importantFoundations: [
+      ...(lesson.importantFoundations || []),
+      ...(enhancement.importantFoundations || []),
+      ...(microFoundations.importantFoundations || [])
+    ],
+    foundationTags: [
+      ...new Set([
+        ...(lesson.foundationTags || []),
+        ...(enhancement.foundationTags || []),
+        ...(microFoundations.foundationTags || [])
+      ])
+    ],
+    pythonLessonKey: pythonBridgeMap[lesson.key] || null,
+    inlinePythonCompanion: inlinePythonCompanionMap[lesson.key] || null,
+    pythonCompanion: lesson.pythonCompanion
+      ? {
+          ...lesson.pythonCompanion,
+          gradedQuestions:
+            pythonGradedQuestionMap[lesson.key] ||
+            (lesson.pythonCompanion.gradedQuestion ? [lesson.pythonCompanion.gradedQuestion] : [])
+        }
+      : lesson.pythonCompanion
+  };
+});
 
 function normalizeExtraPractice(item) {
   return {

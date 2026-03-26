@@ -735,6 +735,43 @@ button {
   gap: 18px;
 }
 
+.notation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.notation-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 8px;
+}
+
+.notation-symbol {
+  color: var(--accent-deep);
+  font-size: 1.16rem;
+}
+
+.notation-read,
+.notation-why {
+  margin: 0;
+  color: var(--accent);
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.notation-why {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.lesson-notation-grid .notation-card p:last-child {
+  margin-bottom: 0;
+}
+
 .content-card.wide {
   grid-column: 1 / -1;
 }

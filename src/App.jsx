@@ -5,6 +5,7 @@ import {
   foundationChecklist,
   futureModules,
   lessons,
+  notationStarterKit,
   prepOutcomes
 } from "./lessonData.js";
 import PythonPlayground from "./PythonPlayground.jsx";
@@ -449,6 +450,28 @@ export default function App() {
         <section className="roadmap-panel">
           <div className="roadmap-header">
             <div>
+              <p className="panel-label">Notation Survival Kit</p>
+              <h2 className="starter-title">Decode the symbols that usually freeze people.</h2>
+            </div>
+            <p className="roadmap-text">
+              Use this before or during hard lessons. The point is not to memorize symbols in isolation,
+              but to stop notation from blocking understanding.
+            </p>
+          </div>
+          <div className="notation-grid">
+            {notationStarterKit.map((item) => (
+              <article key={item.symbol} className="notation-card">
+                <strong className="notation-symbol">{item.symbol}</strong>
+                <p className="notation-read">{item.readAs}</p>
+                <p>{item.meaning}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="roadmap-panel">
+          <div className="roadmap-header">
+            <div>
               <p className="panel-label">Curriculum Roadmap</p>
               <h2 className="starter-title">What is inside the study workspace right now.</h2>
             </div>
@@ -534,7 +557,13 @@ export default function App() {
           <button
             type="button"
             className="primary-button"
-            onClick={() => openPythonPractice(lesson.pythonCompanion ? lesson.key : linkedPythonLesson?.key || firstPythonLesson.key)}
+            onClick={() =>
+              openPythonPractice(
+                lesson.inlinePythonCompanion || lesson.pythonCompanion
+                  ? lesson.key
+                  : linkedPythonLesson?.key || firstPythonLesson.key
+              )
+            }
           >
             Practice Code
           </button>
@@ -672,6 +701,22 @@ export default function App() {
                     ))}
                   </div>
                 </article>
+
+                {lesson.notationGuide?.length ? (
+                  <article className="content-card wide">
+                    <p className="panel-label">Notation Decoder</p>
+                    <div className="notation-grid lesson-notation-grid">
+                      {lesson.notationGuide.map((item) => (
+                        <div key={`${lesson.key}-${item.symbol}`} className="notation-card">
+                          <strong className="notation-symbol">{item.symbol}</strong>
+                          <p className="notation-read">{item.readAs}</p>
+                          <p>{item.meaning}</p>
+                          {item.whyItShowsUp ? <p className="notation-why">{item.whyItShowsUp}</p> : null}
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                ) : null}
 
                 <article className="content-card">
                   <p className="panel-label">Formula</p>
