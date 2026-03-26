@@ -4622,6 +4622,38 @@ const lessonEnhancements = {
       }
     ]
   },
+  "vector-valued": {
+    goal: "Represent a path in code by letting one parameter control several coordinates at once.",
+    examUse: "Useful for parametric curves, motion, and vector-valued function questions.",
+    codeTitle: "Vector-Valued Function In Python",
+    code: "def r(t):\n    return [t, t**2]\n\nprint(r(-1))\nprint(r(2))",
+    output: "[-1, 1]\n[2, 4]",
+    explainSteps: [
+      "The same input t is used in both coordinates.",
+      "The output is a pair, not one number.",
+      "Changing t moves the point along a path.",
+      "This is the coding form of r(t) = (x(t), y(t))."
+    ],
+    traps: [
+      "Using different parameters for different coordinates.",
+      "Forgetting the output is a vector-like object.",
+      "Thinking the function must return one scalar."
+    ],
+    examTasks: [
+      "Define a vector-valued function.",
+      "Evaluate the function at given t values.",
+      "Relate the outputs to a path."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Write a Python function `r(t)` that returns `[t, 2 * t]`, then print `r(3)`.",
+        starterCode: "# Define r(t)\n# Print r(3)",
+        explanation: "Use one input parameter and return both coordinates together in a list.",
+        solution: "def r(t):\n    return [t, 2 * t]\n\nprint(r(3))",
+        output: "[3, 6]"
+      }
+    ]
+  },
   probability: {
     visualScenario: {
       title: "Scenario Behind The Graph",
@@ -4665,6 +4697,38 @@ const lessonEnhancements = {
         options: ["Moderate uncertainty", "Impossible event", "Guaranteed event", "Negative chance"],
         correctIndex: 0,
         explanation: "Correct. 0.5 is a balanced uncertain case, not certainty."
+      }
+    ]
+  },
+  binomial: {
+    goal: "Simulate repeated success counts and connect exact vs cumulative binomial questions to code.",
+    examUse: "Useful for probability coding questions involving repeated Bernoulli trials.",
+    codeTitle: "Binomial Simulation In Python",
+    code: "import numpy as np\n\nsamples = np.random.binomial(n=4, p=0.5, size=8)\nprint(samples)\nprint(np.mean(samples <= 2))",
+    output: "Output will vary.",
+    explainSteps: [
+      "Each sample counts successes out of 4 trials.",
+      "The array stores several repeated experiments.",
+      "The comparison `samples <= 2` marks cumulative events.",
+      "Taking the mean estimates the cumulative probability."
+    ],
+    traps: [
+      "Confusing `size` with the number of trials `n`.",
+      "Reading one simulation as the exact theoretical probability.",
+      "Mixing exact and cumulative questions."
+    ],
+    examTasks: [
+      "Simulate binomial counts.",
+      "Estimate a cumulative probability from simulation.",
+      "Interpret what the code is counting."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Simulate 6 binomial samples with `n = 3` and `p = 0.5`, then print the sample array.",
+        starterCode: "import numpy as np\n\n# Simulate and print the binomial samples",
+        explanation: "Use `np.random.binomial` with the correct trial count, success probability, and sample size.",
+        solution: "import numpy as np\n\nsamples = np.random.binomial(n=3, p=0.5, size=6)\nprint(samples)",
+        output: "Output will vary."
       }
     ]
   },
@@ -5260,6 +5324,166 @@ const lessonEnhancements = {
       }
     ]
   },
+  transformations: {
+    goal: "Read a matrix as a transformation rule and apply it to basis vectors or ordinary vectors in code.",
+    examUse: "Useful for coding questions about scaling, shear, and transformed vectors.",
+    codeTitle: "Transformation As Matrix Action",
+    code: "import numpy as np\n\nA = np.array([[2, 1], [0, 1]])\ne1 = np.array([1, 0])\ne2 = np.array([0, 1])\nprint(A @ e1)\nprint(A @ e2)",
+    output: "[2 0]\n[1 1]",
+    explainSteps: [
+      "The matrix acts on vectors by multiplication.",
+      "Applying it to basis vectors shows what the transformation does to the whole space.",
+      "Those transformed basis vectors define the action on every other vector.",
+      "This is the code version of a linear transformation."
+    ],
+    traps: [
+      "Thinking the matrix entries act independently with no geometric meaning.",
+      "Using elementwise multiplication instead of `@`.",
+      "Ignoring basis-vector interpretation."
+    ],
+    examTasks: [
+      "Apply a transformation to vectors.",
+      "Use basis vectors to read matrix action.",
+      "Interpret the resulting geometry."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given `A = [[2, 0], [0, 3]]`, print `A @ [1, 1]`.",
+        starterCode: "import numpy as np\n\nA = np.array([[2, 0], [0, 3]])\nv = np.array([1, 1])\n\n# Print A @ v",
+        explanation: "Multiply the matrix and vector with the `@` operator.",
+        solution: "import numpy as np\n\nA = np.array([[2, 0], [0, 3]])\nv = np.array([1, 1])\nprint(A @ v)",
+        output: "[2 3]"
+      }
+    ]
+  },
+  basis: {
+    goal: "Express coordinate changes in code so basis questions stop feeling purely abstract.",
+    examUse: "Useful for basis, coordinate, and change-of-basis exam questions.",
+    codeTitle: "Coordinates In A New Basis",
+    code: "import numpy as np\n\nB = np.array([[1, 1], [1, -1]])\nv = np.array([2, 0])\ncoords = np.linalg.solve(B, v)\nprint(coords)",
+    output: "[1. 1.]",
+    explainSteps: [
+      "The columns of B are the basis vectors.",
+      "Solving Bc = v finds the coordinates c in that basis.",
+      "The vector stays the same, but its coordinates change.",
+      "This is the code version of change of basis."
+    ],
+    traps: [
+      "Confusing the vector with its coordinate representation.",
+      "Using basis vectors as rows instead of columns.",
+      "Forgetting that coordinates depend on the chosen basis."
+    ],
+    examTasks: [
+      "Compute coordinates in a nonstandard basis.",
+      "Interpret the meaning of the coordinate vector.",
+      "Connect solve-based code to basis equations."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given basis matrix `B = [[1, 1], [1, -1]]` and vector `v = [2, 0]`, print the basis coordinates.",
+        starterCode: "import numpy as np\n\nB = np.array([[1, 1], [1, -1]])\nv = np.array([2, 0])\n\n# Solve for the coordinates",
+        explanation: "Use `np.linalg.solve(B, v)` to find the coordinate vector.",
+        solution: "import numpy as np\n\nB = np.array([[1, 1], [1, -1]])\nv = np.array([2, 0])\nprint(np.linalg.solve(B, v))",
+        output: "[1. 1.]"
+      }
+    ]
+  },
+  composition: {
+    goal: "Code repeated matrix action so composition and matrix powers feel concrete.",
+    examUse: "Useful for composition and repeated-transformation coding questions.",
+    codeTitle: "Composition And Matrix Powers",
+    code: "import numpy as np\n\nA = np.array([[2, 0], [0, 2]])\nprint(A @ A)\nprint(np.linalg.matrix_power(A, 3))",
+    output: "[[4 0]\n [0 4]]\n[[8 0]\n [0 8]]",
+    explainSteps: [
+      "Multiplying A by itself once gives A squared.",
+      "`matrix_power` repeats the same transformation several times.",
+      "The output shows how repeated transformations scale effects.",
+      "This is the code version of matrix powers."
+    ],
+    traps: [
+      "Confusing A^n with scalar powers done entrywise.",
+      "Forgetting that order matters in composition.",
+      "Using plain multiplication instead of matrix multiplication."
+    ],
+    examTasks: [
+      "Compute A squared or A cubed.",
+      "Explain repeated transformation effect.",
+      "Connect powers to iteration."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given `A = [[2, 0], [0, 2]]`, print `A^3` using NumPy.",
+        starterCode: "import numpy as np\n\nA = np.array([[2, 0], [0, 2]])\n\n# Print A^3",
+        explanation: "Use `np.linalg.matrix_power(A, 3)` for repeated matrix multiplication.",
+        solution: "import numpy as np\n\nA = np.array([[2, 0], [0, 2]])\nprint(np.linalg.matrix_power(A, 3))",
+        output: "[[8 0]\n [0 8]]"
+      }
+    ]
+  },
+  "inverse-spaces": {
+    goal: "Compute determinant, inverse, and rank in code and connect them to lost or preserved information.",
+    examUse: "Useful for matrix invertibility and rank coding questions.",
+    codeTitle: "Inverse, Determinant, And Rank",
+    code: "import numpy as np\n\nA = np.array([[1, 2], [3, 4]])\nprint(np.linalg.det(A))\nprint(np.linalg.inv(A))\nprint(np.linalg.matrix_rank(A))",
+    output: "-2.0000000000000004\n[[-2.   1. ]\n [ 1.5 -0.5]]\n2",
+    explainSteps: [
+      "Determinant tests whether the matrix collapses space.",
+      "A nonzero determinant permits an inverse in the matching dimension.",
+      "Rank counts how many independent directions remain.",
+      "These outputs are three views of the same information structure."
+    ],
+    traps: [
+      "Trying to invert a singular matrix.",
+      "Treating determinant, rank, and inverse as unrelated.",
+      "Ignoring numerical approximation in printed output."
+    ],
+    examTasks: [
+      "Compute determinant and rank.",
+      "Read whether a matrix is invertible.",
+      "Connect the numeric results to geometry."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "For `A = [[1, 2], [2, 4]]`, print the determinant and rank.",
+        starterCode: "import numpy as np\n\nA = np.array([[1, 2], [2, 4]])\n\n# Print determinant\n# Print rank",
+        explanation: "Use determinant and rank to show that the matrix collapses to one independent direction.",
+        solution: "import numpy as np\n\nA = np.array([[1, 2], [2, 4]])\nprint(np.linalg.det(A))\nprint(np.linalg.matrix_rank(A))",
+        output: "0.0\n1"
+      }
+    ]
+  },
+  eigendecomp: {
+    goal: "See eigendecomposition as code that separates a matrix into eigenvectors and eigenvalues.",
+    examUse: "Useful for decomposition and diagonalization coding questions.",
+    codeTitle: "Eigendecomposition Pieces In Python",
+    code: "import numpy as np\n\nA = np.array([[1, 4], [2, 3]])\nvalues, vectors = np.linalg.eig(A)\nD = np.diag(values)\nprint(D)\nprint(np.round(vectors, 3))",
+    output: "[[ 5.  0.]\n [ 0. -1.]]\n[[ 0.707 -0.894]\n [ 0.707  0.447]]",
+    explainSteps: [
+      "Eigenvalues come from `np.linalg.eig`.",
+      "Putting them on the diagonal forms D.",
+      "The eigenvectors form the columns of the eigenvector matrix.",
+      "This is the computational skeleton behind A = C D C^-1."
+    ],
+    traps: [
+      "Forgetting that D is diagonal.",
+      "Assuming eigenvector order is arbitrary relative to eigenvalues.",
+      "Ignoring approximation in floating-point output."
+    ],
+    examTasks: [
+      "Build D from eigenvalues.",
+      "Read the eigenvector matrix.",
+      "Connect code outputs to decomposition notation."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Using `values = np.array([3, 2])`, create and print the diagonal matrix D.",
+        starterCode: "import numpy as np\n\nvalues = np.array([3, 2])\n\n# Build and print D",
+        explanation: "Use `np.diag(values)` to place the eigenvalues on the diagonal.",
+        solution: "import numpy as np\n\nvalues = np.array([3, 2])\nprint(np.diag(values))",
+        output: "[[3 0]\n [0 2]]"
+      }
+    ]
+  },
   eigendecomp: {
     visualScenario: {
       title: "Scenario Behind The Graph",
@@ -5688,6 +5912,70 @@ const lessonEnhancements = {
         explanation: "Correct. The chain rule connects those layered dependencies."
       }
     ]
+  },
+  logistic: {
+    goal: "Code a logistic score and probability so binary classification math feels concrete.",
+    examUse: "Useful for coding questions on sigmoid outputs and classification probabilities.",
+    codeTitle: "Logistic Score And Probability",
+    code: "import math\n\nz = 1.5\np = 1 / (1 + math.exp(-z))\nprint(round(p, 3))",
+    output: "0.818",
+    explainSteps: [
+      "Start with the score z.",
+      "Apply the sigmoid formula to turn it into a probability-like output.",
+      "The result stays between 0 and 1.",
+      "This is the code version of logistic regression output."
+    ],
+    traps: [
+      "Confusing the raw score z with the probability p.",
+      "Dropping the negative sign in the exponent.",
+      "Assuming the sigmoid output is already a hard class label."
+    ],
+    examTasks: [
+      "Compute a sigmoid probability.",
+      "Interpret score vs probability.",
+      "Explain why the output is bounded."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given `z = 0`, print the sigmoid output rounded to 2 decimals.",
+        starterCode: "import math\n\nz = 0\n\n# Compute sigmoid(z)\n# Print the rounded result",
+        explanation: "Use the sigmoid formula `1 / (1 + exp(-z))`.",
+        solution: "import math\n\nz = 0\np = 1 / (1 + math.exp(-z))\nprint(round(p, 2))",
+        output: "0.5"
+      }
+    ]
+  },
+  backprop: {
+    goal: "Trace a tiny chain-rule path in code so backprop stops looking magical.",
+    examUse: "Useful for coding questions where you compute one local gradient by hand or in code.",
+    codeTitle: "Backprop Style Local Gradient",
+    code: "dL_da = 3\nda_dz = 0.5\ndz_dw1 = 2\ndL_dw1 = dL_da * da_dz * dz_dw1\nprint(dL_dw1)",
+    output: "3.0",
+    explainSteps: [
+      "Each local derivative is stored as a variable.",
+      "Chain rule multiplies them in order.",
+      "The result tells how the loss changes with one weight.",
+      "This is a tiny code version of backpropagation."
+    ],
+    traps: [
+      "Adding local derivatives instead of multiplying them.",
+      "Confusing forward values with backward gradients.",
+      "Forgetting which local derivative belongs to which link."
+    ],
+    examTasks: [
+      "Compute one chain-rule gradient in code.",
+      "Explain what each local derivative represents.",
+      "Relate the result to weight updates."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "If `dL_da = 2`, `da_dz = 0.25`, and `dz_dw = 8`, print `dL_dw`.",
+        starterCode: "dL_da = 2\nda_dz = 0.25\ndz_dw = 8\n\n# Compute dL_dw\n# Print it",
+        explanation: "Multiply the local derivatives in order using chain rule.",
+        solution: "dL_da = 2\nda_dz = 0.25\ndz_dw = 8\ndL_dw = dL_da * da_dz * dz_dw\nprint(dL_dw)",
+        output: "4.0"
+      }
+    ]
   }
 };
 
@@ -5870,6 +6158,12 @@ const lessonMicroFoundationMap = {
     ],
     foundationTags: ["coordinate-change"]
   },
+  composition: {
+    importantFoundations: [
+      "Composition means applying one transformation after another in order, not adding them together.",
+      "Matrix powers are repeated applications of the same transformation."
+    ]
+  },
   "inverse-spaces": {
     importantFoundations: [
       "Determinant, rank, and inverse questions are really asking whether information was lost.",
@@ -5891,6 +6185,12 @@ const lessonMicroFoundationMap = {
     ],
     foundationTags: ["gradient-basics"]
   },
+  "vector-valued": {
+    importantFoundations: [
+      "One parameter can control several outputs at once, which is why vector-valued functions trace paths.",
+      "A vector-valued function is still one rule even though it returns multiple coordinates."
+    ]
+  },
   probability: {
     importantFoundations: [
       "An event is not the same thing as a random variable or a full distribution.",
@@ -5901,6 +6201,12 @@ const lessonMicroFoundationMap = {
     importantFoundations: [
       "A random variable assigns numbers to outcomes so averages and spread can be computed.",
       "Expected value is a weighted average, not a guaranteed one-shot outcome."
+    ]
+  },
+  binomial: {
+    importantFoundations: [
+      "Binomial questions assume a fixed number of independent trials with the same success probability.",
+      "Exact probability and cumulative probability are different tasks."
     ]
   },
   statistics: {
@@ -5922,6 +6228,38 @@ const lessonMicroFoundationMap = {
       "Predictions, residuals, and error all need to be read together before optimization means anything.",
       "Regression is the first place linear algebra, calculus, and statistics visibly meet."
     ]
+  },
+  eigen: {
+    importantFoundations: [
+      "Eigenvectors are special directions that stay on their own line under the transformation.",
+      "Eigenvalues tell how much those special directions are stretched or flipped."
+    ]
+  },
+  eigendecomp: {
+    importantFoundations: [
+      "Eigendecomposition changes into the eigenvector basis, scales simply, then changes back.",
+      "The matrix D is simple because the action in the eigenbasis becomes diagonal."
+    ]
+  },
+  "gradient-descent": {
+    importantFoundations: [
+      "Gradient descent is just repeated use of slope information to reduce the loss step by step.",
+      "Learning rate controls step size, not the direction of the gradient itself."
+    ],
+    foundationTags: ["gradient-basics"]
+  },
+  logistic: {
+    importantFoundations: [
+      "Logistic regression converts a score into a probability-like value using the sigmoid curve.",
+      "The output is about class confidence, not a hard decision by itself."
+    ]
+  },
+  backprop: {
+    importantFoundations: [
+      "Backprop is repeated chain rule through many connected computations.",
+      "Each local derivative controls how strongly error information flows backward."
+    ],
+    foundationTags: ["gradient-basics"]
   }
 };
 
@@ -6403,6 +6741,294 @@ const inlinePythonCompanionMap = {
         explanation: "Use `x = x - lr * grad` exactly once.",
         solution: "x = 3\nlr = 0.5\ngrad = 4\nx = x - lr * grad\nprint(x)",
         output: "1.0"
+      }
+    ]
+  },
+  transformations: {
+    goal: "Read a matrix as a transformation rule and apply it to basis vectors or ordinary vectors in code.",
+    examUse: "Useful for coding questions about scaling, shear, and transformed vectors.",
+    codeTitle: "Transformation As Matrix Action",
+    code: "import numpy as np\n\nA = np.array([[2, 1], [0, 1]])\ne1 = np.array([1, 0])\ne2 = np.array([0, 1])\nprint(A @ e1)\nprint(A @ e2)",
+    output: "[2 0]\n[1 1]",
+    explainSteps: [
+      "The matrix acts on vectors by multiplication.",
+      "Applying it to basis vectors shows what the transformation does to the whole space.",
+      "Those transformed basis vectors define the action on every other vector.",
+      "This is the code version of a linear transformation."
+    ],
+    traps: [
+      "Thinking the matrix entries act independently with no geometric meaning.",
+      "Using elementwise multiplication instead of `@`.",
+      "Ignoring basis-vector interpretation."
+    ],
+    examTasks: [
+      "Apply a transformation to vectors.",
+      "Use basis vectors to read matrix action.",
+      "Interpret the resulting geometry."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given `A = [[2, 0], [0, 3]]`, print `A @ [1, 1]`.",
+        starterCode: "import numpy as np\n\nA = np.array([[2, 0], [0, 3]])\nv = np.array([1, 1])\n\n# Print A @ v",
+        explanation: "Multiply the matrix and vector with the `@` operator.",
+        solution: "import numpy as np\n\nA = np.array([[2, 0], [0, 3]])\nv = np.array([1, 1])\nprint(A @ v)",
+        output: "[2 3]"
+      }
+    ]
+  },
+  basis: {
+    goal: "Express coordinate changes in code so basis questions stop feeling purely abstract.",
+    examUse: "Useful for basis, coordinate, and change-of-basis exam questions.",
+    codeTitle: "Coordinates In A New Basis",
+    code: "import numpy as np\n\nB = np.array([[1, 1], [1, -1]])\nv = np.array([2, 0])\ncoords = np.linalg.solve(B, v)\nprint(coords)",
+    output: "[1. 1.]",
+    explainSteps: [
+      "The columns of B are the basis vectors.",
+      "Solving Bc = v finds the coordinates c in that basis.",
+      "The vector stays the same, but its coordinates change.",
+      "This is the code version of change of basis."
+    ],
+    traps: [
+      "Confusing the vector with its coordinate representation.",
+      "Using basis vectors as rows instead of columns.",
+      "Forgetting that coordinates depend on the chosen basis."
+    ],
+    examTasks: [
+      "Compute coordinates in a nonstandard basis.",
+      "Interpret the meaning of the coordinate vector.",
+      "Connect solve-based code to basis equations."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given basis matrix `B = [[1, 1], [1, -1]]` and vector `v = [2, 0]`, print the basis coordinates.",
+        starterCode: "import numpy as np\n\nB = np.array([[1, 1], [1, -1]])\nv = np.array([2, 0])\n\n# Solve for the coordinates",
+        explanation: "Use `np.linalg.solve(B, v)` to find the coordinate vector.",
+        solution: "import numpy as np\n\nB = np.array([[1, 1], [1, -1]])\nv = np.array([2, 0])\nprint(np.linalg.solve(B, v))",
+        output: "[1. 1.]"
+      }
+    ]
+  },
+  composition: {
+    goal: "Code repeated matrix action so composition and matrix powers feel concrete.",
+    examUse: "Useful for composition and repeated-transformation coding questions.",
+    codeTitle: "Composition And Matrix Powers",
+    code: "import numpy as np\n\nA = np.array([[2, 0], [0, 2]])\nprint(A @ A)\nprint(np.linalg.matrix_power(A, 3))",
+    output: "[[4 0]\n [0 4]]\n[[8 0]\n [0 8]]",
+    explainSteps: [
+      "Multiplying A by itself once gives A squared.",
+      "`matrix_power` repeats the same transformation several times.",
+      "The output shows how repeated transformations scale effects.",
+      "This is the code version of matrix powers."
+    ],
+    traps: [
+      "Confusing A^n with scalar powers done entrywise.",
+      "Forgetting that order matters in composition.",
+      "Using plain multiplication instead of matrix multiplication."
+    ],
+    examTasks: [
+      "Compute A squared or A cubed.",
+      "Explain repeated transformation effect.",
+      "Connect powers to iteration."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given `A = [[2, 0], [0, 2]]`, print `A^3` using NumPy.",
+        starterCode: "import numpy as np\n\nA = np.array([[2, 0], [0, 2]])\n\n# Print A^3",
+        explanation: "Use `np.linalg.matrix_power(A, 3)` for repeated matrix multiplication.",
+        solution: "import numpy as np\n\nA = np.array([[2, 0], [0, 2]])\nprint(np.linalg.matrix_power(A, 3))",
+        output: "[[8 0]\n [0 8]]"
+      }
+    ]
+  },
+  "inverse-spaces": {
+    goal: "Compute determinant, inverse, and rank in code and connect them to lost or preserved information.",
+    examUse: "Useful for matrix invertibility and rank coding questions.",
+    codeTitle: "Inverse, Determinant, And Rank",
+    code: "import numpy as np\n\nA = np.array([[1, 2], [3, 4]])\nprint(np.linalg.det(A))\nprint(np.linalg.inv(A))\nprint(np.linalg.matrix_rank(A))",
+    output: "-2.0000000000000004\n[[-2.   1. ]\n [ 1.5 -0.5]]\n2",
+    explainSteps: [
+      "Determinant tests whether the matrix collapses space.",
+      "A nonzero determinant permits an inverse in the matching dimension.",
+      "Rank counts how many independent directions remain.",
+      "These outputs are three views of the same information structure."
+    ],
+    traps: [
+      "Trying to invert a singular matrix.",
+      "Treating determinant, rank, and inverse as unrelated.",
+      "Ignoring numerical approximation in printed output."
+    ],
+    examTasks: [
+      "Compute determinant and rank.",
+      "Read whether a matrix is invertible.",
+      "Connect the numeric results to geometry."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "For `A = [[1, 2], [2, 4]]`, print the determinant and rank.",
+        starterCode: "import numpy as np\n\nA = np.array([[1, 2], [2, 4]])\n\n# Print determinant\n# Print rank",
+        explanation: "Use determinant and rank to show that the matrix collapses to one independent direction.",
+        solution: "import numpy as np\n\nA = np.array([[1, 2], [2, 4]])\nprint(np.linalg.det(A))\nprint(np.linalg.matrix_rank(A))",
+        output: "0.0\n1"
+      }
+    ]
+  },
+  "vector-valued": {
+    goal: "Represent a path in code by letting one parameter control several coordinates at once.",
+    examUse: "Useful for parametric curves, motion, and vector-valued function questions.",
+    codeTitle: "Vector-Valued Function In Python",
+    code: "def r(t):\n    return [t, t**2]\n\nprint(r(-1))\nprint(r(2))",
+    output: "[-1, 1]\n[2, 4]",
+    explainSteps: [
+      "The same input t is used in both coordinates.",
+      "The output is a pair, not one number.",
+      "Changing t moves the point along a path.",
+      "This is the coding form of r(t) = (x(t), y(t))."
+    ],
+    traps: [
+      "Using different parameters for different coordinates.",
+      "Forgetting the output is a vector-like object.",
+      "Thinking the function must return one scalar."
+    ],
+    examTasks: [
+      "Define a vector-valued function.",
+      "Evaluate the function at given t values.",
+      "Relate the outputs to a path."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Write a Python function `r(t)` that returns `[t, 2 * t]`, then print `r(3)`.",
+        starterCode: "# Define r(t)\n# Print r(3)",
+        explanation: "Use one input parameter and return both coordinates together in a list.",
+        solution: "def r(t):\n    return [t, 2 * t]\n\nprint(r(3))",
+        output: "[3, 6]"
+      }
+    ]
+  },
+  binomial: {
+    goal: "Simulate repeated success counts and connect exact vs cumulative binomial questions to code.",
+    examUse: "Useful for probability coding questions involving repeated Bernoulli trials.",
+    codeTitle: "Binomial Simulation In Python",
+    code: "import numpy as np\n\nsamples = np.random.binomial(n=4, p=0.5, size=8)\nprint(samples)\nprint(np.mean(samples <= 2))",
+    output: "Output will vary.",
+    explainSteps: [
+      "Each sample counts successes out of 4 trials.",
+      "The array stores several repeated experiments.",
+      "The comparison `samples <= 2` marks cumulative events.",
+      "Taking the mean estimates the cumulative probability."
+    ],
+    traps: [
+      "Confusing `size` with the number of trials `n`.",
+      "Reading one simulation as the exact theoretical probability.",
+      "Mixing exact and cumulative questions."
+    ],
+    examTasks: [
+      "Simulate binomial counts.",
+      "Estimate a cumulative probability from simulation.",
+      "Interpret what the code is counting."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Simulate 6 binomial samples with `n = 3` and `p = 0.5`, then print the sample array.",
+        starterCode: "import numpy as np\n\n# Simulate and print the binomial samples",
+        explanation: "Use `np.random.binomial` with the correct trial count, success probability, and sample size.",
+        solution: "import numpy as np\n\nsamples = np.random.binomial(n=3, p=0.5, size=6)\nprint(samples)",
+        output: "Output will vary."
+      }
+    ]
+  },
+  eigendecomp: {
+    goal: "See eigendecomposition as code that separates a matrix into eigenvectors and eigenvalues.",
+    examUse: "Useful for decomposition and diagonalization coding questions.",
+    codeTitle: "Eigendecomposition Pieces In Python",
+    code: "import numpy as np\n\nA = np.array([[1, 4], [2, 3]])\nvalues, vectors = np.linalg.eig(A)\nD = np.diag(values)\nprint(D)\nprint(np.round(vectors, 3))",
+    output: "[[ 5.  0.]\n [ 0. -1.]]\n[[ 0.707 -0.894]\n [ 0.707  0.447]]",
+    explainSteps: [
+      "Eigenvalues come from `np.linalg.eig`.",
+      "Putting them on the diagonal forms D.",
+      "The eigenvectors form the columns of the eigenvector matrix.",
+      "This is the computational skeleton behind A = C D C^-1."
+    ],
+    traps: [
+      "Forgetting that D is diagonal.",
+      "Assuming eigenvector order is arbitrary relative to eigenvalues.",
+      "Ignoring approximation in floating-point output."
+    ],
+    examTasks: [
+      "Build D from eigenvalues.",
+      "Read the eigenvector matrix.",
+      "Connect code outputs to decomposition notation."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Using `values = np.array([3, 2])`, create and print the diagonal matrix D.",
+        starterCode: "import numpy as np\n\nvalues = np.array([3, 2])\n\n# Build and print D",
+        explanation: "Use `np.diag(values)` to place the eigenvalues on the diagonal.",
+        solution: "import numpy as np\n\nvalues = np.array([3, 2])\nprint(np.diag(values))",
+        output: "[[3 0]\n [0 2]]"
+      }
+    ]
+  },
+  logistic: {
+    goal: "Code a logistic score and probability so binary classification math feels concrete.",
+    examUse: "Useful for coding questions on sigmoid outputs and classification probabilities.",
+    codeTitle: "Logistic Score And Probability",
+    code: "import math\n\nz = 1.5\np = 1 / (1 + math.exp(-z))\nprint(round(p, 3))",
+    output: "0.818",
+    explainSteps: [
+      "Start with the score z.",
+      "Apply the sigmoid formula to turn it into a probability-like output.",
+      "The result stays between 0 and 1.",
+      "This is the code version of logistic regression output."
+    ],
+    traps: [
+      "Confusing the raw score z with the probability p.",
+      "Dropping the negative sign in the exponent.",
+      "Assuming the sigmoid output is already a hard class label."
+    ],
+    examTasks: [
+      "Compute a sigmoid probability.",
+      "Interpret score vs probability.",
+      "Explain why the output is bounded."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given `z = 0`, print the sigmoid output rounded to 2 decimals.",
+        starterCode: "import math\n\nz = 0\n\n# Compute sigmoid(z)\n# Print the rounded result",
+        explanation: "Use the sigmoid formula `1 / (1 + exp(-z))`.",
+        solution: "import math\n\nz = 0\np = 1 / (1 + math.exp(-z))\nprint(round(p, 2))",
+        output: "0.5"
+      }
+    ]
+  },
+  backprop: {
+    goal: "Trace a tiny chain-rule path in code so backprop stops looking magical.",
+    examUse: "Useful for coding questions where you compute one local gradient by hand or in code.",
+    codeTitle: "Backprop Style Local Gradient",
+    code: "dL_da = 3\nda_dz = 0.5\ndz_dw1 = 2\ndL_dw1 = dL_da * da_dz * dz_dw1\nprint(dL_dw1)",
+    output: "3.0",
+    explainSteps: [
+      "Each local derivative is stored as a variable.",
+      "Chain rule multiplies them in order.",
+      "The result tells how the loss changes with one weight.",
+      "This is a tiny code version of backpropagation."
+    ],
+    traps: [
+      "Adding local derivatives instead of multiplying them.",
+      "Confusing forward values with backward gradients.",
+      "Forgetting which local derivative belongs to which link."
+    ],
+    examTasks: [
+      "Compute one chain-rule gradient in code.",
+      "Explain what each local derivative represents.",
+      "Relate the result to weight updates."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "If `dL_da = 2`, `da_dz = 0.25`, and `dz_dw = 8`, print `dL_dw`.",
+        starterCode: "dL_da = 2\nda_dz = 0.25\ndz_dw = 8\n\n# Compute dL_dw\n# Print it",
+        explanation: "Multiply the local derivatives in order using chain rule.",
+        solution: "dL_da = 2\nda_dz = 0.25\ndz_dw = 8\ndL_dw = dL_da * da_dz * dz_dw\nprint(dL_dw)",
+        output: "4.0"
       }
     ]
   }
