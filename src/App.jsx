@@ -1,5 +1,12 @@
 import React, { startTransition, useEffect, useState } from "react";
-import { curriculumStages, futureModules, lessons } from "./lessonData.js";
+import {
+  curriculumStages,
+  dashboardTopicCards,
+  foundationChecklist,
+  futureModules,
+  lessons,
+  prepOutcomes
+} from "./lessonData.js";
 import PythonPlayground from "./PythonPlayground.jsx";
 import VectorScene from "./VectorScene.jsx";
 
@@ -59,6 +66,12 @@ export default function App() {
     difficulty: "All",
     search: ""
   });
+  const [lastVisitedLessonKey, setLastVisitedLessonKey] = useState(() => {
+    if (typeof window === "undefined") {
+      return null;
+    }
+    return window.localStorage.getItem("ml-math-last-lesson");
+  });
 
   const filteredLessons = lessons.filter((entry) => matchesLessonFilters(entry, filters));
 
@@ -68,8 +81,14 @@ export default function App() {
   const linkedPythonLesson = lesson.pythonLessonKey
     ? lessons.find((entry) => entry.key === lesson.pythonLessonKey) ?? null
     : null;
-  const activePythonLesson = lesson.pythonCompanion ? lesson : linkedPythonLesson;
-  const activePythonCompanion = activePythonLesson?.pythonCompanion ?? null;
+  const activePythonCompanion =
+    lesson.inlinePythonCompanion || lesson.pythonCompanion || linkedPythonLesson?.pythonCompanion || null;
+  const pythonContentKey =
+    lesson.inlinePythonCompanion || lesson.pythonCompanion
+      ? lesson.key
+      : linkedPythonLesson?.key || lesson.key;
+  const showDeeperPythonLink = Boolean(lesson.inlinePythonCompanion && linkedPythonLesson);
+  const showLinkedPythonLesson = Boolean(!lesson.inlinePythonCompanion && linkedPythonLesson && linkedPythonLesson.key !== lesson.key);
   const isPythonLesson = lesson.stage === "Python Programming";
   const hasPythonContent = Boolean(activePythonCompanion);
   const visibleSectionTabs = isPythonLesson
@@ -77,12 +96,26 @@ export default function App() {
     : hasPythonContent
       ? sectionTabs
       : sectionTabs.filter((tab) => tab.key !== "python");
+  const startLesson = lessons[0];
+  const lastVisitedLesson = lessons.find((entry) => entry.key === lastVisitedLessonKey) ?? null;
+  const recommendedLesson = getRecommendedLesson(lastVisitedLessonKey);
+  const checklistStatus = foundationChecklist.map((item) => ({
+    ...item,
+    lessonMatches: lessons.filter((entry) => item.tags.some((tag) => entry.foundationTags.includes(tag)))
+  }));
 
   useEffect(() => {
     if (screen === "study" && typeof window !== "undefined") {
       window.localStorage.setItem("ml-math-home-seen", "true");
     }
   }, [screen]);
+
+  useEffect(() => {
+    if (screen === "study" && typeof window !== "undefined") {
+      window.localStorage.setItem("ml-math-last-lesson", lessonKey);
+      setLastVisitedLessonKey(lessonKey);
+    }
+  }, [lessonKey, screen]);
 
   useEffect(() => {
     if (!filteredLessons.length) {
@@ -105,10 +138,10 @@ export default function App() {
     });
   }
 
-  function openLessonFromHome(nextKey) {
+  function openLessonWithTab(nextKey, nextTab = "explanation") {
     startTransition(() => {
       setLessonKey(nextKey);
-      setStudyTab("explanation");
+      setStudyTab(nextTab);
       setScreen("study");
       setMcqFeedback("");
       setSelectedMcq(null);
@@ -120,6 +153,10 @@ export default function App() {
       setShowConceptAnswer(false);
       setRevealedPythonQuestions({});
     });
+  }
+
+  function openLessonFromHome(nextKey) {
+    openLessonWithTab(nextKey, "explanation");
   }
 
   function goHome() {
@@ -129,36 +166,11 @@ export default function App() {
   }
 
   function openPythonPractice(nextKey = firstPythonLesson.key) {
-    startTransition(() => {
-      setLessonKey(nextKey);
-      setStudyTab("python");
-      setScreen("study");
-      setMcqFeedback("");
-      setSelectedMcq(null);
-      setExtraMcqState({});
-      setRevealedPractice({});
-      setRevealedExamAnswers({});
-      setProblemAnswer("");
-      setProblemFeedback("");
-      setShowConceptAnswer(false);
-      setRevealedPythonQuestions({});
-    });
+    openLessonWithTab(nextKey, "python");
   }
 
   function switchLesson(nextKey) {
-    startTransition(() => {
-      setLessonKey(nextKey);
-      setStudyTab("explanation");
-      setMcqFeedback("");
-      setSelectedMcq(null);
-      setExtraMcqState({});
-      setRevealedPractice({});
-      setRevealedExamAnswers({});
-      setProblemAnswer("");
-      setProblemFeedback("");
-      setShowConceptAnswer(false);
-      setRevealedPythonQuestions({});
-    });
+    openLessonWithTab(nextKey, "explanation");
   }
 
   function updateControl(controlId, value) {
@@ -238,20 +250,32 @@ export default function App() {
         <header className="hero">
           <div className="hero-copy">
             <p className="eyebrow">ML Math Studio</p>
-            <h1>Build ML math in the right order.</h1>
+            <h1>Build ML math in the right order, without missing the basics.</h1>
             <p className="hero-text">
-              This is your study guide and exam-prep workspace, not just a cheat
-              sheet. It is built for learners who want simple explanations, real
-              order, worked examples, practice, and clear ML relevance.
+              This is a study dashboard for ML and AI math prep. It keeps the roadmap
+              ML-first, but fills in the foundational gaps that usually make learners
+              get lost when formulas, vectors, gradients, and probability arrive too fast.
             </p>
             <div className="hero-pills">
               <span>Study guide</span>
               <span>Exam prep</span>
+              <span>Python practice</span>
               <span>ML-focused</span>
             </div>
             <div className="home-actions">
-              <button type="button" className="primary-button" onClick={enterStudyGuide}>
-                Enter Study Guide
+              <button
+                type="button"
+                className="primary-button"
+                onClick={() => openLessonWithTab(startLesson.key, "explanation")}
+              >
+                Start Here
+              </button>
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => openLessonWithTab(recommendedLesson.key, "exam")}
+              >
+                Exam Prep Entry
               </button>
               <button
                 type="button"
@@ -264,26 +288,153 @@ export default function App() {
           </div>
 
           <div className="hero-card">
-            <p className="hero-card-label">How To Use This</p>
-            <ol>
-              <li>Read the explanation tab first.</li>
-              <li>Use the examples tab to build confidence.</li>
-              <li>Use practice for problem solving.</li>
-              <li>Use exam prep for speed and testing.</li>
-            </ol>
+            <p className="hero-card-label">What This Dashboard Solves</p>
+            <div className="steps">
+              <div className="step">1. Shows where to begin.</div>
+              <div className="step">2. Highlights critical foundations like magnitude, determinant, and z-score.</div>
+              <div className="step">3. Connects each topic to ML and to Python practice.</div>
+              <div className="step">4. Gives direct links into explanation, exam prep, and coding practice.</div>
+            </div>
           </div>
         </header>
 
-        <section className="starter-panel">
-          <div>
+        <section className="dashboard-grid">
+          <article className="dashboard-card">
+            <p className="panel-label">Start Here</p>
+            <h2 className="starter-title">{startLesson.label}</h2>
+            <p className="starter-text">{startLesson.whyThisBefore}</p>
+            <button type="button" className="primary-button" onClick={() => openLessonWithTab(startLesson.key, "explanation")}>
+              Open first lesson
+            </button>
+          </article>
+
+          <article className="dashboard-card">
+            <p className="panel-label">Recommended Next Step</p>
+            <h2 className="starter-title">{recommendedLesson.label}</h2>
+            <p className="starter-text">
+              {lastVisitedLesson
+                ? `You last studied ${lastVisitedLesson.label}. The next sensible move is ${recommendedLesson.label}.`
+                : "You have not started the roadmap yet, so the best next step is the first lesson."}
+            </p>
+            <div className="home-actions">
+              <button type="button" className="primary-button" onClick={() => openLessonWithTab(recommendedLesson.key, "explanation")}>
+                Continue study
+              </button>
+              <button type="button" className="secondary-button" onClick={() => openLessonWithTab(recommendedLesson.key, "exam")}>
+                Open exam mode
+              </button>
+            </div>
+          </article>
+
+          <article className="dashboard-card">
             <p className="panel-label">Why This Sequence</p>
-            <h2 className="starter-title">Linear algebra before calculus for ML.</h2>
+            <h2 className="starter-title">Linear algebra before calculus.</h2>
             <p className="starter-text">
               In ML, you first need to understand what the objects are: vectors,
-              matrices, transformations, similarity scores. Then calculus explains
-              how those objects are updated during learning. Then probability and
-              statistics explain uncertainty, data noise, and inference.
+              matrices, transformations, and similarity scores. Then calculus shows
+              how those objects change during learning. Probability and statistics
+              explain uncertainty, noise, and model confidence.
             </p>
+          </article>
+        </section>
+
+        <section className="roadmap-panel">
+          <div className="roadmap-header">
+            <div>
+              <p className="panel-label">Core ML Math Checklist</p>
+              <h2 className="starter-title">Important foundations that should not be missed.</h2>
+            </div>
+            <p className="roadmap-text">
+              This checklist exists so essential ideas like magnitude, transpose,
+              determinant, z-score, and gradients are clearly covered in the roadmap.
+            </p>
+          </div>
+          <div className="checklist-grid">
+            {checklistStatus.map((item) => (
+              <article key={item.id} className="checklist-card">
+                <div className="checklist-head">
+                  <span className="check-badge">Covered</span>
+                  <h3>{item.title}</h3>
+                </div>
+                <p>{item.description}</p>
+                <div className="roadmap-topics">
+                  {item.lessonMatches.map((match) => (
+                    <button
+                      key={`${item.id}-${match.key}`}
+                      type="button"
+                      className="topic-link"
+                      onClick={() => openLessonWithTab(match.key, "explanation")}
+                    >
+                      {match.label}
+                    </button>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="roadmap-panel">
+          <div className="roadmap-header">
+            <div>
+              <p className="panel-label">Topic Launchpad</p>
+              <h2 className="starter-title">Jump into the right block quickly.</h2>
+            </div>
+            <p className="roadmap-text">
+              These cards are not just labels. Each one links directly into the lessons
+              you are most likely to need for ML prep.
+            </p>
+          </div>
+          <div className="topic-card-grid">
+            {dashboardTopicCards.map((card) => (
+              <article key={card.key} className="topic-launch-card">
+                <h3>{card.title}</h3>
+                <p>{card.summary}</p>
+                <div className="roadmap-topics">
+                  {card.lessonKeys.map((key) => {
+                    const match = lessons.find((entry) => entry.key === key);
+                    if (!match) {
+                      return null;
+                    }
+                    return (
+                      <button
+                        key={`${card.key}-${match.key}`}
+                        type="button"
+                        className="topic-link"
+                        onClick={() => openLessonWithTab(match.key, "explanation")}
+                      >
+                        {match.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="home-actions">
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    onClick={() => openLessonWithTab(card.lessonKeys[0], "explanation")}
+                  >
+                    Open topic
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="roadmap-panel">
+          <div className="roadmap-header">
+            <div>
+              <p className="panel-label">What This Prepares You For</p>
+              <h2 className="starter-title">Why this roadmap matters for ML.</h2>
+            </div>
+          </div>
+          <div className="prep-grid">
+            {prepOutcomes.map((item) => (
+              <article key={item} className="prep-card">
+                <p>{item}</p>
+              </article>
+            ))}
           </div>
           <div className="symbol-strip">
             {starterGuide.map((item) => (
@@ -299,11 +450,10 @@ export default function App() {
           <div className="roadmap-header">
             <div>
               <p className="panel-label">Curriculum Roadmap</p>
-              <h2 className="starter-title">What to study first, and why.</h2>
+              <h2 className="starter-title">What is inside the study workspace right now.</h2>
             </div>
             <p className="roadmap-text">
-              Treat this like a first-pass ML math roadmap for serious study, not
-              a random collection of formulas.
+              Use this filtered view when you want to browse the full roadmap rather than jump in through the dashboard.
             </p>
           </div>
           <div className="roadmap-grid">
@@ -327,8 +477,8 @@ export default function App() {
         <section className="roadmap-panel">
           <div className="roadmap-header">
             <div>
-              <p className="panel-label">Current Scope</p>
-              <h2 className="starter-title">What is already inside the study workspace.</h2>
+              <p className="panel-label">Full Lesson List</p>
+              <h2 className="starter-title">Open any lesson directly.</h2>
             </div>
           </div>
           <LessonFilters
@@ -380,11 +530,11 @@ export default function App() {
             Explanation first, then examples, practice, exam prep, and Python when needed.
           </p>
         </div>
-        <div className="study-actions">
+            <div className="study-actions">
           <button
             type="button"
             className="primary-button"
-            onClick={() => openPythonPractice(activePythonLesson?.key || firstPythonLesson.key)}
+            onClick={() => openPythonPractice(lesson.pythonCompanion ? lesson.key : linkedPythonLesson?.key || firstPythonLesson.key)}
           >
             Practice Code
           </button>
@@ -558,6 +708,17 @@ export default function App() {
                     ))}
                   </ul>
                 </article>
+
+                {lesson.importantFoundations?.length ? (
+                  <article className="content-card wide">
+                    <p className="panel-label">Important Foundations Covered Here</p>
+                    <ul className="shortcut-list">
+                      {lesson.importantFoundations.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </article>
+                ) : null}
 
                 {lesson.advancedExplanation ? (
                   <article className="content-card wide">
@@ -887,15 +1048,28 @@ export default function App() {
             <section className="lesson-grid">
               {activePythonCompanion ? (
                 <>
-                  {activePythonLesson && activePythonLesson.key !== lesson.key ? (
+                  {showLinkedPythonLesson ? (
                     <article className="content-card wide">
                       <p className="panel-label">Linked Python Lesson</p>
                       <p>
-                        This topic uses the Python companion from <strong>{activePythonLesson.label}</strong>.
+                        This topic uses the Python companion from <strong>{linkedPythonLesson.label}</strong>.
                         The code below is the practical version of the math you are studying here.
                       </p>
-                      <button type="button" onClick={() => openPythonPractice(activePythonLesson.key)}>
+                      <button type="button" onClick={() => openPythonPractice(linkedPythonLesson.key)}>
                         Open full Python lesson
+                      </button>
+                    </article>
+                  ) : null}
+
+                  {showDeeperPythonLink ? (
+                    <article className="content-card wide">
+                      <p className="panel-label">Go Deeper In Python</p>
+                      <p>
+                        This lesson has its own Python companion here, and it also links to the deeper
+                        Python lesson <strong>{linkedPythonLesson.label}</strong> for more coding practice.
+                      </p>
+                      <button type="button" onClick={() => openPythonPractice(linkedPythonLesson.key)}>
+                        Open deeper Python lesson
                       </button>
                     </article>
                   ) : null}
@@ -931,7 +1105,7 @@ export default function App() {
                     <p className="panel-label">Code Walkthrough</p>
                     <div className="steps">
                       {activePythonCompanion.explainSteps.map((step, index) => (
-                        <div key={`${activePythonLesson.key}-python-step-${index + 1}`} className="step">
+                        <div key={`${pythonContentKey}-python-step-${index + 1}`} className="step">
                           {index + 1}. {step}
                         </div>
                       ))}
@@ -961,7 +1135,7 @@ export default function App() {
                       <p className="panel-label">Graded-Style Coding Questions</p>
                       <div className="extra-mcq-list">
                         {activePythonCompanion.gradedQuestions.map((item, index) => (
-                          <div key={`${activePythonLesson.key}-graded-python-${index + 1}`} className="extra-mcq-card">
+                          <div key={`${pythonContentKey}-graded-python-${index + 1}`} className="extra-mcq-card">
                             <p className="question">
                               <strong>Q{index + 1}.</strong> {item.prompt}
                             </p>
@@ -1006,7 +1180,7 @@ export default function App() {
                   ) : null}
 
                   <PythonPlayground
-                    lessonKey={activePythonLesson.key}
+                    lessonKey={pythonContentKey}
                     initialCode={activePythonCompanion.code}
                   />
                 </>
@@ -1184,6 +1358,19 @@ function LessonFilters({ filters, onChange, onReset, filteredCount, totalCount, 
 
 function normalize(value) {
   return value.trim().toLowerCase().replace(/\s+/g, "");
+}
+
+function getRecommendedLesson(lastVisitedLessonKey) {
+  if (!lastVisitedLessonKey) {
+    return lessons[0];
+  }
+
+  const currentIndex = lessons.findIndex((entry) => entry.key === lastVisitedLessonKey);
+  if (currentIndex === -1 || currentIndex === lessons.length - 1) {
+    return lessons[0];
+  }
+
+  return lessons[currentIndex + 1];
 }
 
 function matchesLessonFilters(lesson, filters) {

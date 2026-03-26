@@ -88,6 +88,103 @@ export const futureModules = [
   "Advanced probability inequalities"
 ];
 
+export const foundationChecklist = [
+  {
+    id: "magnitude",
+    title: "Vector magnitude",
+    description: "Know how long a vector is and why magnitude matters before similarity and normalization.",
+    tags: ["magnitude"]
+  },
+  {
+    id: "distance",
+    title: "Distance intuition",
+    description: "Read distance as the size of the difference between two points or vectors.",
+    tags: ["distance"]
+  },
+  {
+    id: "unit-vector",
+    title: "Unit vectors",
+    description: "Understand direction without scale so normalization and cosine ideas make sense.",
+    tags: ["unit-vector"]
+  },
+  {
+    id: "transpose",
+    title: "Transpose",
+    description: "Recognize how rows and columns swap and why transpose keeps showing up in matrix formulas.",
+    tags: ["transpose"]
+  },
+  {
+    id: "determinant",
+    title: "Determinant and invertibility",
+    description: "Read determinant as a geometric test for collapse, scaling, and reversibility.",
+    tags: ["determinant"]
+  },
+  {
+    id: "coordinate-change",
+    title: "Basis and coordinates",
+    description: "Separate the vector itself from the coordinate system used to describe it.",
+    tags: ["coordinate-change"]
+  },
+  {
+    id: "gradient-basics",
+    title: "Gradient basics",
+    description: "Decode derivative notation, partial derivatives, and gradient direction before optimization.",
+    tags: ["gradient-basics"]
+  },
+  {
+    id: "z-score",
+    title: "Z-scores and spread",
+    description: "Understand center, standard deviation, and standardized distance for statistics and distributions.",
+    tags: ["z-score"]
+  }
+];
+
+export const dashboardTopicCards = [
+  {
+    key: "foundation",
+    title: "Math Language",
+    summary: "Start by learning how graphs, symbols, and formulas behave before touching heavier ML notation.",
+    lessonKeys: ["functions"]
+  },
+  {
+    key: "linear-algebra",
+    title: "Linear Algebra Core",
+    summary: "Data, embeddings, matrix transformations, determinants, eigen ideas, and geometric reasoning live here.",
+    lessonKeys: ["vectors", "matrix-basics", "matrices", "dot", "eigen"]
+  },
+  {
+    key: "calculus",
+    title: "Calculus For Learning",
+    summary: "Slopes, partial derivatives, gradients, and update rules explain how models improve.",
+    lessonKeys: ["derivatives", "multivariable", "gradient-descent"]
+  },
+  {
+    key: "probability",
+    title: "Probability And Statistics",
+    summary: "Uncertainty, random variables, expectation, spread, z-scores, and Bayes all connect to ML evaluation and inference.",
+    lessonKeys: ["probability", "random-variables", "statistics", "bayes", "distributions"]
+  },
+  {
+    key: "modeling",
+    title: "Modeling Bridge",
+    summary: "Regression, logistic models, and backprop show how the earlier math becomes actual ML.",
+    lessonKeys: ["regression", "logistic", "backprop"]
+  },
+  {
+    key: "python",
+    title: "Python Practice",
+    summary: "Translate the same math into code so exam questions and ML workflows feel connected instead of separate.",
+    lessonKeys: ["python-basics", "python-linear-algebra", "python-probability", "python-functions-gradients"]
+  }
+];
+
+export const prepOutcomes = [
+  "Read ML math notation without freezing on symbols.",
+  "Move from intuitive explanations to formulas and then to exam questions.",
+  "Translate vectors, matrices, probability, and gradients into Python.",
+  "Recognize what each topic is actually doing in ML."
+];
+
 const baseLessons = [
   {
     key: "functions",
@@ -5602,6 +5699,9 @@ const defaultEnhancement = {
   advancedExplanation: "",
   commonMistakes: [],
   examAngles: [],
+  importantFoundations: [],
+  foundationTags: [],
+  inlinePythonCompanion: null,
   visualAnalogy: null,
   visualScenario: null
 };
@@ -5611,13 +5711,13 @@ const pythonBridgeMap = {
   vectors: "python-numpy",
   "matrix-basics": "python-numpy",
   matrices: "python-linear-algebra",
-  "linear-transformations": "python-linear-algebra",
-  "basis-coordinates": "python-linear-algebra",
-  "composition-powers": "python-linear-algebra",
-  "inverse-rank-spaces": "python-linear-algebra",
+  transformations: "python-linear-algebra",
+  basis: "python-linear-algebra",
+  composition: "python-linear-algebra",
+  "inverse-spaces": "python-linear-algebra",
   dot: "python-linear-algebra",
   eigen: "python-linear-algebra",
-  decomposition: "python-linear-algebra",
+  eigendecomp: "python-linear-algebra",
   derivatives: "python-functions-gradients",
   multivariable: "python-functions-gradients",
   "vector-valued": "python-functions-gradients",
@@ -5628,7 +5728,7 @@ const pythonBridgeMap = {
   bayes: "python-probability",
   distributions: "python-probability",
   regression: "python-functions-gradients",
-  descent: "python-functions-gradients",
+  "gradient-descent": "python-functions-gradients",
   logistic: "python-functions-gradients",
   backprop: "python-functions-gradients"
 };
@@ -5739,13 +5839,584 @@ const pythonGradedQuestionMap = {
   ]
 };
 
+const lessonMicroFoundationMap = {
+  vectors: {
+    importantFoundations: [
+      "Magnitude tells you the size of a vector, not just where it points.",
+      "Distance between two points is the magnitude of their difference vector.",
+      "A unit vector keeps direction but rescales the length to 1."
+    ],
+    foundationTags: ["magnitude", "distance", "unit-vector"]
+  },
+  matrices: {
+    importantFoundations: [
+      "Matrix multiplication works by matching inner dimensions, not by guessing from appearance.",
+      "Each entry in the product comes from one row meeting one column.",
+      "Transpose swaps rows and columns, which is why it keeps appearing in linear algebra and ML."
+    ],
+    foundationTags: ["transpose"]
+  },
+  transformations: {
+    importantFoundations: [
+      "A determinant tells you whether the transformation stretches, shrinks, flips, or collapses space.",
+      "A nonzero determinant means the transformation can be undone in the matching dimension."
+    ],
+    foundationTags: ["determinant"]
+  },
+  basis: {
+    importantFoundations: [
+      "A vector stays the same object even when its coordinates change under a new basis.",
+      "Coordinate change is about description, not changing the underlying geometric object."
+    ],
+    foundationTags: ["coordinate-change"]
+  },
+  "inverse-spaces": {
+    importantFoundations: [
+      "Determinant, rank, and inverse questions are really asking whether information was lost.",
+      "If space collapses onto fewer directions, you cannot reverse the transformation."
+    ],
+    foundationTags: ["determinant"]
+  },
+  derivatives: {
+    importantFoundations: [
+      "Derivative notation can look different, but all versions are asking about local rate of change.",
+      "A derivative is a slope idea before it becomes an optimization tool."
+    ],
+    foundationTags: ["gradient-basics"]
+  },
+  multivariable: {
+    importantFoundations: [
+      "Partial derivatives ask how the output changes when one variable moves and the others stay fixed.",
+      "The gradient collects those partials into one direction-of-change vector."
+    ],
+    foundationTags: ["gradient-basics"]
+  },
+  probability: {
+    importantFoundations: [
+      "An event is not the same thing as a random variable or a full distribution.",
+      "Probability tells you belief over outcomes, not certainty about one result."
+    ]
+  },
+  "random-variables": {
+    importantFoundations: [
+      "A random variable assigns numbers to outcomes so averages and spread can be computed.",
+      "Expected value is a weighted average, not a guaranteed one-shot outcome."
+    ]
+  },
+  statistics: {
+    importantFoundations: [
+      "Variance measures spread around the mean, while standard deviation puts that spread back in familiar units.",
+      "A z-score tells you how far a value is from the mean in standard-deviation units."
+    ],
+    foundationTags: ["z-score"]
+  },
+  distributions: {
+    importantFoundations: [
+      "A distribution tells you how values are spread out, not just where the average sits.",
+      "Standard normal uses z-scores so different scales can be compared cleanly."
+    ],
+    foundationTags: ["z-score"]
+  },
+  regression: {
+    importantFoundations: [
+      "Predictions, residuals, and error all need to be read together before optimization means anything.",
+      "Regression is the first place linear algebra, calculus, and statistics visibly meet."
+    ]
+  }
+};
+
+const inlinePythonCompanionMap = {
+  functions: {
+    goal: "Write the same linear rule you see in algebra as a tiny Python function.",
+    examUse: "Useful for code questions where you must evaluate or write a simple mathematical rule.",
+    codeTitle: "Functions In Python",
+    code: "def line(x, m, c):\n    return m * x + c\n\nprint(line(3, 2, 1))",
+    output: "7",
+    explainSteps: [
+      "The function stores the rule y = mx + c.",
+      "The inputs x, m, and c are the numbers from the algebra problem.",
+      "The return line computes the output exactly like the formula.",
+      "Calling the function plugs in actual values."
+    ],
+    traps: [
+      "Forgetting `return` and expecting Python to output automatically.",
+      "Mixing the input x with the parameters m and c.",
+      "Confusing assignment with equality."
+    ],
+    examTasks: [
+      "Write a one-line prediction rule.",
+      "Evaluate a function call quickly.",
+      "Explain what each parameter means."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Write a Python function `f(x)` that returns `3 * x + 2`, then print `f(4)`.",
+        starterCode: "# Define f(x)\n# Print f(4)",
+        explanation: "Translate the algebra rule directly into a Python function and then call it once.",
+        solution: "def f(x):\n    return 3 * x + 2\n\nprint(f(4))",
+        output: "14"
+      }
+    ]
+  },
+  vectors: {
+    goal: "Represent a vector in NumPy and compute its magnitude and unit direction.",
+    examUse: "Useful when exams ask for vector length, normalization, or basic vector manipulation in code.",
+    codeTitle: "Vectors, Magnitude, And Unit Direction",
+    code: "import numpy as np\n\nv = np.array([3.0, 4.0])\nmag = np.linalg.norm(v)\nunit_v = np.round(v / mag, 2)\nprint(mag)\nprint(unit_v)",
+    output: "5.0\n[0.6 0.8]",
+    explainSteps: [
+      "The vector is stored as a NumPy array.",
+      "`np.linalg.norm` computes the magnitude.",
+      "Dividing by the magnitude gives a unit vector.",
+      "The rounded result is easier to read in an exam."
+    ],
+    traps: [
+      "Forgetting to convert to decimal values before dividing.",
+      "Dividing by zero when the vector is the zero vector.",
+      "Thinking normalization changes direction."
+    ],
+    examTasks: [
+      "Compute magnitude from coordinates.",
+      "Normalize a vector.",
+      "Interpret vector code as geometry."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Create the vector `[6, 8]`, compute its magnitude, and print the result.",
+        starterCode: "import numpy as np\n\n# Create the vector\n# Compute the magnitude\n# Print it",
+        explanation: "Use `np.array` for the vector and `np.linalg.norm` for the magnitude.",
+        solution: "import numpy as np\n\nv = np.array([6, 8])\nmag = np.linalg.norm(v)\nprint(mag)",
+        output: "10.0"
+      }
+    ]
+  },
+  "matrix-basics": {
+    goal: "Read matrix shape and transpose in the same code form used in linear algebra exams.",
+    examUse: "Useful when exams ask for rows, columns, shapes, or transpose operations.",
+    codeTitle: "Matrix Shape And Transpose",
+    code: "import numpy as np\n\nA = np.array([[1, 2, 3], [4, 5, 6]])\nprint(A.shape)\nprint(A.T)",
+    output: "(2, 3)\n[[1 4]\n [2 5]\n [3 6]]",
+    explainSteps: [
+      "The matrix has 2 rows and 3 columns.",
+      "`.shape` confirms the dimensions.",
+      "`A.T` flips rows into columns.",
+      "This is the code version of transpose notation."
+    ],
+    traps: [
+      "Reading shape backwards.",
+      "Forgetting that transpose changes layout, not the values themselves.",
+      "Using uneven row lengths."
+    ],
+    examTasks: [
+      "Identify rows and columns from code.",
+      "Print a transpose.",
+      "Read dimensions without guessing."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Create the matrix `[[1, 0], [2, 3], [4, 5]]` and print its transpose.",
+        starterCode: "import numpy as np\n\n# Create the matrix\n# Print the transpose",
+        explanation: "Store the matrix as a 2D array and use `.T` to transpose it.",
+        solution: "import numpy as np\n\nA = np.array([[1, 0], [2, 3], [4, 5]])\nprint(A.T)",
+        output: "[[1 2 4]\n [0 3 5]]"
+      }
+    ]
+  },
+  matrices: {
+    goal: "Translate matrix-vector and matrix-matrix multiplication directly into NumPy.",
+    examUse: "Useful for coded linear transformation questions and matrix multiplication drills.",
+    codeTitle: "Matrix Multiplication In Python",
+    code: "import numpy as np\n\nA = np.array([[1, 2], [0, 1]])\nB = np.array([[2, 0], [1, 3]])\nv = np.array([3, 1])\nprint(A @ B)\nprint(A @ v)",
+    output: "[[4 6]\n [1 3]]\n[5 1]",
+    explainSteps: [
+      "`@` performs matrix multiplication.",
+      "The first print multiplies two matrices.",
+      "The second print multiplies a matrix by a vector.",
+      "Both are the code version of the same paper operation."
+    ],
+    traps: [
+      "Using `*` instead of `@` for matrix multiplication.",
+      "Ignoring dimension compatibility.",
+      "Thinking matrix multiplication is commutative."
+    ],
+    examTasks: [
+      "Write matrix multiplication with `@`.",
+      "Check shapes before multiplying.",
+      "Explain the output as a transformed vector or new matrix."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given `A = [[2, 1], [0, 1]]` and `v = [4, 3]`, print `A @ v`.",
+        starterCode: "import numpy as np\n\nA = np.array([[2, 1], [0, 1]])\nv = np.array([4, 3])\n\n# Print A @ v",
+        explanation: "Use the matrix multiplication operator directly on the matrix and vector.",
+        solution: "import numpy as np\n\nA = np.array([[2, 1], [0, 1]])\nv = np.array([4, 3])\nprint(A @ v)",
+        output: "[11  3]"
+      }
+    ]
+  },
+  dot: {
+    goal: "Compute dot products and read them as similarity or alignment scores in code.",
+    examUse: "Useful for vector similarity, cosine-style reasoning, and matrix/vector coding questions.",
+    codeTitle: "Dot Product And Alignment",
+    code: "import numpy as np\n\na = np.array([2, 3])\nb = np.array([4, 1])\ndot = np.dot(a, b)\ncosine = dot / (np.linalg.norm(a) * np.linalg.norm(b))\nprint(dot)\nprint(round(cosine, 2))",
+    output: "11\n0.74",
+    explainSteps: [
+      "`np.dot` computes the dot product.",
+      "The raw dot score mixes length and alignment.",
+      "Dividing by both magnitudes gives cosine-style alignment.",
+      "This is how code ties back to the geometry."
+    ],
+    traps: [
+      "Forgetting that a large dot product can come from long vectors, not just strong alignment.",
+      "Dividing by zero when a vector has zero magnitude.",
+      "Mixing elementwise multiply with dot product."
+    ],
+    examTasks: [
+      "Compute a dot product in NumPy.",
+      "Relate the score to alignment.",
+      "Interpret when the score is zero or negative."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Create `a = [1, 2]` and `b = [3, 4]`, then print their dot product.",
+        starterCode: "import numpy as np\n\n# Create the vectors\n# Print the dot product",
+        explanation: "Store both vectors and use `np.dot(a, b)`.",
+        solution: "import numpy as np\n\na = np.array([1, 2])\nb = np.array([3, 4])\nprint(np.dot(a, b))",
+        output: "11"
+      }
+    ]
+  },
+  derivatives: {
+    goal: "Write a slope rule in Python and connect derivative notation to an actual computed value.",
+    examUse: "Useful when exams ask you to trace a derivative formula or compute a slope value from code.",
+    codeTitle: "Derivative Rule In Python",
+    code: "def df(x):\n    return 2 * x + 1\n\nprint(df(3))",
+    output: "7",
+    explainSteps: [
+      "The derivative rule is written as a Python function.",
+      "Calling `df(3)` evaluates the slope at x = 3.",
+      "This is the programming version of reading f'(x).",
+      "A derivative becomes a reusable computation."
+    ],
+    traps: [
+      "Mixing the original function with its derivative rule.",
+      "Using `^` instead of `**` in Python power expressions.",
+      "Forgetting that the derivative is about rate of change, not the original output."
+    ],
+    examTasks: [
+      "Write a derivative rule as code.",
+      "Evaluate the slope at a point.",
+      "Explain the difference between f(x) and f'(x)."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Write a Python function `df(x)` that returns `6 * x`, then print `df(2)`.",
+        starterCode: "# Define df(x)\n# Print df(2)",
+        explanation: "This is a direct translation of a derivative rule into code.",
+        solution: "def df(x):\n    return 6 * x\n\nprint(df(2))",
+        output: "12"
+      }
+    ]
+  },
+  multivariable: {
+    goal: "Translate a gradient formula into Python and return the partial derivatives as a vector-like list.",
+    examUse: "Useful for partial derivative, gradient, and optimization coding questions.",
+    codeTitle: "Gradient Vector In Python",
+    code: "x, y = 1.0, -1.0\ndf_dx = 6 * x + y\ndf_dy = x + 2 * y\nprint([df_dx, df_dy])",
+    output: "[5.0, -1.0]",
+    explainSteps: [
+      "Each partial derivative is coded separately.",
+      "The gradient is the pair of those partials.",
+      "A Python list is enough to display the gradient for exam purposes.",
+      "This is the code version of ∇f."
+    ],
+    traps: [
+      "Forgetting which variable stays fixed in each partial derivative.",
+      "Mixing the x and y formulas.",
+      "Thinking the gradient is one number."
+    ],
+    examTasks: [
+      "Compute partial derivatives in code.",
+      "Print a gradient vector.",
+      "Interpret the gradient as direction of steepest increase."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "For `f(x, y) = x**2 + 3*y**2`, print the gradient at `(2, 1)`.",
+        starterCode: "x, y = 2, 1\n\n# Compute df_dx and df_dy\n# Print the gradient",
+        explanation: "Differentiate first: df/dx = 2x and df/dy = 6y, then substitute the numbers.",
+        solution: "x, y = 2, 1\ndf_dx = 2 * x\ndf_dy = 6 * y\nprint([df_dx, df_dy])",
+        output: "[4, 6]"
+      }
+    ]
+  },
+  probability: {
+    goal: "Use Python to estimate an event probability from repeated random trials.",
+    examUse: "Useful for simple simulation questions and event-probability coding tasks.",
+    codeTitle: "Probability By Simulation",
+    code: "import numpy as np\n\ntrials = np.random.randint(0, 2, size=20)\nprob_heads = np.mean(trials)\nprint(round(prob_heads, 2))",
+    output: "Output will vary.",
+    explainSteps: [
+      "Each trial is a 0 or 1 outcome.",
+      "The mean of many 0/1 trials estimates probability of 1.",
+      "This turns abstract event probability into something you can inspect.",
+      "Simulation supports, but does not replace, theory."
+    ],
+    traps: [
+      "Expecting one simulation run to exactly match the true probability.",
+      "Confusing one event with the long-run estimate.",
+      "Reading random output as fixed."
+    ],
+    examTasks: [
+      "Simulate a simple event.",
+      "Estimate probability with a sample mean.",
+      "Explain why the output can vary."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Simulate 10 fair coin tosses coded as 0/1 and print the estimated probability of heads.",
+        starterCode: "import numpy as np\n\n# Simulate 10 tosses\n# Compute and print the estimate",
+        explanation: "Use random 0/1 outcomes and take the mean of the results.",
+        solution: "import numpy as np\n\ntosses = np.random.randint(0, 2, size=10)\nprint(np.mean(tosses))",
+        output: "Output will vary."
+      }
+    ]
+  },
+  "random-variables": {
+    goal: "Compute expected value from values and probabilities using NumPy arrays.",
+    examUse: "Useful for coding tasks about weighted averages and discrete random variables.",
+    codeTitle: "Expected Value In Python",
+    code: "import numpy as np\n\nvalues = np.array([0, 1, 2])\nprobs = np.array([0.2, 0.5, 0.3])\nexpected = np.sum(values * probs)\nprint(expected)",
+    output: "1.1",
+    explainSteps: [
+      "One array stores the possible values.",
+      "Another stores their probabilities.",
+      "Multiplying and summing computes the weighted average.",
+      "That is the code version of expectation."
+    ],
+    traps: [
+      "Forgetting probabilities must add to 1.",
+      "Treating expectation as the most likely single value.",
+      "Using plain addition instead of weighted addition."
+    ],
+    examTasks: [
+      "Compute expected value from arrays.",
+      "Read probabilities as weights.",
+      "Explain why the answer can be non-integer."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given values `[1, 4]` and probabilities `[0.25, 0.75]`, print the expected value.",
+        starterCode: "import numpy as np\n\nvalues = np.array([1, 4])\nprobs = np.array([0.25, 0.75])\n\n# Compute and print E[X]",
+        explanation: "Multiply each value by its probability and sum the products.",
+        solution: "import numpy as np\n\nvalues = np.array([1, 4])\nprobs = np.array([0.25, 0.75])\nprint(np.sum(values * probs))",
+        output: "3.25"
+      }
+    ]
+  },
+  statistics: {
+    goal: "Compute mean, standard deviation, and z-scores in code so spread stops feeling abstract.",
+    examUse: "Useful for statistics coding questions and standardized-data reasoning.",
+    codeTitle: "Mean, Standard Deviation, And Z-Score",
+    code: "import numpy as np\n\ndata = np.array([2, 4, 6, 8])\nmean = np.mean(data)\nstd = np.std(data)\nz = (6 - mean) / std\nprint(mean)\nprint(round(std, 2))\nprint(round(z, 2))",
+    output: "5.0\n2.24\n0.45",
+    explainSteps: [
+      "The mean gives the center.",
+      "Standard deviation gives the spread in the original units.",
+      "A z-score standardizes one value relative to that center and spread.",
+      "This is the code version of statistics formulas used in exams."
+    ],
+    traps: [
+      "Confusing variance with standard deviation.",
+      "Forgetting z-scores use subtraction and division.",
+      "Ignoring that different libraries may define sample vs population spread differently."
+    ],
+    examTasks: [
+      "Compute mean and standard deviation.",
+      "Translate a z-score formula into code.",
+      "Explain what a positive or negative z-score means."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "For data `[10, 12, 14]`, compute the mean and print the z-score of 14 rounded to 2 decimals.",
+        starterCode: "import numpy as np\n\ndata = np.array([10, 12, 14])\n\n# Compute mean and std\n# Compute z-score of 14\n# Print the rounded z-score",
+        explanation: "Compute the center and spread first, then standardize 14 relative to them.",
+        solution: "import numpy as np\n\ndata = np.array([10, 12, 14])\nmean = np.mean(data)\nstd = np.std(data)\nz = (14 - mean) / std\nprint(round(z, 2))",
+        output: "1.22"
+      }
+    ]
+  },
+  regression: {
+    goal: "Write a tiny prediction rule and measure prediction error in Python.",
+    examUse: "Useful for code questions on predictions, residuals, and mean squared error.",
+    codeTitle: "Regression Prediction And Error",
+    code: "import numpy as np\n\nx = np.array([1, 2, 3])\ny = np.array([3, 5, 7])\nm, b = 2, 1\npred = m * x + b\nmse = np.mean((y - pred) ** 2)\nprint(pred)\nprint(mse)",
+    output: "[3 5 7]\n0.0",
+    explainSteps: [
+      "The line rule predicts outputs from inputs.",
+      "Residuals are actual minus predicted values.",
+      "Squaring and averaging gives MSE.",
+      "This is the code version of regression fit quality."
+    ],
+    traps: [
+      "Mixing residual direction.",
+      "Forgetting to square errors for MSE.",
+      "Assuming a line must fit perfectly."
+    ],
+    examTasks: [
+      "Compute predictions from a line.",
+      "Compute a residual or MSE.",
+      "Interpret what lower error means."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given `x = [1, 2]`, `y = [4, 6]`, `m = 2`, and `b = 1`, print the prediction array.",
+        starterCode: "import numpy as np\n\nx = np.array([1, 2])\ny = np.array([4, 6])\nm, b = 2, 1\n\n# Compute predictions\n# Print them",
+        explanation: "Use the line rule elementwise on the input array.",
+        solution: "import numpy as np\n\nx = np.array([1, 2])\ny = np.array([4, 6])\nm, b = 2, 1\npred = m * x + b\nprint(pred)",
+        output: "[3 5]"
+      }
+    ]
+  },
+  eigen: {
+    goal: "Compute eigenvalues and eigenvectors in NumPy and match them to the math notation.",
+    examUse: "Useful for eigendecomposition and PCA-style coding questions.",
+    codeTitle: "Eigenvalues And Eigenvectors In Python",
+    code: "import numpy as np\n\nA = np.array([[1, 4], [2, 3]])\nvalues, vectors = np.linalg.eig(A)\nprint(values)\nprint(np.round(vectors, 3))",
+    output: "[ 5. -1.]\n[[ 0.707 -0.894]\n [ 0.707  0.447]]",
+    explainSteps: [
+      "`np.linalg.eig` returns both eigenvalues and eigenvectors.",
+      "The eigenvalues come first as a 1D array.",
+      "The eigenvectors appear as columns in the returned matrix.",
+      "This is the code form of Av = λv."
+    ],
+    traps: [
+      "Assuming eigenvectors are returned as rows.",
+      "Expecting one fixed sign choice for every eigenvector.",
+      "Forgetting that numerical output may be approximate."
+    ],
+    examTasks: [
+      "Find eigenvalues in code.",
+      "Read eigenvectors from the output matrix.",
+      "Connect numerical output to the paper formula."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Find the eigenvalues of `[[3, 0], [0, 2]]` using Python and print them.",
+        starterCode: "import numpy as np\n\nA = np.array([[3, 0], [0, 2]])\n\n# Find and print the eigenvalues",
+        explanation: "Use the standard eigenvalue command and print the returned eigenvalue array.",
+        solution: "import numpy as np\n\nA = np.array([[3, 0], [0, 2]])\nvalues, vectors = np.linalg.eig(A)\nprint(values)",
+        output: "[3. 2.]"
+      }
+    ]
+  },
+  bayes: {
+    goal: "Compute a posterior probability from prior, likelihood, and false-positive information in code.",
+    examUse: "Useful for simple Bayes-style coding tasks and sanity checks.",
+    codeTitle: "Bayes Update In Python",
+    code: "prior = 0.01\nsensitivity = 0.9\nfalse_positive = 0.05\nposterior = (sensitivity * prior) / ((sensitivity * prior) + (false_positive * (1 - prior)))\nprint(round(posterior, 3))",
+    output: "0.154",
+    explainSteps: [
+      "The numerator is the true-positive path.",
+      "The denominator adds all ways to get a positive test.",
+      "The result is the posterior probability after the evidence.",
+      "This is Bayes written as direct computation."
+    ],
+    traps: [
+      "Confusing prior with posterior.",
+      "Forgetting the false-positive term in the denominator.",
+      "Mixing conditional directions."
+    ],
+    examTasks: [
+      "Code a Bayes update from given rates.",
+      "Interpret the posterior.",
+      "Explain why the denominator matters."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Using prior = 0.2, sensitivity = 0.8, and false_positive = 0.1, print the posterior rounded to 2 decimals.",
+        starterCode: "prior = 0.2\nsensitivity = 0.8\nfalse_positive = 0.1\n\n# Compute posterior\n# Print rounded value",
+        explanation: "Use the standard Bayes update with a numerator for true positives and a denominator for all positives.",
+        solution: "prior = 0.2\nsensitivity = 0.8\nfalse_positive = 0.1\nposterior = (sensitivity * prior) / ((sensitivity * prior) + (false_positive * (1 - prior)))\nprint(round(posterior, 2))",
+        output: "0.67"
+      }
+    ]
+  },
+  distributions: {
+    goal: "Work with mean, standard deviation, and z-scores in the coding form used for distributions.",
+    examUse: "Useful for standard normal and distribution-based coding questions.",
+    codeTitle: "Distribution Parameters In Python",
+    code: "mu = 10\nsigma = 2\nx = 14\nz = (x - mu) / sigma\nprint(z)",
+    output: "2.0",
+    explainSteps: [
+      "The mean and standard deviation define the scale.",
+      "The z-score converts the raw value into standardized distance.",
+      "This is the main bridge to standard normal reasoning.",
+      "It removes raw-unit dependence."
+    ],
+    traps: [
+      "Confusing sigma with variance.",
+      "Forgetting to subtract the mean first.",
+      "Using the wrong sign."
+    ],
+    examTasks: [
+      "Compute a z-score from distribution parameters.",
+      "Interpret standardized distance.",
+      "Connect N(mu, sigma^2) to code variables."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "Given `mu = 50`, `sigma = 5`, and `x = 60`, print the z-score.",
+        starterCode: "mu = 50\nsigma = 5\nx = 60\n\n# Compute and print the z-score",
+        explanation: "Use the standard formula `(x - mu) / sigma`.",
+        solution: "mu = 50\nsigma = 5\nx = 60\nprint((x - mu) / sigma)",
+        output: "2.0"
+      }
+    ]
+  },
+  "gradient-descent": {
+    goal: "Code one update step so optimization stops feeling abstract.",
+    examUse: "Useful for questions that ask you to trace or implement a single gradient-descent step.",
+    codeTitle: "One Gradient Descent Step",
+    code: "x = 5.0\nlr = 0.1\ngrad = 2 * x\nx = x - lr * grad\nprint(x)",
+    output: "4.0",
+    explainSteps: [
+      "Compute the current gradient.",
+      "Multiply by the learning rate.",
+      "Move opposite the gradient.",
+      "Print the updated value."
+    ],
+    traps: [
+      "Moving with the gradient instead of against it.",
+      "Forgetting the learning-rate multiplier.",
+      "Updating before computing the gradient."
+    ],
+    examTasks: [
+      "Trace one descent step.",
+      "Explain the role of learning rate.",
+      "Connect the update to the slope."
+    ],
+    gradedQuestions: [
+      {
+        prompt: "If `x = 3`, `lr = 0.5`, and `grad = 4`, print the updated x after one descent step.",
+        starterCode: "x = 3\nlr = 0.5\ngrad = 4\n\n# Update x\n# Print it",
+        explanation: "Use `x = x - lr * grad` exactly once.",
+        solution: "x = 3\nlr = 0.5\ngrad = 4\nx = x - lr * grad\nprint(x)",
+        output: "1.0"
+      }
+    ]
+  }
+};
+
 export const lessons = baseLessons.map((lesson, index) => ({
   ...defaultEnhancement,
   ...lesson,
   order: index + 1,
   ...(lessonEnhancements[lesson.key] || {}),
   extraPractice: (lessonEnhancements[lesson.key]?.extraPractice || []).map(normalizeExtraPractice),
+  ...(lessonMicroFoundationMap[lesson.key] || {}),
   pythonLessonKey: pythonBridgeMap[lesson.key] || null,
+  inlinePythonCompanion: inlinePythonCompanionMap[lesson.key] || null,
   pythonCompanion: lesson.pythonCompanion
     ? {
         ...lesson.pythonCompanion,

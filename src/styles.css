@@ -54,6 +54,10 @@ button {
 .hero,
 .workspace,
 .visual-layout,
+.dashboard-grid,
+.checklist-grid,
+.topic-card-grid,
+.prep-grid,
 .roadmap-grid,
 .meta-grid,
 .lesson-grid {
@@ -98,6 +102,10 @@ button {
 .hero-card,
 .starter-panel,
 .roadmap-panel,
+.dashboard-card,
+.checklist-card,
+.topic-launch-card,
+.prep-card,
 .lesson-nav,
 .primer-card,
 .visual-panel,
@@ -119,6 +127,10 @@ button {
 .hero-card,
 .starter-panel,
 .roadmap-panel,
+.dashboard-card,
+.checklist-card,
+.topic-launch-card,
+.prep-card,
 .lesson-nav,
 .primer-card,
 .visual-panel,
@@ -281,6 +293,60 @@ button {
   gap: 18px;
   margin-bottom: 24px;
   animation-delay: 120ms;
+}
+
+.dashboard-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.dashboard-card h2,
+.checklist-card h3,
+.topic-launch-card h3 {
+  margin: 0 0 12px;
+  font-family: "Space Grotesk", sans-serif;
+  line-height: 1.05;
+}
+
+.dashboard-card p,
+.checklist-card p,
+.topic-launch-card p,
+.prep-card p {
+  color: var(--muted);
+  line-height: 1.72;
+}
+
+.checklist-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.topic-card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.prep-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+
+.checklist-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.check-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.1);
+  border: 1px solid rgba(15, 118, 110, 0.22);
+  color: var(--accent-deep);
+  font-weight: 700;
+  font-size: 0.85rem;
 }
 
 .starter-title {
@@ -1088,6 +1154,10 @@ svg {
 @media (max-width: 1024px) {
   .hero,
   .starter-panel,
+  .dashboard-grid,
+  .checklist-grid,
+  .topic-card-grid,
+  .prep-grid,
   .workspace,
   .visual-layout,
   .lesson-grid,
