@@ -871,7 +871,7 @@ button {
 
 .code-block.compact {
   font-size: 0.9rem;
-  color: #dff4ef;
+  color: #f4fffb;
 }
 
 .code-output {
@@ -882,6 +882,14 @@ button {
 
 .code-output strong {
   color: var(--accent-deep);
+}
+
+.code-output .code-block {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #14251f 0%, #10201b 100%);
+  border: 1px solid rgba(15, 118, 110, 0.24);
+  overflow-x: auto;
 }
 
 .playground-header,
