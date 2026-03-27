@@ -825,6 +825,13 @@ button {
   color: var(--accent-deep);
 }
 
+.formal-topic-bridge {
+  margin: 4px 0 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 72ch;
+}
+
 .formal-notation-read {
   margin: 4px 0 0;
   color: var(--accent);

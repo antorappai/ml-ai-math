@@ -720,6 +720,10 @@ export default function App() {
                     <p className="panel-label">
                       {lesson.formalNotationBlock.label || "Key Formal Notation"}
                     </p>
+                    <p className="formal-topic-bridge">
+                      {lesson.formalNotationBlock.topicTieIn ||
+                        `For ${lesson.label}, this is the main formal statement you should learn to recognize.`}
+                    </p>
                     <div className="formal-notation-box">
                       <p className="formal-notation-expression">
                         {lesson.formalNotationBlock.formalNotation}
@@ -746,7 +750,7 @@ export default function App() {
                         </div>
                       </div>
                       <div className="formula-context">
-                        <strong>What This Formal Notation Is Doing</strong>
+                        <strong>Why This Belongs To {lesson.label}</strong>
                         <p>{lesson.formalNotationBlock.context}</p>
                       </div>
                       <div className="formula-exam-use">
