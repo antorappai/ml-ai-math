@@ -56,6 +56,7 @@ button {
 .visual-layout,
 .dashboard-grid,
 .checklist-grid,
+.formula-coverage-grid,
 .topic-card-grid,
 .prep-grid,
 .roadmap-grid,
@@ -322,6 +323,10 @@ button {
 
 .topic-card-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.formula-coverage-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .prep-grid {
@@ -786,6 +791,12 @@ button {
   max-width: 72ch;
 }
 
+.formula-helper-copy {
+  margin: 4px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .lesson-notation-grid .notation-card p:last-child {
   margin-bottom: 0;
 }
@@ -798,9 +809,12 @@ button {
 .bridge-item,
 .formula-piece-card,
 .formal-notation-box,
+.formula-variation-card,
 .formula-flow,
 .formula-context,
-.formula-exam-use {
+.formula-exam-use,
+.supporting-formula-card,
+.formula-coverage-item {
   padding: 16px;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.62);
@@ -812,9 +826,12 @@ button {
 .bridge-item strong,
 .formula-piece-card strong,
 .formal-notation-box strong,
+.formula-variation-card strong,
 .formula-flow strong,
 .formula-context strong,
-.formula-exam-use strong {
+.formula-exam-use strong,
+.supporting-formula-card strong,
+.formula-coverage-item strong {
   color: var(--accent-deep);
 }
 
@@ -854,16 +871,84 @@ button {
   margin-top: 6px;
 }
 
+.compact-grid {
+  margin-top: 0;
+}
+
+.formula-piece-section,
+.formula-variation-section {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.formula-variation-grid,
+.supporting-formula-list,
+.formula-coverage-list {
+  display: grid;
+  gap: 16px;
+}
+
+.formula-variation-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
 .formula-breakdown-extra {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
+.supporting-formula-list {
+  margin-top: 6px;
+}
+
 .formula-piece-card p,
 .formal-notation-box p,
+.formula-variation-card p,
 .formula-context p,
 .formula-exam-use p,
-.bridge-item p {
+.bridge-item p,
+.supporting-formula-card p,
+.formula-coverage-item p {
   margin: 0;
+}
+
+.formula-coverage-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+}
+
+.formula-level-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid rgba(25, 50, 41, 0.14);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--accent-deep);
+}
+
+.formula-level-badge.main {
+  background: rgba(15, 118, 110, 0.12);
+  border-color: rgba(15, 118, 110, 0.26);
+}
+
+.formula-level-badge.supporting {
+  background: rgba(197, 138, 46, 0.14);
+  border-color: rgba(197, 138, 46, 0.24);
+}
+
+.formula-level-badge.variation {
+  background: rgba(25, 50, 41, 0.1);
+  border-color: rgba(25, 50, 41, 0.18);
+}
+
+.formula-audit-notation {
+  color: var(--accent-deep);
+  font-weight: 700;
 }
 
 .content-card.wide {
@@ -1277,6 +1362,7 @@ svg {
   .starter-panel,
   .dashboard-grid,
   .checklist-grid,
+  .formula-coverage-grid,
   .topic-card-grid,
   .prep-grid,
   .workspace,

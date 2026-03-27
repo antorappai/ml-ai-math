@@ -3,6 +3,7 @@ import {
   curriculumStages,
   dashboardTopicCards,
   foundationChecklist,
+  formulaCoverageChecklist,
   futureModules,
   lessons,
   notationStarterKit,
@@ -104,6 +105,13 @@ export default function App() {
   const checklistStatus = foundationChecklist.map((item) => ({
     ...item,
     lessonMatches: lessons.filter((entry) => item.tags.some((tag) => entry.foundationTags.includes(tag)))
+  }));
+  const formulaCoverageStatus = formulaCoverageChecklist.map((group) => ({
+    ...group,
+    items: group.items.map((item) => ({
+      ...item,
+      ownerLesson: lessons.find((entry) => entry.key === item.lessonKey) ?? null
+    }))
   }));
 
   useEffect(() => {
@@ -369,6 +377,48 @@ export default function App() {
                     >
                       {match.label}
                     </button>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="roadmap-panel">
+          <div className="roadmap-header">
+            <div>
+              <p className="panel-label">Formula Coverage Audit</p>
+              <h2 className="starter-title">The formulas you should be able to recognize.</h2>
+            </div>
+            <p className="roadmap-text">
+              This is the formula-level dashboard. It shows which lesson owns each important formula and whether it is the
+              main formula, a supporting formula, or a common exam variation.
+            </p>
+          </div>
+          <div className="formula-coverage-grid">
+            {formulaCoverageStatus.map((group) => (
+              <article key={group.key} className="roadmap-card formula-group-card">
+                <h3>{group.title}</h3>
+                <p>{group.summary}</p>
+                <div className="formula-coverage-list">
+                  {group.items.map((item) => (
+                    <div key={item.id} className="formula-coverage-item">
+                      <div className="formula-coverage-head">
+                        <strong>{item.title}</strong>
+                        <span className={`formula-level-badge ${item.level}`}>{formatFormulaLevel(item.level)}</span>
+                      </div>
+                      <p className="formula-audit-notation">{item.notation}</p>
+                      <p>{item.description}</p>
+                      {item.ownerLesson ? (
+                        <button
+                          type="button"
+                          className="topic-link"
+                          onClick={() => openLessonWithTab(item.ownerLesson.key, "explanation")}
+                        >
+                          Open {item.ownerLesson.label}
+                        </button>
+                      ) : null}
+                    </div>
                   ))}
                 </div>
               </article>
@@ -735,14 +785,57 @@ export default function App() {
                         </p>
                       ) : null}
                     </div>
-                    <div className="formula-piece-grid">
-                      {lesson.formalNotationBlock.pieces.map((item) => (
-                        <div key={`${lesson.key}-${item.part}`} className="formula-piece-card">
-                          <strong>{item.part}</strong>
-                          <p>{item.meaning}</p>
+                    {lesson.commonExamVariations?.length ? (
+                      <div className="formula-variation-section">
+                        <p className="panel-label">Common Exam Variations</p>
+                        <div className="formula-variation-grid">
+                          {lesson.commonExamVariations.map((item, index) => (
+                            <div key={`${lesson.key}-variation-${index + 1}`} className="formula-variation-card">
+                              <p className="formal-notation-expression">{item.notation}</p>
+                              <p className="formal-notation-read">{item.readAs}</p>
+                              {item.whyItAppears ? (
+                                <p className="formula-helper-copy">{item.whyItAppears}</p>
+                              ) : null}
+                              {item.pieces?.length ? (
+                                <>
+                                  <p className="panel-label">Formula Decoder</p>
+                                  <p className="formula-helper-copy">
+                                    These are the symbols used in this exam variation.
+                                  </p>
+                                  <div className="formula-piece-grid compact-grid">
+                                    {item.pieces.map((piece) => (
+                                      <div
+                                        key={`${lesson.key}-variation-${index + 1}-${piece.part}`}
+                                        className="formula-piece-card"
+                                      >
+                                        <strong>{piece.part}</strong>
+                                        <p>{piece.meaning}</p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              ) : null}
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ) : null}
+                    {lesson.formalNotationBlock.pieces.length ? (
+                      <div className="formula-piece-section">
+                        <p className="panel-label">Formula Decoder</p>
+                        <p className="formula-helper-copy">
+                          These are the symbols used in the main formula above.
+                        </p>
+                        <div className="formula-piece-grid">
+                          {lesson.formalNotationBlock.pieces.map((item) => (
+                            <div key={`${lesson.key}-${item.part}`} className="formula-piece-card">
+                              <strong>{item.part}</strong>
+                              <p>{item.meaning}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
                     <div className="formula-breakdown-extra">
                       <div className="formula-flow">
                         <strong>Read It Left To Right</strong>
@@ -766,9 +859,77 @@ export default function App() {
                   </article>
                 ) : null}
 
+                {lesson.supportingFormulas?.length ? (
+                  <article className="content-card wide formal-notation-card">
+                    <p className="panel-label">Other Core Formulas In This Topic</p>
+                    <p className="notation-link-copy">
+                      This topic is not fully captured by one formula. These are the other formulas you should recognize
+                      for the same lesson.
+                    </p>
+                    <div className="supporting-formula-list">
+                      {lesson.supportingFormulas.map((item, index) => (
+                        <div key={`${lesson.key}-supporting-${index + 1}`} className="supporting-formula-card">
+                          {item.label ? <p className="panel-label">{item.label}</p> : null}
+                          <div className="formal-notation-box">
+                            <p className="formal-notation-expression">{item.notation}</p>
+                            <p className="formal-notation-read">{item.readAs}</p>
+                            {item.simpleVersion ? (
+                              <p className="formal-notation-simple">
+                                <strong>Simple version:</strong> {item.simpleVersion}
+                              </p>
+                            ) : null}
+                          </div>
+                          {item.pieces?.length ? (
+                            <div className="formula-piece-section">
+                              <p className="panel-label">Formula Decoder</p>
+                              <p className="formula-helper-copy">
+                                These are the symbols used in this supporting formula.
+                              </p>
+                              <div className="formula-piece-grid compact-grid">
+                                {item.pieces.map((piece) => (
+                                  <div
+                                    key={`${lesson.key}-supporting-${index + 1}-${piece.part}`}
+                                    className="formula-piece-card"
+                                  >
+                                    <strong>{piece.part}</strong>
+                                    <p>{piece.meaning}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ) : null}
+                          <div className="formula-breakdown-extra">
+                            <div className="formula-flow">
+                              <strong>Read It Left To Right</strong>
+                              <div className="steps compact-steps">
+                                {(item.stepFlow || []).map((step, stepIndex) => (
+                                  <div
+                                    key={`${lesson.key}-supporting-step-${index + 1}-${stepIndex + 1}`}
+                                    className="step"
+                                  >
+                                    {stepIndex + 1}. {step}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                            <div className="formula-context">
+                              <strong>Why This Belongs To {lesson.label}</strong>
+                              <p>{item.context}</p>
+                            </div>
+                            <div className="formula-exam-use">
+                              <strong>What Exams Usually Test Here</strong>
+                              <p>{item.examUse}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                ) : null}
+
                 {lesson.notationGuide?.length ? (
                   <article className="content-card wide">
-                    <p className="panel-label">Related Notation From The Formula Above</p>
+                    <p className="panel-label">Other Notation You May See</p>
                     <p className="notation-link-copy">
                       {lesson.notationConnection ||
                         "These symbols are not a new topic. They are the next formal notations that usually appear when you expand, solve, or apply the main notation shown above."}
@@ -1500,4 +1661,17 @@ function matchesLessonFilters(lesson, filters) {
     filters.search.trim() === "" || searchHaystack.includes(filters.search.trim().toLowerCase());
 
   return matchesTopic && matchesDifficulty && matchesSearch;
+}
+
+function formatFormulaLevel(level) {
+  if (level === "main") {
+    return "Main";
+  }
+  if (level === "supporting") {
+    return "Supporting";
+  }
+  if (level === "variation") {
+    return "Exam variation";
+  }
+  return level;
 }

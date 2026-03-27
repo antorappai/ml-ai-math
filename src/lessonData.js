@@ -139,6 +139,204 @@ export const foundationChecklist = [
   }
 ];
 
+export const formulaCoverageChecklist = [
+  {
+    key: "functions-foundations",
+    title: "Functions / Foundations",
+    summary: "The first formulas should teach reading, not intimidation.",
+    items: [
+      {
+        id: "function-rule",
+        title: "Linear function rule",
+        notation: "f(x) = mx + c",
+        description: "Recognize input, slope, and starting value before later ML equations stack on top.",
+        lessonKey: "functions",
+        level: "main"
+      }
+    ]
+  },
+  {
+    key: "linear-algebra",
+    title: "Vectors / Linear Algebra",
+    summary: "These are the core formulas behind representation, similarity, and transformations.",
+    items: [
+      {
+        id: "vector-magnitude",
+        title: "Vector magnitude",
+        notation: "||v|| = sqrt(x^2 + y^2)",
+        description: "Magnitude turns a coordinate pair into a length you can interpret geometrically.",
+        lessonKey: "vectors",
+        level: "supporting"
+      },
+      {
+        id: "unit-vector",
+        title: "Unit vector",
+        notation: "u = v / ||v||",
+        description: "Normalization keeps direction while removing raw scale.",
+        lessonKey: "vectors",
+        level: "supporting"
+      },
+      {
+        id: "distance",
+        title: "Distance",
+        notation: "d(a, b) = ||a - b||",
+        description: "Distance is the length of the difference vector.",
+        lessonKey: "vectors",
+        level: "supporting"
+      },
+      {
+        id: "matrix-dimension",
+        title: "Matrix dimension notation",
+        notation: "A ∈ R^(m×n)",
+        description: "Formal matrix shape notation makes rows and columns explicit.",
+        lessonKey: "matrix-basics",
+        level: "main"
+      },
+      {
+        id: "transpose",
+        title: "Transpose",
+        notation: "(A^T)_(ij) = A_(ji)",
+        description: "Transpose is the clean formal way to say rows and columns swap.",
+        lessonKey: "matrices",
+        level: "supporting"
+      },
+      {
+        id: "determinant",
+        title: "Determinant / invertibility",
+        notation: "det(A) ≠ 0 ⇔ A^(-1) exists",
+        description: "This is the formal collapse-versus-reversibility test.",
+        lessonKey: "inverse-spaces",
+        level: "main"
+      },
+      {
+        id: "dot-product",
+        title: "Dot product",
+        notation: "a · b = Σ_i a_i b_i",
+        description: "The dot product measures coordinate-wise alignment.",
+        lessonKey: "dot",
+        level: "main"
+      },
+      {
+        id: "eigen-equation",
+        title: "Eigen equation",
+        notation: "A v = λ v",
+        description: "This is the formal statement for special directions under a transformation.",
+        lessonKey: "eigen",
+        level: "main"
+      },
+      {
+        id: "eigendecomposition",
+        title: "Eigendecomposition",
+        notation: "A = C D C^(-1)",
+        description: "This rewrites a matrix in the eigenvector basis.",
+        lessonKey: "eigendecomp",
+        level: "main"
+      }
+    ]
+  },
+  {
+    key: "calculus",
+    title: "Calculus",
+    summary: "These formulas explain slope, partial change, and optimization direction.",
+    items: [
+      {
+        id: "derivative",
+        title: "Derivative",
+        notation: "f'(x) = df/dx",
+        description: "Different notations, same local rate-of-change idea.",
+        lessonKey: "derivatives",
+        level: "main"
+      },
+      {
+        id: "gradient",
+        title: "Gradient",
+        notation: "∇f = (∂f/∂x, ∂f/∂y)",
+        description: "The gradient collects partial derivatives into one vector.",
+        lessonKey: "multivariable",
+        level: "main"
+      }
+    ]
+  },
+  {
+    key: "probability-statistics",
+    title: "Probability / Statistics",
+    summary: "These are the formulas for uncertainty, averages, spread, and standardized distance.",
+    items: [
+      {
+        id: "expectation",
+        title: "Expected value",
+        notation: "E[X] = Σ_x x P(X = x)",
+        description: "Expectation is the weighted average of a random variable.",
+        lessonKey: "random-variables",
+        level: "main"
+      },
+      {
+        id: "variance",
+        title: "Variance",
+        notation: "s^2 = (1/(n - 1)) Σ_(i=1)^n (x_i - x̄)^2",
+        description: "Variance measures squared spread around the center.",
+        lessonKey: "statistics",
+        level: "supporting"
+      },
+      {
+        id: "standard-deviation",
+        title: "Standard deviation",
+        notation: "s = sqrt((1/(n - 1)) Σ_(i=1)^n (x_i - x̄)^2)",
+        description: "Standard deviation returns spread to the original units.",
+        lessonKey: "statistics",
+        level: "supporting"
+      },
+      {
+        id: "z-score",
+        title: "Z-score",
+        notation: "z = (x - μ) / σ",
+        description: "Z-score expresses distance from the mean in standard-deviation units.",
+        lessonKey: "distributions",
+        level: "main"
+      },
+      {
+        id: "bayes-rule",
+        title: "Bayes rule",
+        notation: "P(A | B) = (P(B | A) P(A)) / P(B)",
+        description: "Bayes updates a belief after observing evidence.",
+        lessonKey: "bayes",
+        level: "main"
+      },
+      {
+        id: "binomial-probability",
+        title: "Binomial probability",
+        notation: "P(X = x) = C(n, x) p^x (1 - p)^(n - x)",
+        description: "This is the exact probability formula for repeated independent trials.",
+        lessonKey: "binomial",
+        level: "main"
+      }
+    ]
+  },
+  {
+    key: "modeling",
+    title: "Modeling",
+    summary: "These formulas are the first bridge from math ideas into actual ML model behavior.",
+    items: [
+      {
+        id: "regression-line",
+        title: "Regression line",
+        notation: "ŷ = mx + b",
+        description: "This is the core prediction rule for first-pass regression.",
+        lessonKey: "regression",
+        level: "main"
+      },
+      {
+        id: "logistic-probability",
+        title: "Logistic probability",
+        notation: "P(y = 1 | x) = 1 / (1 + e^(-(w x + b)))",
+        description: "This turns a linear score into a probability-like classification output.",
+        lessonKey: "logistic",
+        level: "main"
+      }
+    ]
+  }
+];
+
 export const dashboardTopicCards = [
   {
     key: "foundation",
@@ -6057,6 +6255,9 @@ const defaultEnhancement = {
   notationConnection: "",
   exampleBridge: null,
   formalNotationBlock: null,
+  supportingFormulas: [],
+  commonExamVariations: [],
+  formulaChecklistTags: [],
   hasDeeperChapterPractice: false,
   inlinePythonCompanion: null,
   visualAnalogy: null,
@@ -6542,12 +6743,6 @@ const lessonNotationGuideMap = {
   ],
   distributions: [
     {
-      symbol: "N(μ, σ²)",
-      readAs: "Read as: normal with mean mu and variance sigma squared",
-      meaning: "This names a normal distribution using its center and spread.",
-      whyItShowsUp: "It is the standard notation for normal-distribution questions."
-    },
-    {
       symbol: "f(x)",
       readAs: "Read as: density at x",
       meaning: "For a continuous variable, this is a density value, not the probability at exactly one point.",
@@ -6974,7 +7169,7 @@ const lessonExamExpansionMap = {
   }
 };
 
-const extraNotationLessonKeys = new Set(["basis", "inverse-spaces", "eigen", "distributions"]);
+const extraNotationLessonKeys = new Set(["basis", "inverse-spaces", "distributions"]);
 
 const formalNotationOverrideMap = {
   "matrix-basics": {
@@ -7151,6 +7346,309 @@ const formalNotationOverrideMap = {
     context:
       "This is the formal chain-rule view of backpropagation. It explains how blame for the error signal is passed back to an earlier weight."
   }
+};
+
+const lessonSupportingFormulaMap = {
+  vectors: [
+    {
+      label: "Supporting Formula: Magnitude",
+      notation: "||v|| = sqrt(x^2 + y^2)",
+      readAs: "Read this as: the length of v equals the square root of the sum of the squared coordinates.",
+      pieces: [
+        { part: "||v||", meaning: "Magnitude or length of vector v." },
+        { part: "x^2 + y^2", meaning: "Square each coordinate and add them." },
+        { part: "sqrt( )", meaning: "Take the square root to return to length units." }
+      ],
+      stepFlow: [
+        "Square the horizontal coordinate.",
+        "Square the vertical coordinate.",
+        "Add the two squares.",
+        "Take the square root."
+      ],
+      context:
+        "Magnitude turns coordinates into a usable geometric size. This matters before distance, normalization, and cosine similarity can make sense.",
+      examUse:
+        "Exams usually test quick magnitude computation and whether you confuse direction with length."
+    },
+    {
+      label: "Supporting Formula: Unit Vector",
+      notation: "u = v / ||v||",
+      readAs: "Read this as: divide the vector by its own magnitude to get a unit vector.",
+      pieces: [
+        { part: "u", meaning: "The normalized unit vector." },
+        { part: "v", meaning: "The original vector." },
+        { part: "||v||", meaning: "The length used to rescale the vector to length 1." }
+      ],
+      stepFlow: [
+        "Compute the magnitude of v.",
+        "Divide each coordinate of v by that magnitude.",
+        "Check that the new length is 1."
+      ],
+      context:
+        "Normalization removes raw size and keeps direction. This is why unit vectors are useful in similarity and direction-only comparisons.",
+      examUse:
+        "Exams usually test whether you know that normalization changes scale but keeps direction."
+    },
+    {
+      label: "Supporting Formula: Distance",
+      notation: "d(a, b) = ||a - b||",
+      readAs: "Read this as: the distance between a and b is the magnitude of their difference.",
+      pieces: [
+        { part: "a - b", meaning: "The difference vector between the two points or vectors." },
+        { part: "||a - b||", meaning: "The length of that difference vector." }
+      ],
+      stepFlow: [
+        "Subtract the coordinates first.",
+        "Treat the result as a difference vector.",
+        "Take its magnitude."
+      ],
+      context:
+        "Distance is not a separate mystery object. It is just vector difference followed by magnitude.",
+      examUse:
+        "Exams usually test coordinate subtraction mistakes before the final square-root step."
+    }
+  ],
+  matrices: [
+    {
+      label: "Supporting Formula: Transpose",
+      notation: "(A^T)_(ij) = A_(ji)",
+      readAs: "Read this as: the i, j entry of the transpose equals the j, i entry of the original matrix.",
+      pieces: [
+        { part: "A^T", meaning: "The transpose of matrix A." },
+        { part: "(i, j)", meaning: "A row-column position in the transposed matrix." },
+        { part: "(j, i)", meaning: "The swapped position from the original matrix." }
+      ],
+      stepFlow: [
+        "Pick one entry in the original matrix.",
+        "Swap its row and column positions.",
+        "Place it there in the transpose."
+      ],
+      context:
+        "Transpose is the formal row-column swap rule. It keeps appearing in covariance, linear algebra identities, and ML matrix expressions.",
+      examUse:
+        "Exams usually test whether you can transpose correctly and recognize where transpose changes shape."
+    }
+  ],
+  multivariable: [
+    {
+      label: "Supporting Formula: Partial Derivative",
+      notation: "∂f/∂x",
+      readAs: "Read this as: partial derivative of f with respect to x.",
+      pieces: [
+        { part: "∂", meaning: "Partial-derivative symbol." },
+        { part: "f", meaning: "The multivariable function." },
+        { part: "x", meaning: "The variable allowed to move while others stay fixed." }
+      ],
+      stepFlow: [
+        "Choose the variable you are differentiating with respect to.",
+        "Hold the other variables fixed.",
+        "Differentiate only with respect to the chosen variable."
+      ],
+      context:
+        "The gradient is built from partial derivatives, so this notation has to feel normal before optimization questions become readable.",
+      examUse:
+        "Exams usually test whether you know which variables are treated as constants in each partial derivative."
+    }
+  ],
+  "random-variables": [
+    {
+      label: "Supporting Formula: Variance Of A Random Variable",
+      notation: "Var(X) = E[(X - μ)^2]",
+      readAs: "Read this as: the variance of X is the expected squared distance from the mean.",
+      pieces: [
+        { part: "Var(X)", meaning: "Variance of the random variable X." },
+        { part: "X - μ", meaning: "Deviation of X from its mean." },
+        { part: "( )^2", meaning: "Square the deviation so negative and positive deviations do not cancel." },
+        { part: "E[ ]", meaning: "Take the expectation or weighted average." }
+      ],
+      stepFlow: [
+        "Measure how far each outcome sits from the mean.",
+        "Square those deviations.",
+        "Take the weighted average of the squared deviations."
+      ],
+      context:
+        "Expected value gives the center. Variance tells how spread out the random variable is around that center.",
+      examUse:
+        "Exams usually test whether you understand variance as spread, not as another average of raw values."
+    }
+  ],
+  statistics: [
+    {
+      label: "Supporting Formula: Population Variance",
+      notation: "σ^2 = (1/N) Σ_(i=1)^N (x_i - μ)^2",
+      readAs: "Read this as: population variance equals one over N times the sum of squared deviations from the population mean.",
+      pieces: [
+        { part: "σ^2", meaning: "Population variance." },
+        { part: "1/N", meaning: "Average across all N population values." },
+        { part: "x_i - μ", meaning: "Deviation of each value from the population mean." },
+        { part: "( )^2", meaning: "Square each deviation." }
+      ],
+      stepFlow: [
+        "Find the population mean μ.",
+        "Subtract μ from each value.",
+        "Square each deviation.",
+        "Average them using N."
+      ],
+      context:
+        "Variance measures spread in squared units. Population variance uses N because you are treating the whole population as known.",
+      examUse:
+        "Exams usually test whether you know variance is squared spread and whether you can distinguish population notation from sample notation."
+    },
+    {
+      label: "Supporting Formula: Population Standard Deviation",
+      notation: "σ = sqrt((1/N) Σ_(i=1)^N (x_i - μ)^2)",
+      readAs: "Read this as: population standard deviation is the square root of population variance.",
+      simpleVersion: "You can also read this as σ = sqrt(σ^2).",
+      pieces: [
+        { part: "σ", meaning: "Population standard deviation." },
+        { part: "sqrt( )", meaning: "Square root returns the spread to the original units." },
+        { part: "σ^2", meaning: "Population variance inside the square root." }
+      ],
+      stepFlow: [
+        "Compute the population variance first.",
+        "Take the square root.",
+        "Interpret the result in the original data units."
+      ],
+      context:
+        "Standard deviation is often easier to interpret than variance because it lives in the same units as the original data.",
+      examUse:
+        "Exams usually test whether you can explain why standard deviation is more interpretable than variance."
+    },
+    {
+      label: "Supporting Formula: Sample Variance",
+      notation: "s^2 = (1/(n - 1)) Σ_(i=1)^n (x_i - x̄)^2",
+      readAs: "Read this as: sample variance equals one over n minus one times the sum of squared deviations from the sample mean.",
+      pieces: [
+        { part: "s^2", meaning: "Sample variance." },
+        { part: "1/(n - 1)", meaning: "Use n minus 1 for the sample version." },
+        { part: "x_i - x̄", meaning: "Deviation from the sample mean." },
+        { part: "( )^2", meaning: "Square each deviation." }
+      ],
+      stepFlow: [
+        "Compute the sample mean x̄.",
+        "Subtract x̄ from each observed value.",
+        "Square those deviations.",
+        "Average them using n - 1."
+      ],
+      context:
+        "Sample variance is the common classroom-exam version when the data are treated as a sample instead of the entire population.",
+      examUse:
+        "Exams often test whether you can tell when n becomes n - 1."
+    },
+    {
+      label: "Supporting Formula: Sample Standard Deviation",
+      notation: "s = sqrt((1/(n - 1)) Σ_(i=1)^n (x_i - x̄)^2)",
+      readAs: "Read this as: sample standard deviation is the square root of sample variance.",
+      simpleVersion: "You can also read this as s = sqrt(s^2).",
+      pieces: [
+        { part: "s", meaning: "Sample standard deviation." },
+        { part: "sqrt( )", meaning: "Return the spread to the original units." },
+        { part: "s^2", meaning: "Sample variance inside the square root." }
+      ],
+      stepFlow: [
+        "Compute the sample variance first.",
+        "Take the square root.",
+        "Interpret the result in the original data units."
+      ],
+      context:
+        "This is the sample spread in the same units as the data. It is often what people mean in practice when they say the data have standard deviation.",
+      examUse:
+        "Exams usually test the relationship between variance, standard deviation, and z-score interpretation."
+    }
+  ],
+  distributions: [
+    {
+      label: "Supporting Formula: Normal Distribution Notation",
+      notation: "X ~ N(μ, σ^2)",
+      readAs: "Read this as: X is distributed normally with mean mu and variance sigma squared.",
+      pieces: [
+        { part: "X", meaning: "The random variable being modeled." },
+        { part: "μ", meaning: "The center or mean." },
+        { part: "σ^2", meaning: "The variance; sigma itself is the standard deviation." }
+      ],
+      stepFlow: [
+        "Identify the random variable X.",
+        "Read μ as the center.",
+        "Read σ^2 as the variance that controls spread."
+      ],
+      context:
+        "This notation names the whole distribution, while the z-score formula standardizes one specific value from that distribution.",
+      examUse:
+        "Exams often ask you to move between distribution notation and z-score calculations."
+    }
+  ],
+  logistic: [
+    {
+      label: "Supporting Formula: Linear Score",
+      notation: "z = w x + b",
+      readAs: "Read this as: the score z equals weight times input plus bias.",
+      pieces: [
+        { part: "z", meaning: "Raw score before the sigmoid is applied." },
+        { part: "w", meaning: "Weight on the input." },
+        { part: "x", meaning: "Input feature value." },
+        { part: "b", meaning: "Bias or offset." }
+      ],
+      stepFlow: [
+        "Compute the weighted input.",
+        "Add the bias term.",
+        "Use the result as the score fed into the sigmoid."
+      ],
+      context:
+        "Logistic regression has two stages: first the linear score, then the sigmoid probability. Keeping those separate makes later exam questions much clearer.",
+      examUse:
+        "Exams often test score interpretation separately from final probability interpretation."
+    }
+  ]
+};
+
+const commonExamVariationMap = {
+  "random-variables": [
+    {
+      notation: "Var(X) = Σ_x (x - μ)^2 P(X = x)",
+      readAs: "Read this as: variance is the sum of each squared deviation times its probability.",
+      whyItAppears:
+        "This is the direct discrete-outcome version that often appears when the exam gives a small outcome table.",
+      pieces: [
+        { part: "Σ_x", meaning: "Add across all possible outcomes x." },
+        { part: "(x - μ)^2", meaning: "Squared deviation of one outcome from the mean." },
+        { part: "P(X = x)", meaning: "Probability weight for that outcome." }
+      ]
+    }
+  ],
+  eigen: [
+    {
+      notation: "det(A - λI) = 0",
+      readAs: "Read this as: determinant of A minus lambda I equals zero.",
+      whyItAppears:
+        "This is the standard algebraic step used to find eigenvalues after you understand the meaning of A v = λ v.",
+      pieces: [
+        { part: "A", meaning: "The original matrix." },
+        { part: "λ", meaning: "The candidate eigenvalue." },
+        { part: "I", meaning: "The identity matrix." },
+        { part: "det( )", meaning: "Take the determinant after forming A - λI." }
+      ]
+    }
+  ]
+};
+
+const lessonFormulaChecklistTagMap = {
+  functions: ["function-rule"],
+  vectors: ["vector-magnitude", "unit-vector", "distance"],
+  "matrix-basics": ["matrix-dimension"],
+  matrices: ["transpose"],
+  "inverse-spaces": ["determinant"],
+  dot: ["dot-product"],
+  derivatives: ["derivative"],
+  multivariable: ["gradient"],
+  "random-variables": ["expectation"],
+  statistics: ["variance", "standard-deviation"],
+  bayes: ["bayes-rule"],
+  binomial: ["binomial-probability"],
+  distributions: ["z-score"],
+  regression: ["regression-line"],
+  logistic: ["logistic-probability"],
+  eigen: ["eigen-equation"],
+  eigendecomp: ["eigendecomposition"]
 };
 
 const lessonExampleBridgeMap = {
@@ -8564,6 +9062,8 @@ export const lessons = baseLessons.map((lesson, index) => {
   const notationGuide = extraNotationLessonKeys.has(lesson.key) ? lessonNotationGuideMap[lesson.key] || [] : [];
   const exampleBridge = lessonExampleBridgeMap[lesson.key] || null;
   const legacyFormulaBreakdown = lessonFormulaBreakdownMap[lesson.key] || null;
+  const supportingFormulas = lessonSupportingFormulaMap[lesson.key] || [];
+  const commonExamVariations = commonExamVariationMap[lesson.key] || [];
   const formalNotationBlock =
     lesson.stage === "Python Programming"
       ? null
@@ -8588,6 +9088,9 @@ export const lessons = baseLessons.map((lesson, index) => {
     notationConnection: notationConnectionMap[lesson.key] || "",
     exampleBridge,
     formalNotationBlock,
+    supportingFormulas,
+    commonExamVariations,
+    formulaChecklistTags: lessonFormulaChecklistTagMap[lesson.key] || [],
     extraPractice: [
       ...(lesson.extraPractice || []),
       ...(enhancement.extraPractice || []),
