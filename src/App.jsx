@@ -715,17 +715,47 @@ export default function App() {
                   </article>
                 ) : null}
 
-                <article className="content-card">
-                  <p className="panel-label">Symbol Decoder</p>
-                  <div className="symbol-list">
-                    {lesson.symbolGuide.map((item) => (
-                      <div key={`${lesson.key}-${item.symbol}`} className="symbol-row">
-                        <strong>{item.symbol}</strong>
-                        <span>{item.meaning}</span>
+                {lesson.formalNotationBlock ? (
+                  <article className="content-card wide formal-notation-card">
+                    <p className="panel-label">
+                      {lesson.formalNotationBlock.label || "Key Formal Notation"}
+                    </p>
+                    <div className="formal-notation-box">
+                      <p className="formal-notation-expression">
+                        {lesson.formalNotationBlock.formalNotation}
+                      </p>
+                      <p className="formal-notation-read">{lesson.formalNotationBlock.readAs}</p>
+                    </div>
+                    <div className="formula-piece-grid">
+                      {lesson.formalNotationBlock.pieces.map((item) => (
+                        <div key={`${lesson.key}-${item.part}`} className="formula-piece-card">
+                          <strong>{item.part}</strong>
+                          <p>{item.meaning}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="formula-breakdown-extra">
+                      <div className="formula-flow">
+                        <strong>Read It Left To Right</strong>
+                        <div className="steps compact-steps">
+                          {lesson.formalNotationBlock.stepFlow.map((step, index) => (
+                            <div key={`${lesson.key}-formal-step-${index + 1}`} className="step">
+                              {index + 1}. {step}
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </article>
+                      <div className="formula-context">
+                        <strong>What This Formal Notation Is Doing</strong>
+                        <p>{lesson.formalNotationBlock.context}</p>
+                      </div>
+                      <div className="formula-exam-use">
+                        <strong>What Exams Usually Test Here</strong>
+                        <p>{lesson.formalNotationBlock.examUse}</p>
+                      </div>
+                    </div>
+                  </article>
+                ) : null}
 
                 {lesson.notationGuide?.length ? (
                   <article className="content-card wide">
@@ -742,45 +772,6 @@ export default function App() {
                     </div>
                   </article>
                 ) : null}
-
-                {lesson.formulaBreakdown ? (
-                  <article className="content-card wide formula-breakdown-card">
-                    <p className="panel-label">Formula Breakdown</p>
-                    <p className="formula-breakdown-read">{lesson.formulaBreakdown.readAs}</p>
-                    <div className="formula-piece-grid">
-                      {lesson.formulaBreakdown.pieces.map((item) => (
-                        <div key={`${lesson.key}-${item.part}`} className="formula-piece-card">
-                          <strong>{item.part}</strong>
-                          <p>{item.meaning}</p>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="formula-breakdown-extra">
-                      <div className="formula-flow">
-                        <strong>Read It Left To Right</strong>
-                        <div className="steps compact-steps">
-                          {lesson.formulaBreakdown.stepFlow.map((step, index) => (
-                            <div key={`${lesson.key}-formula-step-${index + 1}`} className="step">
-                              {index + 1}. {step}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="formula-exam-use">
-                        <strong>What Exams Usually Test Here</strong>
-                        <p>{lesson.formulaBreakdown.examUse}</p>
-                      </div>
-                    </div>
-                  </article>
-                ) : null}
-
-                <article className="content-card">
-                  <p className="panel-label">Formula</p>
-                  <div className="formula-box">
-                    <p className="formula">{lesson.formula}</p>
-                    <p className="formula-meaning">{lesson.formulaMeaning}</p>
-                  </div>
-                </article>
 
                 <article className="content-card">
                   <p className="panel-label">Why It Matters In ML</p>

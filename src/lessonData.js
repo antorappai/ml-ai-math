@@ -6055,7 +6055,7 @@ const defaultEnhancement = {
   foundationTags: [],
   notationGuide: [],
   exampleBridge: null,
-  formulaBreakdown: null,
+  formalNotationBlock: null,
   hasDeeperChapterPractice: false,
   inlinePythonCompanion: null,
   visualAnalogy: null,
@@ -6544,16 +6544,16 @@ const lessonNotationGuideMap = {
   ],
   eigen: [
     {
-      symbol: "Av = λv",
-      readAs: "Read as: A v equals lambda v",
-      meaning: "The matrix acts on v without changing its line, only its scale or sign.",
-      whyItShowsUp: "This is the core statement of eigenvectors and eigenvalues."
-    },
-    {
       symbol: "det(A - λI) = 0",
       readAs: "Read as: determinant of A minus lambda I equals zero",
       meaning: "This is the characteristic equation used to find eigenvalues.",
       whyItShowsUp: "It is the standard exam starting point for eigenvalue problems."
+    },
+    {
+      symbol: "I",
+      readAs: "Read as: identity matrix",
+      meaning: "This is the do-nothing matrix used when forming A - λI.",
+      whyItShowsUp: "It lets the scalar λ interact correctly with the matrix."
     }
   ],
   eigendecomp: [
@@ -6959,6 +6959,184 @@ const lessonExamExpansionMap = {
         explanation: "Correct. Multiplying by zero kills that path's gradient contribution."
       }
     ]
+  }
+};
+
+const extraNotationLessonKeys = new Set(["basis", "inverse-spaces", "eigen", "distributions"]);
+
+const formalNotationOverrideMap = {
+  "matrix-basics": {
+    formalNotation: "A ∈ R^(m×n)",
+    readAs: "Read this as: A is a real matrix with m rows and n columns.",
+    pieces: [
+      { part: "A", meaning: "The matrix being described." },
+      { part: "R^(m×n)", meaning: "The set of real matrices with m rows and n columns." },
+      { part: "m", meaning: "Number of rows." },
+      { part: "n", meaning: "Number of columns." }
+    ],
+    stepFlow: [
+      "Identify the matrix A.",
+      "Read the shape inside R^(m×n).",
+      "Interpret m as rows and n as columns."
+    ],
+    context:
+      "This is the textbook way to state a matrix dimension. It is more formal than saying 'A is m × n' and it makes shape part of the notation itself."
+  },
+  derivatives: {
+    formalNotation: "f'(x) = df/dx",
+    readAs: "Read this as: f prime of x equals d f by d x, the derivative of f with respect to x.",
+    pieces: [
+      { part: "f'(x)", meaning: "Prime notation for the derivative at x." },
+      { part: "df/dx", meaning: "Leibniz notation for the same derivative." },
+      { part: "x", meaning: "The input point where the local slope is measured." }
+    ],
+    stepFlow: [
+      "Pick the point x.",
+      "Read either notation as the local derivative there.",
+      "Interpret that derivative as the local rate of change or tangent slope."
+    ],
+    context:
+      "The derivative notation is the formal object. The slope interpretation comes after that: this quantity tells you how the output is changing right now, not over a large interval."
+  },
+  "inverse-spaces": {
+    formalNotation: "det(A) ≠ 0 ⇔ A^(-1) exists",
+    readAs: "Read this as: determinant of A is not zero if and only if the inverse of A exists.",
+    pieces: [
+      { part: "det(A)", meaning: "The determinant of the matrix." },
+      { part: "≠ 0", meaning: "The transformation does not collapse all area or volume." },
+      { part: "⇔", meaning: "If and only if; the two statements are equivalent." },
+      { part: "A^(-1)", meaning: "The inverse matrix that undoes A." }
+    ],
+    stepFlow: [
+      "Check the determinant first.",
+      "If it is zero, information has collapsed.",
+      "If it is nonzero, the transformation is reversible."
+    ],
+    context:
+      "This is the clean formal test for invertibility in the square-matrix setting. Zero determinant means collapse and lost information, so no unique inverse can exist."
+  },
+  dot: {
+    formalNotation: "a · b = Σ_i a_i b_i",
+    readAs: "Read this as: the dot product is the sum of coordinate-wise products.",
+    pieces: [
+      { part: "a · b", meaning: "The dot product of vectors a and b." },
+      { part: "Σ_i", meaning: "Add across all coordinates i." },
+      { part: "a_i", meaning: "The ith coordinate of vector a." },
+      { part: "b_i", meaning: "The ith coordinate of vector b." }
+    ],
+    stepFlow: [
+      "Take matching coordinates from the two vectors.",
+      "Multiply each pair.",
+      "Add all the products together."
+    ],
+    context:
+      "This is the general textbook version of the dot product. A positive result suggests alignment, 0 suggests orthogonality, and a negative result suggests opposition."
+  },
+  probability: {
+    formalNotation: "P(A^c) = 1 - P(A)",
+    readAs: "Read this as: the probability of not A equals one minus the probability of A.",
+    pieces: [
+      { part: "P(A)", meaning: "Probability of event A." },
+      { part: "A^c", meaning: "The complement event: not A." },
+      { part: "1", meaning: "Total probability across the full sample space." }
+    ],
+    stepFlow: [
+      "Start from total probability 1.",
+      "Subtract the probability already assigned to A.",
+      "The remainder belongs to the complement."
+    ],
+    context:
+      "This is the general complement rule. It is more useful than the coin-specific version because it works for any event, not just heads and tails."
+  },
+  "random-variables": {
+    formalNotation: "E[X] = Σ_x x P(X = x)",
+    context:
+      "This is the weighted-average formula for a discrete random variable. If the outcomes are gains and losses, then the sign of E[X] tells you who benefits in the long run: a negative value means the player loses on average and the house has the edge."
+  },
+  binomial: {
+    formalNotation: "P(X = x) = C(n, x) p^x (1 - p)^(n - x)",
+    pieces: [
+      { part: "C(n, x)", meaning: "Number of ways to choose x success positions from n trials." },
+      { part: "p^x", meaning: "Probability contribution from x successes." },
+      { part: "(1 - p)^(n - x)", meaning: "Probability contribution from the remaining failures." }
+    ],
+    context:
+      "This is the standard binomial probability formula. It combines counting and probability: first count the valid success patterns, then weight them by the chance of each pattern."
+  },
+  statistics: {
+    formalNotation: "x̄ = (1/n) Σ_(i=1)^n x_i",
+    readAs: "Read this as: x bar equals one over n times the sum of the observed values x sub i.",
+    pieces: [
+      { part: "x̄", meaning: "Sample mean or average." },
+      { part: "1/n", meaning: "Divide by the number of observations." },
+      { part: "Σ_(i=1)^n", meaning: "Add from the first observation up to the nth observation." },
+      { part: "x_i", meaning: "The ith observed value." }
+    ],
+    stepFlow: [
+      "Add all observed values together.",
+      "Count how many observations there are.",
+      "Divide the total by n."
+    ],
+    context:
+      "This is the general mean formula. The earlier three-value version is just the special case where n = 3. Once the mean is set, spread and z-scores tell you whether a value is above or below that center."
+  },
+  bayes: {
+    formalNotation: "P(A | B) = (P(B | A) P(A)) / P(B)",
+    context:
+      "This updates a prior belief after observing evidence B. The conditioning direction matters: P(A | B) is not the same as P(B | A), and exams often test that confusion directly."
+  },
+  distributions: {
+    formalNotation: "z = (x - μ) / σ",
+    context:
+      "This standardizes a raw value. Positive z means the value is above the mean, negative z means it is below, and the magnitude tells how many standard deviations away it is."
+  },
+  eigen: {
+    formalNotation: "A v = λ v",
+    context:
+      "This is the defining eigen equation: v keeps its line under A and only gets scaled by λ. In exams, the next formal step is usually solving det(A - λI) = 0 to find the allowed eigenvalues."
+  },
+  eigendecomp: {
+    formalNotation: "A = C D C^(-1)",
+    context:
+      "This rewrites the matrix using the eigenvector basis. C stores eigenvectors, D stores eigenvalues on the diagonal, and C^(-1) changes back to the original coordinates."
+  },
+  "gradient-descent": {
+    formalNotation: "x_new = x_old - η f'(x_old)",
+    context:
+      "This is one optimization update step. The derivative gives direction, and η controls stride length: too small is slow, too large overshoots and can destabilize learning."
+  },
+  logistic: {
+    formalNotation: "P(y = 1 | x) = 1 / (1 + e^(-(w x + b)))",
+    readAs: "Read this as: the probability of class 1 given x equals one over one plus e to the negative score.",
+    pieces: [
+      { part: "P(y = 1 | x)", meaning: "Predicted probability of class 1 given input x." },
+      { part: "w x + b", meaning: "The raw linear score before sigmoid squashing." },
+      { part: "e^(-(w x + b))", meaning: "The exponential term that turns the score into a bounded probability." }
+    ],
+    stepFlow: [
+      "Compute the score w x + b.",
+      "Negate that score in the exponent.",
+      "Apply the sigmoid formula to get a value between 0 and 1."
+    ],
+    context:
+      "This is the formal classification probability formula. A positive score pushes the output above 0.5 toward class 1, and a negative score pushes it below 0.5 toward class 0."
+  },
+  backprop: {
+    formalNotation: "∂L/∂w1 = (∂L/∂a)(∂a/∂z)(∂z/∂w1)",
+    readAs: "Read this as: the loss gradient with respect to w1 is the product of local derivatives along the chain-rule path.",
+    pieces: [
+      { part: "∂L/∂w1", meaning: "How the loss changes if weight w1 changes a little." },
+      { part: "∂L/∂a", meaning: "How the loss changes with the activation." },
+      { part: "∂a/∂z", meaning: "How the activation changes with the pre-activation." },
+      { part: "∂z/∂w1", meaning: "How the pre-activation changes with weight w1." }
+    ],
+    stepFlow: [
+      "Start from the loss.",
+      "Move backward through each local dependency.",
+      "Multiply the local derivatives along the path."
+    ],
+    context:
+      "This is the formal chain-rule view of backpropagation. It explains how blame for the error signal is passed back to an earlier weight."
   }
 };
 
@@ -8370,9 +8548,22 @@ export const lessons = baseLessons.map((lesson, index) => {
   const enhancement = lessonEnhancements[lesson.key] || {};
   const microFoundations = lessonMicroFoundationMap[lesson.key] || {};
   const examExpansion = lessonExamExpansionMap[lesson.key] || {};
-  const notationGuide = lessonNotationGuideMap[lesson.key] || [];
+  const notationGuide = extraNotationLessonKeys.has(lesson.key) ? lessonNotationGuideMap[lesson.key] || [] : [];
   const exampleBridge = lessonExampleBridgeMap[lesson.key] || null;
-  const formulaBreakdown = lessonFormulaBreakdownMap[lesson.key] || null;
+  const legacyFormulaBreakdown = lessonFormulaBreakdownMap[lesson.key] || null;
+  const formalNotationBlock =
+    lesson.stage === "Python Programming"
+      ? null
+      : {
+          label: "Key Formal Notation",
+          formalNotation: lesson.formula,
+          readAs: legacyFormulaBreakdown?.readAs || "",
+          pieces: legacyFormulaBreakdown?.pieces || [],
+          stepFlow: legacyFormulaBreakdown?.stepFlow || [],
+          context: lesson.formulaMeaning,
+          examUse: legacyFormulaBreakdown?.examUse || "",
+          ...(formalNotationOverrideMap[lesson.key] || {})
+        };
 
   return {
     ...defaultEnhancement,
@@ -8382,7 +8573,7 @@ export const lessons = baseLessons.map((lesson, index) => {
     ...microFoundations,
     notationGuide: [...notationGuide],
     exampleBridge,
-    formulaBreakdown,
+    formalNotationBlock,
     extraPractice: [
       ...(lesson.extraPractice || []),
       ...(enhancement.extraPractice || []),

@@ -748,8 +748,7 @@ button {
   gap: 14px;
 }
 
-.bridge-grid,
-.formula-breakdown-extra {
+.bridge-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -785,13 +784,15 @@ button {
 }
 
 .example-bridge-card,
-.formula-breakdown-card {
+.formal-notation-card {
   background: linear-gradient(180deg, rgba(255, 251, 243, 0.96), rgba(245, 238, 224, 0.9));
 }
 
 .bridge-item,
 .formula-piece-card,
+.formal-notation-box,
 .formula-flow,
+.formula-context,
 .formula-exam-use {
   padding: 16px;
   border-radius: 18px;
@@ -803,15 +804,25 @@ button {
 
 .bridge-item strong,
 .formula-piece-card strong,
+.formal-notation-box strong,
 .formula-flow strong,
+.formula-context strong,
 .formula-exam-use strong {
   color: var(--accent-deep);
 }
 
-.formula-breakdown-read {
+.formal-notation-expression {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-deep);
+}
+
+.formal-notation-read {
   margin: 4px 0 0;
   color: var(--accent);
   font-weight: 700;
+  line-height: 1.6;
 }
 
 .formula-piece-grid {
@@ -819,7 +830,13 @@ button {
   margin-top: 6px;
 }
 
+.formula-breakdown-extra {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
 .formula-piece-card p,
+.formal-notation-box p,
+.formula-context p,
 .formula-exam-use p,
 .bridge-item p {
   margin: 0;
@@ -827,24 +844,6 @@ button {
 
 .content-card.wide {
   grid-column: 1 / -1;
-}
-
-.formula-box {
-  padding: 16px;
-  border-radius: 18px;
-  background: #f7f1e2;
-  border: 1px solid rgba(197, 138, 46, 0.22);
-}
-
-.formula {
-  margin: 0 0 8px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--accent-deep);
-}
-
-.formula-meaning {
-  margin: 0;
 }
 
 .symbol-row,
