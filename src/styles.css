@@ -839,6 +839,16 @@ button {
   line-height: 1.6;
 }
 
+.formal-notation-simple {
+  margin: 2px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.formal-notation-simple strong {
+  color: var(--accent-deep);
+}
+
 .formula-piece-grid {
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   margin-top: 6px;

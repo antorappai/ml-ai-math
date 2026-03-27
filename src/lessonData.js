@@ -7078,6 +7078,7 @@ const formalNotationOverrideMap = {
   statistics: {
     formalNotation: "x̄ = (1/n) Σ_(i=1)^n x_i",
     readAs: "Read this as: x bar equals one over n times the sum of the observed values x sub i.",
+    simpleVersion: "If you only have 3 values, this becomes x̄ = (x1 + x2 + x3) / 3.",
     pieces: [
       { part: "x̄", meaning: "Sample mean or average." },
       { part: "1/n", meaning: "Divide by the number of observations." },

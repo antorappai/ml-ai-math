@@ -729,6 +729,11 @@ export default function App() {
                         {lesson.formalNotationBlock.formalNotation}
                       </p>
                       <p className="formal-notation-read">{lesson.formalNotationBlock.readAs}</p>
+                      {lesson.formalNotationBlock.simpleVersion ? (
+                        <p className="formal-notation-simple">
+                          <strong>Simple version:</strong> {lesson.formalNotationBlock.simpleVersion}
+                        </p>
+                      ) : null}
                     </div>
                     <div className="formula-piece-grid">
                       {lesson.formalNotationBlock.pieces.map((item) => (
