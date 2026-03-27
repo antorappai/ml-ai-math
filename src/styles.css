@@ -779,6 +779,13 @@ button {
   font-weight: 500;
 }
 
+.notation-link-copy {
+  margin: 4px 0 16px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 72ch;
+}
+
 .lesson-notation-grid .notation-card p:last-child {
   margin-bottom: 0;
 }

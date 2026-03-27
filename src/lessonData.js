@@ -6054,6 +6054,7 @@ const defaultEnhancement = {
   importantFoundations: [],
   foundationTags: [],
   notationGuide: [],
+  notationConnection: "",
   exampleBridge: null,
   formalNotationBlock: null,
   hasDeeperChapterPractice: false,
@@ -6329,6 +6330,17 @@ const lessonMicroFoundationMap = {
     ],
     foundationTags: ["gradient-basics"]
   }
+};
+
+const notationConnectionMap = {
+  basis:
+    "The main formal notation above tells you how a vector is built from basis directions. The symbols below are the extra coordinate-system notations you will see when exams ask you to switch basis or express the same vector in a new language.",
+  "inverse-spaces":
+    "The main formal statement above gives the invertibility test. The symbols below are the related space and matrix notations that appear when you explain why information is preserved or lost.",
+  distributions:
+    "The z-score formula above is the main standardization rule. The symbols below are the extra distribution notations that usually appear when you connect z-scores to the normal distribution.",
+  eigen:
+    "The main formula above tells you what an eigenvector and eigenvalue are. The notation below is the next step used to actually solve for the allowed eigenvalues in exam questions."
 };
 
 const lessonNotationGuideMap = {
@@ -8572,6 +8584,7 @@ export const lessons = baseLessons.map((lesson, index) => {
     ...enhancement,
     ...microFoundations,
     notationGuide: [...notationGuide],
+    notationConnection: notationConnectionMap[lesson.key] || "",
     exampleBridge,
     formalNotationBlock,
     extraPractice: [

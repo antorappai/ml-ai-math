@@ -759,7 +759,11 @@ export default function App() {
 
                 {lesson.notationGuide?.length ? (
                   <article className="content-card wide">
-                    <p className="panel-label">Notation Decoder</p>
+                    <p className="panel-label">Related Notation From The Formula Above</p>
+                    <p className="notation-link-copy">
+                      {lesson.notationConnection ||
+                        "These symbols are not a new topic. They are the next formal notations that usually appear when you expand, solve, or apply the main notation shown above."}
+                    </p>
                     <div className="notation-grid lesson-notation-grid">
                       {lesson.notationGuide.map((item) => (
                         <div key={`${lesson.key}-${item.symbol}`} className="notation-card">
