@@ -787,15 +787,6 @@ export default function App() {
                   <p>{lesson.mlUseCase}</p>
                 </article>
 
-                <article className="content-card">
-                  <p className="panel-label">Real-Life & ML Uses</p>
-                  <ul className="shortcut-list">
-                    {lesson.realLifeExamples.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </article>
-
                 <article className="content-card wide">
                   <p className="panel-label">Intuition</p>
                   <p>{lesson.intuition}</p>
