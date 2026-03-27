@@ -82,13 +82,14 @@ export default function App() {
   const linkedPythonLesson = lesson.pythonLessonKey
     ? lessons.find((entry) => entry.key === lesson.pythonLessonKey) ?? null
     : null;
+  const hasLocalPythonCompanion = Boolean(lesson.inlinePythonCompanion || lesson.pythonCompanion);
   const activePythonCompanion =
     lesson.inlinePythonCompanion || lesson.pythonCompanion || linkedPythonLesson?.pythonCompanion || null;
   const pythonContentKey =
-    lesson.inlinePythonCompanion || lesson.pythonCompanion
+    hasLocalPythonCompanion
       ? lesson.key
       : linkedPythonLesson?.key || lesson.key;
-  const showDeeperPythonLink = Boolean(lesson.inlinePythonCompanion && linkedPythonLesson);
+  const showDeeperPythonLink = Boolean(hasLocalPythonCompanion && linkedPythonLesson && lesson.hasDeeperChapterPractice);
   const showLinkedPythonLesson = Boolean(!lesson.inlinePythonCompanion && linkedPythonLesson && linkedPythonLesson.key !== lesson.key);
   const isPythonLesson = lesson.stage === "Python Programming";
   const hasPythonContent = Boolean(activePythonCompanion);
@@ -690,6 +691,30 @@ export default function App() {
                   <p>{lesson.simpleExplanation}</p>
                 </article>
 
+                {lesson.exampleBridge ? (
+                  <article className="content-card wide example-bridge-card">
+                    <p className="panel-label">Real-World Example</p>
+                    <div className="bridge-grid">
+                      <div className="bridge-item">
+                        <strong>Scenario</strong>
+                        <p>{lesson.exampleBridge.scenario}</p>
+                      </div>
+                      <div className="bridge-item">
+                        <strong>What The Numbers Mean</strong>
+                        <p>{lesson.exampleBridge.numberMeaning}</p>
+                      </div>
+                      <div className="bridge-item">
+                        <strong>How To Read The Result</strong>
+                        <p>{lesson.exampleBridge.interpretation}</p>
+                      </div>
+                      <div className="bridge-item">
+                        <strong>ML Parallel</strong>
+                        <p>{lesson.exampleBridge.mlParallel}</p>
+                      </div>
+                    </div>
+                  </article>
+                ) : null}
+
                 <article className="content-card">
                   <p className="panel-label">Symbol Decoder</p>
                   <div className="symbol-list">
@@ -714,6 +739,37 @@ export default function App() {
                           {item.whyItShowsUp ? <p className="notation-why">{item.whyItShowsUp}</p> : null}
                         </div>
                       ))}
+                    </div>
+                  </article>
+                ) : null}
+
+                {lesson.formulaBreakdown ? (
+                  <article className="content-card wide formula-breakdown-card">
+                    <p className="panel-label">Formula Breakdown</p>
+                    <p className="formula-breakdown-read">{lesson.formulaBreakdown.readAs}</p>
+                    <div className="formula-piece-grid">
+                      {lesson.formulaBreakdown.pieces.map((item) => (
+                        <div key={`${lesson.key}-${item.part}`} className="formula-piece-card">
+                          <strong>{item.part}</strong>
+                          <p>{item.meaning}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="formula-breakdown-extra">
+                      <div className="formula-flow">
+                        <strong>Read It Left To Right</strong>
+                        <div className="steps compact-steps">
+                          {lesson.formulaBreakdown.stepFlow.map((step, index) => (
+                            <div key={`${lesson.key}-formula-step-${index + 1}`} className="step">
+                              {index + 1}. {step}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="formula-exam-use">
+                        <strong>What Exams Usually Test Here</strong>
+                        <p>{lesson.formulaBreakdown.examUse}</p>
+                      </div>
                     </div>
                   </article>
                 ) : null}
@@ -798,12 +854,25 @@ export default function App() {
                   <article className="content-card">
                     <p className="panel-label">Practice This In Python</p>
                     <p>
-                      This math topic has a matching Python lesson. Use it when you want to turn
-                      the idea into actual exam-style code.
+                      {hasLocalPythonCompanion
+                        ? "This lesson has its own Python companion. Use it when you want the exact same idea in code."
+                        : "This math topic has a matching Python lesson. Use it when you want to turn the idea into actual exam-style code."}
                     </p>
-                    <button type="button" onClick={() => openPythonPractice(lesson.pythonLessonKey)}>
-                      Open linked Python lesson
+                    <button
+                      type="button"
+                      onClick={() =>
+                        hasLocalPythonCompanion
+                          ? openLessonWithTab(lesson.key, "python")
+                          : openPythonPractice(lesson.pythonLessonKey)
+                      }
+                    >
+                      {hasLocalPythonCompanion ? "Open lesson Python tab" : "Open linked Python lesson"}
                     </button>
+                    {showDeeperPythonLink ? (
+                      <button type="button" onClick={() => openPythonPractice(lesson.pythonLessonKey)}>
+                        Open broader Python chapter practice
+                      </button>
+                    ) : null}
                   </article>
                 ) : null}
 
@@ -1108,13 +1177,13 @@ export default function App() {
 
                   {showDeeperPythonLink ? (
                     <article className="content-card wide">
-                      <p className="panel-label">Go Deeper In Python</p>
+                      <p className="panel-label">Broader Python Chapter Practice</p>
                       <p>
-                        This lesson has its own Python companion here, and it also links to the deeper
-                        Python lesson <strong>{linkedPythonLesson.label}</strong> for more coding practice.
+                        This lesson already has local Python support here. If you want broader chapter-level
+                        drills and extra coding practice, open <strong>{linkedPythonLesson.label}</strong>.
                       </p>
                       <button type="button" onClick={() => openPythonPractice(linkedPythonLesson.key)}>
-                        Open deeper Python lesson
+                        Open broader Python lesson
                       </button>
                     </article>
                   ) : null}

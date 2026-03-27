@@ -6054,6 +6054,9 @@ const defaultEnhancement = {
   importantFoundations: [],
   foundationTags: [],
   notationGuide: [],
+  exampleBridge: null,
+  formulaBreakdown: null,
+  hasDeeperChapterPractice: false,
   inlinePythonCompanion: null,
   visualAnalogy: null,
   visualScenario: null
@@ -6959,6 +6962,639 @@ const lessonExamExpansionMap = {
   }
 };
 
+const lessonExampleBridgeMap = {
+  functions: {
+    scenario:
+      "A taxi company charges a fixed pickup fee plus a charge for every kilometer you travel.",
+    numberMeaning:
+      "The slope m is the extra cost per kilometer, the intercept c is the fixed pickup fee, and x is the number of kilometers.",
+    interpretation:
+      "A bigger positive slope means the total price rises faster. A negative slope would mean the output falls as the input grows.",
+    mlParallel:
+      "A simple linear model does the same thing: start from a base value, then adjust the prediction based on the input."
+  },
+  vectors: {
+    scenario:
+      "A drone starts at a warehouse and moves across a map to reach a delivery location.",
+    numberMeaning:
+      "The first coordinate tells how far the drone moves horizontally and the second tells how far it moves vertically.",
+    interpretation:
+      "The signs tell direction and the length tells total travel strength. Bigger magnitude means a stronger move.",
+    mlParallel:
+      "Embeddings and feature vectors work the same way, except the coordinates describe learned features instead of map movement."
+  },
+  "matrix-basics": {
+    scenario:
+      "A school spreadsheet stores students in rows and subjects in columns.",
+    numberMeaning:
+      "m × n means m rows of students and n columns of features or subjects.",
+    interpretation:
+      "The matrix type tells you how to read the table before you ever calculate with it.",
+    mlParallel:
+      "ML datasets, weight tables, and covariance tables are all matrix-shaped objects."
+  },
+  matrices: {
+    scenario:
+      "A model takes two raw student features, like algebra skill and coding skill, and mixes them into new hidden scores.",
+    numberMeaning:
+      "The matrix entries decide how much each old feature contributes to each new feature, and the vector stores the original profile.",
+    interpretation:
+      "If one entry grows, that old feature influences the new score more strongly. The output vector is the remixed profile.",
+    mlParallel:
+      "A dense neural-network layer is matrix multiplication acting as a feature mixer."
+  },
+  transformations: {
+    scenario:
+      "A city map is printed on a rubber sheet and the whole sheet is stretched or sheared.",
+    numberMeaning:
+      "The matrix tells where the basic horizontal and vertical directions go after the reshaping.",
+    interpretation:
+      "This is about changing the whole space, not just one point. If the space collapses, information is lost.",
+    mlParallel:
+      "Learned layers reshape representation space so patterns become easier to separate."
+  },
+  basis: {
+    scenario:
+      "Two friends describe the same cafe location, but one uses north-east directions and the other uses street-grid directions.",
+    numberMeaning:
+      "The coordinates change because the reference directions changed, not because the cafe moved.",
+    interpretation:
+      "A vector can stay identical while its coordinate description changes under a new basis.",
+    mlParallel:
+      "PCA and eigendecomposition both rely on describing the same data in a different, more useful coordinate system."
+  },
+  composition: {
+    scenario:
+      "An image first gets resized and then gets sheared by a second filter.",
+    numberMeaning:
+      "Each transformation has its own matrix, and the product represents doing both in order.",
+    interpretation:
+      "Order matters. Applying A then B is not usually the same as applying B then A.",
+    mlParallel:
+      "Stacking model layers is composition: one representation is transformed, then transformed again."
+  },
+  "inverse-spaces": {
+    scenario:
+      "A document scanner compresses a 2D page into a 1D strip so different pages can produce the same scan.",
+    numberMeaning:
+      "Determinant and rank tell you whether different directions stay distinct or collapse together.",
+    interpretation:
+      "If determinant is 0 or rank drops, the transformation has lost information and cannot be uniquely reversed.",
+    mlParallel:
+      "Rank deficiency means a model or transformation has thrown away some independent information."
+  },
+  dot: {
+    scenario:
+      "A streaming app compares a user's taste vector with a movie's feature vector.",
+    numberMeaning:
+      "Matching coordinate pairs tell how much each preference aligns with the movie features.",
+    interpretation:
+      "Positive dot product means the vectors help each other, 0 means no alignment, and negative means they pull in opposite directions.",
+    mlParallel:
+      "Similarity scoring in search, recommendations, and embeddings often starts with a dot product."
+  },
+  derivatives: {
+    scenario:
+      "A cyclist rides on a hill and wants to know how steep the road is at one exact point.",
+    numberMeaning:
+      "The derivative is the local slope right there, not the average slope of the whole hill.",
+    interpretation:
+      "Positive derivative means the road rises to the right, negative means it falls, and 0 means locally flat.",
+    mlParallel:
+      "Training uses slope information the same way: it checks whether moving a parameter will increase or decrease the loss."
+  },
+  multivariable: {
+    scenario:
+      "A hiker stands on a 3D hill where one direction is east-west and the other is north-south.",
+    numberMeaning:
+      "Each partial derivative measures slope in one chosen direction while the other direction is held fixed.",
+    interpretation:
+      "The gradient combines those local directional slopes into one vector pointing uphill.",
+    mlParallel:
+      "Loss surfaces in ML depend on many parameters, and gradients tell the optimizer how the loss changes across them."
+  },
+  "vector-valued": {
+    scenario:
+      "A delivery van's position is tracked over time, with one function for east-west position and another for north-south position.",
+    numberMeaning:
+      "The input t is time, and the output gives a full position vector at that moment.",
+    interpretation:
+      "One input can control several outputs at once, which is why vector-valued functions trace paths.",
+    mlParallel:
+      "Trajectory models, motion modeling, and multichannel outputs all use the same idea of one input controlling several coordinates."
+  },
+  probability: {
+    scenario:
+      "You check the weather app to decide whether carrying an umbrella is worth it.",
+    numberMeaning:
+      "The probability is your current belief in rain, not a guarantee of what must happen.",
+    interpretation:
+      "A larger probability means the event is more likely. It does not mean certainty unless it reaches 1.",
+    mlParallel:
+      "Classifier confidence is probability language: the model is expressing uncertainty, not absolute certainty."
+  },
+  "random-variables": {
+    scenario:
+      "A casino game pays you +10 dollars if you win and costs you -12 dollars if you lose.",
+    numberMeaning:
+      "The random variable X is your net gain per play, so positive values mean profit and negative values mean loss.",
+    interpretation:
+      "If E[X] is negative, then on average the player loses money over many plays, which means the game favors the house.",
+    mlParallel:
+      "Expected value works the same way in ML when you average reward, loss, or cost across uncertain outcomes."
+  },
+  binomial: {
+    scenario:
+      "A basketball player takes 10 free throws and you count how many go in.",
+    numberMeaning:
+      "n is the number of shots, p is the success chance on each shot, and X counts the number of successes.",
+    interpretation:
+      "Exact probability asks for one exact success count, while cumulative probability asks for a whole range of counts.",
+    mlParallel:
+      "Repeated yes/no outcomes like correct classifications or user clicks can often be reasoned about with binomial thinking."
+  },
+  statistics: {
+    scenario:
+      "Two students score in different classes, and you want to know who did better relative to their own class.",
+    numberMeaning:
+      "The mean is the class center, standard deviation is the usual spread, and the z-score shows how far one student sits from the class mean.",
+    interpretation:
+      "A positive z-score means above the mean, a negative z-score means below the mean, and a larger magnitude means more unusual.",
+    mlParallel:
+      "Feature standardization and anomaly reasoning depend on exactly this centered-and-scaled viewpoint."
+  },
+  regression: {
+    scenario:
+      "A house-pricing rule predicts price from size using a straight line.",
+    numberMeaning:
+      "The slope says how much price changes per extra unit of size, and the intercept is the starting baseline.",
+    interpretation:
+      "Prediction errors tell you whether the line is underestimating or overestimating real outcomes.",
+    mlParallel:
+      "Linear regression is the first clean model where features, parameters, and prediction error all meet."
+  },
+  bayes: {
+    scenario:
+      "A medical test comes back positive and you want the probability the patient actually has the disease.",
+    numberMeaning:
+      "The prior is the starting disease rate, the likelihood measures how tests behave, and the posterior is the updated belief after the result.",
+    interpretation:
+      "A positive test does not automatically mean a high disease probability if false positives are common.",
+    mlParallel:
+      "Bayesian reasoning shows how models update beliefs after new evidence arrives."
+  },
+  distributions: {
+    scenario:
+      "You compare one exam score from a hard class with one exam score from an easier class.",
+    numberMeaning:
+      "μ is the center, σ is the spread, and the z-score says how far a score sits from its own class mean in standard units.",
+    interpretation:
+      "A large positive z-score means unusually high. A negative z-score means below average in that distribution.",
+    mlParallel:
+      "Standardizing data puts different raw scales onto one comparable scale for modeling."
+  },
+  eigen: {
+    scenario:
+      "A foam sheet is stretched, but some special directions keep their line instead of turning.",
+    numberMeaning:
+      "The eigenvector is one of those special directions, and the eigenvalue says how much that direction stretches or flips.",
+    interpretation:
+      "If the eigenvalue is positive, the direction keeps orientation; if negative, it flips direction as well as scales.",
+    mlParallel:
+      "PCA looks for important directions in data, which is why eigenvectors matter so much in ML."
+  },
+  eigendecomp: {
+    scenario:
+      "A messy movement becomes easy to describe once you rotate into the right pair of natural directions.",
+    numberMeaning:
+      "C changes into the eigenvector basis, D handles simple scaling there, and C^-1 changes back to the original coordinates.",
+    interpretation:
+      "The decomposition is useful because the hard transformation becomes simple in the right coordinate system.",
+    mlParallel:
+      "This is the bridge to PCA and repeated matrix powers becoming easier to analyze."
+  },
+  "gradient-descent": {
+    scenario:
+      "You are walking downhill in fog and can only feel the local slope under your feet.",
+    numberMeaning:
+      "The gradient tells which way is uphill, and the learning rate η is the size of your stride.",
+    interpretation:
+      "If η is too small you crawl slowly, and if η is too large you overshoot the low point and bounce around.",
+    mlParallel:
+      "Model training updates parameters the same way: follow local slope information to reduce loss."
+  },
+  logistic: {
+    scenario:
+      "A spam filter gives an email a raw spam score before turning that score into a probability.",
+    numberMeaning:
+      "The score z = wx + b is the raw evidence, and the sigmoid converts it into a number between 0 and 1.",
+    interpretation:
+      "A positive score pushes the probability above 0.5 toward class 1, while a negative score pushes it below 0.5 toward class 0.",
+    mlParallel:
+      "Binary classifiers often separate the raw score from the final class probability in exactly this way."
+  },
+  backprop: {
+    scenario:
+      "A hiring model combines interview score and test score, then later asks which weight contributed most to a bad prediction.",
+    numberMeaning:
+      "The weighted sum combines the inputs first, and backprop later measures how much changing each weight would change the loss.",
+    interpretation:
+      "A larger gradient magnitude means that weight has stronger influence on the current error signal.",
+    mlParallel:
+      "Neural-network training uses backprop to assign blame or credit to earlier weights through the chain rule."
+  }
+};
+
+const lessonFormulaBreakdownMap = {
+  functions: {
+    readAs: "Read this as: output equals slope times input plus starting value.",
+    pieces: [
+      { part: "f(x)", meaning: "The output of the rule for input x." },
+      { part: "m", meaning: "How fast the output changes when x changes." },
+      { part: "x", meaning: "The input value." },
+      { part: "c", meaning: "The starting value when x = 0." }
+    ],
+    stepFlow: [
+      "Take the input x.",
+      "Multiply it by the slope m.",
+      "Add the intercept c.",
+      "The result is the output f(x)."
+    ],
+    examUse:
+      "Exams usually test whether you can identify slope and intercept quickly and substitute one input correctly."
+  },
+  vectors: {
+    readAs: "Read this as: vector v has one horizontal coordinate and one vertical coordinate.",
+    pieces: [
+      { part: "v", meaning: "The full vector object." },
+      { part: "x", meaning: "Horizontal movement or horizontal coordinate." },
+      { part: "y", meaning: "Vertical movement or vertical coordinate." }
+    ],
+    stepFlow: [
+      "Read the first coordinate as horizontal movement.",
+      "Read the second coordinate as vertical movement.",
+      "Combine them into one arrow or one vector object."
+    ],
+    examUse:
+      "Exams usually test whether you can read coordinates, direction, and magnitude without mixing the two coordinates."
+  },
+  "matrix-basics": {
+    readAs: "Read this as: matrix A has m rows and n columns.",
+    pieces: [
+      { part: "A", meaning: "The matrix being described." },
+      { part: "m", meaning: "Number of rows." },
+      { part: "n", meaning: "Number of columns." }
+    ],
+    stepFlow: [
+      "Look at the number of horizontal rows.",
+      "Look at the number of vertical columns.",
+      "State the shape as rows × columns."
+    ],
+    examUse:
+      "Exams usually test matrix shape, matrix type, and whether shapes are compatible for addition or multiplication."
+  },
+  matrices: {
+    readAs: "Read this as: matrix A acts on vector v to produce a new vector.",
+    pieces: [
+      { part: "A", meaning: "The transformation matrix." },
+      { part: "v", meaning: "The input vector." },
+      { part: "[a, b; c, d]", meaning: "The matrix entries that control feature mixing." },
+      { part: "[x, y]^T", meaning: "The vector written as a column so matrix multiplication works." }
+    ],
+    stepFlow: [
+      "Take one row of the matrix at a time.",
+      "Match it against the vector coordinates.",
+      "Multiply matching parts and add them.",
+      "Those row results become the new vector coordinates."
+    ],
+    examUse:
+      "Exams usually test matrix-vector multiplication, matrix-matrix multiplication, and geometric interpretation of the output."
+  },
+  transformations: {
+    readAs: "Read this as: applying transformation T to vector v is the same as multiplying by matrix A.",
+    pieces: [
+      { part: "T(v)", meaning: "The transformed output vector." },
+      { part: "A", meaning: "The matrix that defines the linear rule." },
+      { part: "v", meaning: "The input vector." }
+    ],
+    stepFlow: [
+      "Start with an input vector v.",
+      "Apply matrix A to it.",
+      "Interpret the new vector as the transformed version T(v)."
+    ],
+    examUse:
+      "Exams usually test whether you can move between matrix form, basis-vector images, and geometry."
+  },
+  basis: {
+    readAs: "Read this as: vector v is built from basis vectors b1 and b2 using coefficients c1 and c2.",
+    pieces: [
+      { part: "v", meaning: "The original vector." },
+      { part: "c1, c2", meaning: "The coordinates in that basis." },
+      { part: "b1, b2", meaning: "The basis directions." }
+    ],
+    stepFlow: [
+      "Choose the basis directions b1 and b2.",
+      "Scale b1 by c1 and b2 by c2.",
+      "Add those scaled basis vectors.",
+      "The sum gives v."
+    ],
+    examUse:
+      "Exams usually test whether you can find coordinates in a nonstandard basis and explain what changes and what stays the same."
+  },
+  composition: {
+    readAs: "Read this as: apply T1 first, then T2, and the combined matrix is BA.",
+    pieces: [
+      { part: "T1(v)", meaning: "The first transformation applied to v." },
+      { part: "T2(T1(v))", meaning: "The second transformation applied after the first." },
+      { part: "BA", meaning: "The matrix product representing the full combined action." }
+    ],
+    stepFlow: [
+      "Start with v.",
+      "Apply the first transformation.",
+      "Apply the second transformation to that result.",
+      "Represent the whole chain as one matrix product."
+    ],
+    examUse:
+      "Exams usually test order sensitivity, composition, and powers like A^2 or A^3."
+  },
+  "inverse-spaces": {
+    readAs: "Read this as: if the determinant of A is not zero, then A can be inverted.",
+    pieces: [
+      { part: "det(A)", meaning: "The determinant of the matrix." },
+      { part: "≠ 0", meaning: "Space was not collapsed completely." },
+      { part: "invertible", meaning: "There is a unique reverse transformation." }
+    ],
+    stepFlow: [
+      "Check the determinant first.",
+      "If it is zero, information was lost.",
+      "If it is nonzero, reversal is possible in the matching dimension."
+    ],
+    examUse:
+      "Exams usually test determinant, inverse, rank, and whether the matrix loses information."
+  },
+  dot: {
+    readAs: "Read this as: multiply matching coordinates and add the results.",
+    pieces: [
+      { part: "A · B", meaning: "The dot product of two vectors." },
+      { part: "x1x2", meaning: "Multiply the horizontal coordinates." },
+      { part: "y1y2", meaning: "Multiply the vertical coordinates." }
+    ],
+    stepFlow: [
+      "Match the first coordinates.",
+      "Multiply them.",
+      "Match the second coordinates.",
+      "Add the products."
+    ],
+    examUse:
+      "Exams usually test quick dot-product calculation and interpretation of positive, zero, or negative alignment."
+  },
+  derivatives: {
+    readAs: "Read this as: f prime of x is the slope of the tangent line at x.",
+    pieces: [
+      { part: "f'(x)", meaning: "Derivative or local slope at x." },
+      { part: "tangent line", meaning: "The line touching the curve locally at that point." }
+    ],
+    stepFlow: [
+      "Choose the point x on the graph.",
+      "Imagine the tangent line there.",
+      "Read the slope of that tangent line."
+    ],
+    examUse:
+      "Exams usually test whether you can interpret derivative sign and connect derivative notation to local slope."
+  },
+  multivariable: {
+    readAs: "Read this as: the gradient is the vector of the x-partial and y-partial.",
+    pieces: [
+      { part: "∇f", meaning: "The gradient of the function." },
+      { part: "∂f/∂x", meaning: "Change in f when x moves and y stays fixed." },
+      { part: "∂f/∂y", meaning: "Change in f when y moves and x stays fixed." }
+    ],
+    stepFlow: [
+      "Differentiate with respect to x while holding y fixed.",
+      "Differentiate with respect to y while holding x fixed.",
+      "Put the two partial derivatives together as one vector."
+    ],
+    examUse:
+      "Exams usually test partial-derivative calculation, gradient construction, and interpretation of the gradient direction."
+  },
+  "vector-valued": {
+    readAs: "Read this as: one input t produces a full output vector with two coordinates.",
+    pieces: [
+      { part: "r(t)", meaning: "The output vector at time or parameter t." },
+      { part: "x(t)", meaning: "The horizontal coordinate as a function of t." },
+      { part: "y(t)", meaning: "The vertical coordinate as a function of t." }
+    ],
+    stepFlow: [
+      "Choose one value of t.",
+      "Compute x(t).",
+      "Compute y(t).",
+      "Combine them into one vector output."
+    ],
+    examUse:
+      "Exams usually test whether you can evaluate a path at one parameter value and interpret the result as a position."
+  },
+  probability: {
+    readAs: "Read this as: the remaining probability goes to tails once heads has taken its share.",
+    pieces: [
+      { part: "P(tails)", meaning: "Probability of tails." },
+      { part: "1", meaning: "The total probability over all outcomes." },
+      { part: "P(heads)", meaning: "Probability already assigned to heads." }
+    ],
+    stepFlow: [
+      "Start from total probability 1.",
+      "Subtract the probability already assigned to heads.",
+      "The remainder is the probability of tails."
+    ],
+    examUse:
+      "Exams usually test complement logic and whether stated probabilities are valid."
+  },
+  "random-variables": {
+    readAs: "Read this as: expected value is the sum of each outcome times its probability.",
+    pieces: [
+      { part: "E[X]", meaning: "Expected value or weighted average of X." },
+      { part: "Σ", meaning: "Add across all possible outcomes." },
+      { part: "x", meaning: "One possible numerical outcome of X." },
+      { part: "P(X = x)", meaning: "Probability of that particular outcome." }
+    ],
+    stepFlow: [
+      "List every possible value of X.",
+      "Multiply each value by its probability.",
+      "Add all those weighted pieces together.",
+      "Interpret the sign of the result as long-run average gain or loss."
+    ],
+    examUse:
+      "Exams usually test weighted averages and whether you understand that negative expected value means the player loses on average and the house benefits."
+  },
+  binomial: {
+    readAs: "Read this as: choose which trials succeed, then multiply the success and failure probabilities.",
+    pieces: [
+      { part: "nCx", meaning: "Number of ways to place x successes in n trials." },
+      { part: "p^x", meaning: "Probability contribution from x successes." },
+      { part: "(1 - p)^(n - x)", meaning: "Probability contribution from the remaining failures." }
+    ],
+    stepFlow: [
+      "Count how many success positions are possible.",
+      "Multiply by the probability of x successes.",
+      "Multiply by the probability of the remaining failures."
+    ],
+    examUse:
+      "Exams usually test exact-versus-cumulative probability and whether the situation really satisfies binomial assumptions."
+  },
+  statistics: {
+    readAs: "Read this as: the mean is the total of the data values divided by how many values there are.",
+    pieces: [
+      { part: "x̄", meaning: "Sample mean or average." },
+      { part: "x1 + x2 + x3", meaning: "Add the observed values." },
+      { part: "/ 3", meaning: "Divide by the number of values." }
+    ],
+    stepFlow: [
+      "Add all the values together.",
+      "Count how many values there are.",
+      "Divide the total by the count."
+    ],
+    examUse:
+      "Exams usually test mean first, then use spread and z-scores to compare how unusual a value is."
+  },
+  regression: {
+    readAs: "Read this as: predicted y equals slope times input plus baseline.",
+    pieces: [
+      { part: "ŷ", meaning: "Predicted output." },
+      { part: "m", meaning: "Slope or weight on x." },
+      { part: "x", meaning: "Input feature." },
+      { part: "b", meaning: "Intercept or baseline shift." }
+    ],
+    stepFlow: [
+      "Take the input x.",
+      "Multiply it by the slope m.",
+      "Add the intercept b.",
+      "Read the result as the prediction."
+    ],
+    examUse:
+      "Exams usually test prediction, residual, and how changing slope or intercept affects the fit."
+  },
+  bayes: {
+    readAs: "Read this as: probability of A after seeing B equals numerator over all ways B can happen.",
+    pieces: [
+      { part: "P(A|B)", meaning: "Posterior probability of A given B." },
+      { part: "P(B|A)", meaning: "Likelihood of observing B if A is true." },
+      { part: "P(A)", meaning: "Prior probability of A." },
+      { part: "P(B)", meaning: "Total probability of observing B." }
+    ],
+    stepFlow: [
+      "Build the numerator from likelihood times prior.",
+      "Compute the denominator as all ways the evidence B can occur.",
+      "Divide numerator by denominator to update the belief."
+    ],
+    examUse:
+      "Exams usually test conditional-direction mistakes and whether you can build the denominator correctly."
+  },
+  distributions: {
+    readAs: "Read this as: z-score equals raw value minus mean, divided by standard deviation.",
+    pieces: [
+      { part: "x", meaning: "The value you are evaluating." },
+      { part: "μ", meaning: "The mean or center." },
+      { part: "σ", meaning: "The standard deviation or spread." },
+      { part: "z", meaning: "Standardized distance from the mean." }
+    ],
+    stepFlow: [
+      "Subtract the mean from the raw value.",
+      "This centers the value around zero.",
+      "Divide by the standard deviation to put it in spread units."
+    ],
+    examUse:
+      "Exams usually test whether you can standardize a value and interpret positive, negative, and large-magnitude z-scores."
+  },
+  eigen: {
+    readAs: "Read this as: matrix A transforms v into a scaled copy of v.",
+    pieces: [
+      { part: "A", meaning: "The transformation matrix." },
+      { part: "v", meaning: "A special direction that stays on its own line." },
+      { part: "λ", meaning: "The scale factor along that direction." }
+    ],
+    stepFlow: [
+      "Apply A to a candidate direction v.",
+      "Check whether the output stays on the same line as v.",
+      "If it does, the scale factor is λ."
+    ],
+    examUse:
+      "Exams usually test the meaning of eigenvectors first and then use the characteristic equation to find eigenvalues."
+  },
+  eigendecomp: {
+    readAs: "Read this as: change into the eigenvector basis, scale diagonally, then change back.",
+    pieces: [
+      { part: "C", meaning: "Matrix whose columns are eigenvectors." },
+      { part: "D", meaning: "Diagonal matrix of eigenvalues." },
+      { part: "C^-1", meaning: "Change back from the eigenbasis to the original basis." }
+    ],
+    stepFlow: [
+      "Use C^-1 or C depending on convention to move into the eigenbasis.",
+      "Apply D where the action is simple diagonal scaling.",
+      "Transform back to the original coordinates."
+    ],
+    examUse:
+      "Exams usually test whether you know what C and D contain and why diagonalization makes matrix powers easier."
+  },
+  "gradient-descent": {
+    readAs: "Read this as: new x equals old x minus learning rate times the local slope.",
+    pieces: [
+      { part: "xnew", meaning: "Updated parameter value." },
+      { part: "xold", meaning: "Current parameter value." },
+      { part: "η", meaning: "Learning rate or step size." },
+      { part: "f'(xold)", meaning: "Current slope of the loss." }
+    ],
+    stepFlow: [
+      "Measure the current slope.",
+      "Multiply that slope by the learning rate.",
+      "Subtract the step from the current value.",
+      "Interpret the result as the next update."
+    ],
+    examUse:
+      "Exams usually test one-step updates, sign logic, and what too-small or too-large learning rates do."
+  },
+  logistic: {
+    readAs: "Read this as: probability equals one over one plus e to the negative score.",
+    pieces: [
+      { part: "wx + b", meaning: "The raw linear score z." },
+      { part: "e^-(wx + b)", meaning: "The exponential part that squashes the score." },
+      { part: "p", meaning: "The resulting probability-like output between 0 and 1." }
+    ],
+    stepFlow: [
+      "Compute the raw score z = wx + b.",
+      "Negate it in the exponent.",
+      "Apply the sigmoid formula.",
+      "Read the result as class-1 confidence."
+    ],
+    examUse:
+      "Exams usually test score versus probability, the 0.5 threshold, and the meaning of positive or negative score."
+  },
+  backprop: {
+    readAs: "Read this as: the neuron's pre-activation z is a weighted sum of the inputs plus a bias.",
+    pieces: [
+      { part: "w1x1, w2x2", meaning: "Each input contribution scaled by its weight." },
+      { part: "b", meaning: "Bias term that shifts the score." },
+      { part: "z", meaning: "The combined pre-activation score." }
+    ],
+    stepFlow: [
+      "Multiply each input by its matching weight.",
+      "Add the weighted contributions together.",
+      "Add the bias.",
+      "Use the resulting z for activation and later gradient flow."
+    ],
+    examUse:
+      "Exams usually test the forward weighted sum first, then ask how gradients flow backward through it."
+  }
+};
+
+const deeperPythonPracticeMap = {
+  functions: true,
+  vectors: true,
+  matrices: true,
+  derivatives: true,
+  probability: true,
+  regression: true,
+  eigen: true
+};
+
 const inlinePythonCompanionMap = {
   functions: {
     goal: "Write the same linear rule you see in algebra as a tiny Python function.",
@@ -7735,6 +8371,8 @@ export const lessons = baseLessons.map((lesson, index) => {
   const microFoundations = lessonMicroFoundationMap[lesson.key] || {};
   const examExpansion = lessonExamExpansionMap[lesson.key] || {};
   const notationGuide = lessonNotationGuideMap[lesson.key] || [];
+  const exampleBridge = lessonExampleBridgeMap[lesson.key] || null;
+  const formulaBreakdown = lessonFormulaBreakdownMap[lesson.key] || null;
 
   return {
     ...defaultEnhancement,
@@ -7743,6 +8381,8 @@ export const lessons = baseLessons.map((lesson, index) => {
     ...enhancement,
     ...microFoundations,
     notationGuide: [...notationGuide],
+    exampleBridge,
+    formulaBreakdown,
     extraPractice: [
       ...(lesson.extraPractice || []),
       ...(enhancement.extraPractice || []),
@@ -7770,6 +8410,7 @@ export const lessons = baseLessons.map((lesson, index) => {
         ...(microFoundations.foundationTags || [])
       ])
     ],
+    hasDeeperChapterPractice: Boolean(deeperPythonPracticeMap[lesson.key]),
     pythonLessonKey: pythonBridgeMap[lesson.key] || null,
     inlinePythonCompanion: inlinePythonCompanionMap[lesson.key] || null,
     pythonCompanion: lesson.pythonCompanion
