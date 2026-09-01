@@ -71,6 +71,9 @@ export function validateCurriculum(chapters, lessons, formulas, projects) {
         errors.push(`Lesson ${lesson.id} references missing prerequisite ${prerequisite}.`);
       }
     }
+    if (!lesson.scenario?.title || !lesson.scenario?.body || !lesson.scenario?.mlParallel) {
+      errors.push(`Lesson ${lesson.id} is missing a real-world scenario or ML connection.`);
+    }
     for (const levelKey of LEVELS) {
       const content = lesson.levels?.[levelKey];
       if (!content) {

@@ -8,8 +8,9 @@ const essentials = ["vector-magnitude", "dot-product", "matrix-product", "determ
 export default function DashboardPage() {
   const { mastery, recommendation, weakSkills } = useMastery();
   const next = lessonById[recommendation.lessonId];
-  const completed = Object.values(mastery.completedLevels).reduce((total, levels) => total + Object.values(levels).filter(Boolean).length, 0);
-  const total = chapters.reduce((sum, chapter) => sum + chapter.lessonIds.length * 3, 0);
+  const lessonIsComplete = (lessonId) => ["basics", "core", "advanced"].every((level) => mastery.completedLevels[lessonId]?.[level]);
+  const completed = chapters.flatMap((chapter) => chapter.lessonIds).filter(lessonIsComplete).length;
+  const total = chapters.reduce((sum, chapter) => sum + chapter.lessonIds.length, 0);
 
   return (
     <div className="page dashboard-page">
@@ -27,7 +28,7 @@ export default function DashboardPage() {
           <span>Current mastery</span>
           <strong>{Math.round((completed / total) * 100)}%</strong>
           <div className="progress-track"><i style={{ width: `${(completed / total) * 100}%` }} /></div>
-          <p>{completed} of {total} lesson levels completed</p>
+          <p>{completed} of {total} lessons completed</p>
         </aside>
       </section>
 
@@ -35,7 +36,7 @@ export default function DashboardPage() {
         <article className="start-card featured">
           <span className="card-index">01</span><p className="eyebrow">Recommended next</p>
           <h2>{next.title}</h2><p>{next.subtitle}</p>
-          <Link to={`/lessons/${next.id}/${recommendation.level}`}>Open {recommendation.level} level →</Link>
+          <Link to={`/lessons/${next.id}/study`}>Open lesson →</Link>
         </article>
         <article className="start-card">
           <span className="card-index">02</span><p className="eyebrow">Python practice</p>
@@ -51,12 +52,12 @@ export default function DashboardPage() {
       </section>
 
       <section className="dashboard-section">
-        <div className="section-heading"><div><p className="eyebrow">Progressive roadmap</p><h2>From symbols to transformers</h2></div><p>Basics → Core → Advanced inside every topic.</p></div>
+        <div className="section-heading"><div><p className="eyebrow">Progressive roadmap</p><h2>From symbols to transformers</h2></div><p>Real-world meaning → formal notation → practice → code.</p></div>
         <div className="chapter-grid">
           {chapters.map((chapter) => {
-            const chapterDone = chapter.lessonIds.reduce((sum, id) => sum + Object.values(mastery.completedLevels[id] || {}).filter(Boolean).length, 0);
-            const chapterTotal = chapter.lessonIds.length * 3;
-            return <Link className={`chapter-card accent-${chapter.accent}`} to={`/chapters/${chapter.id}`} key={chapter.id}><span>Phase {chapter.phase}</span><h3>{chapter.title}</h3><p>{chapter.purpose}</p><div className="mini-progress"><i style={{ width: `${(chapterDone / chapterTotal) * 100}%` }} /></div><small>{chapterDone}/{chapterTotal} levels</small></Link>;
+            const chapterDone = chapter.lessonIds.filter(lessonIsComplete).length;
+            const chapterTotal = chapter.lessonIds.length;
+            return <Link className={`chapter-card accent-${chapter.accent}`} to={`/chapters/${chapter.id}`} key={chapter.id}><span>Phase {chapter.phase}</span><h3>{chapter.title}</h3><p>{chapter.purpose}</p><div className="mini-progress"><i style={{ width: `${(chapterDone / chapterTotal) * 100}%` }} /></div><small>{chapterDone}/{chapterTotal} lessons</small></Link>;
           })}
         </div>
       </section>
@@ -76,4 +77,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

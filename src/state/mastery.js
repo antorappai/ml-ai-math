@@ -99,12 +99,10 @@ export function getRecommendedLesson(state) {
   for (const chapter of chapters) {
     for (const lessonId of chapter.lessonIds) {
       const completed = state.completedLevels[lessonId] || {};
-      if (!completed.basics) return { lessonId, level: "basics" };
-      if (!completed.core) return { lessonId, level: "core" };
-      if (!completed.advanced) return { lessonId, level: "advanced" };
+      if (!["basics", "core", "advanced"].every((level) => completed[level])) return { lessonId, level: "study" };
     }
   }
-  return { lessonId: lessons[0].id, level: "basics" };
+  return { lessonId: lessons[0].id, level: "study" };
 }
 
 const MasteryContext = createContext(null);
@@ -126,6 +124,9 @@ export function MasteryProvider({ children }) {
     },
     completeLevel(lessonId, level) {
       update((state) => ({ ...state, completedLevels: { ...state.completedLevels, [lessonId]: { ...state.completedLevels[lessonId], [level]: true } } }));
+    },
+    completeLesson(lessonId) {
+      update((state) => ({ ...state, completedLevels: { ...state.completedLevels, [lessonId]: { basics: true, core: true, advanced: true } } }));
     },
     recordAnswer(question, correct) {
       update((state) => {

@@ -15,12 +15,14 @@ describe("routed application", () => {
     expect(screen.getByText(/From symbols to transformers/i)).toBeInTheDocument();
   });
 
-  it("renders basics, core, advanced, and formulas on one study page", async () => {
+  it("renders one continuous study guide with a real-world example and formulas", async () => {
     window.location.hash = "#/lessons/eigenvalues-eigenvectors/basics";
     render(<App />);
-    expect(await screen.findByRole("heading", { name: "Basics" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Core" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Advanced" })).toBeInTheDocument();
+    expect(await screen.findByText("Real-world example")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Build the concept step by step" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Basics" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Core" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Advanced" })).not.toBeInTheDocument();
     expect(await screen.findByText("Eigen equation")).toBeInTheDocument();
     expect(document.querySelector(".katex")).toBeInTheDocument();
   });

@@ -30,10 +30,10 @@ describe("mastery state", () => {
     expect(migrateMastery(fakeStorage({ "ml-math-last-lesson": "eigen" })).lastVisited).toEqual({ lessonId: "eigenvalues-eigenvectors", level: "basics" });
   });
 
-  it("recommends the first incomplete level in curriculum order", () => {
+  it("recommends the first incomplete lesson in curriculum order", () => {
     const state = emptyMastery();
     state.completedLevels["numbers-signs"] = { basics: true };
-    expect(getRecommendedLesson(state)).toEqual({ lessonId: "numbers-signs", level: "core" });
+    expect(getRecommendedLesson(state)).toEqual({ lessonId: "numbers-signs", level: "study" });
   });
 
   it("ranks weak skills by incorrect attempts", () => {
