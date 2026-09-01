@@ -107,6 +107,9 @@ footer { display: flex; justify-content: space-between; padding: 2rem clamp(1rem
 .level-links { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1rem; }
 .level-links a { padding: .48rem .78rem; border: 1px solid var(--line); border-radius: 999px; font-size: .78rem; font-weight: 800; text-decoration: none; text-transform: capitalize; }
 .level-links a.level-complete { border-color: var(--green); background: #e3efe8; color: var(--green); }
+.lesson-row-action { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; }
+.lesson-row-action a { color: var(--green); font-weight: 850; }
+.lesson-row-action span { color: var(--muted); font-size: .78rem; }
 .project-flag { align-self: center; padding: .45rem .7rem; border-radius: 999px; background: var(--lime); font-size: .7rem; font-weight: 850; text-transform: uppercase; }
 
 .lesson-breadcrumb { display: flex; gap: .55rem; color: var(--muted); font-size: .85rem; }
@@ -121,6 +124,49 @@ footer { display: flex; justify-content: space-between; padding: 2rem clamp(1rem
 .lesson-tabs { position: sticky; top: 74px; z-index: 20; display: flex; gap: .25rem; overflow-x: auto; margin: 1.8rem 0; padding: .4rem; border: 1px solid var(--line); border-radius: 999px; background: rgb(255 253 247 / 92%); backdrop-filter: blur(12px); }
 .lesson-tabs button { flex: 1 0 auto; padding: .7rem 1rem; background: transparent; color: var(--muted); font-size: .8rem; }
 .lesson-tabs button.active { background: var(--green); color: white; }
+.simple-lesson-hero { padding: 2rem 0 1.2rem; }
+.simple-lesson-hero h1 { font-size: clamp(2.3rem, 4.5vw, 3.7rem); line-height: 1; }
+.lesson-view-links { display: flex; gap: 1.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--line); }
+.lesson-view-links a { padding: .8rem 0; color: var(--muted); font-size: .9rem; font-weight: 800; text-decoration: none; }
+.lesson-view-links a.active { margin-bottom: -1px; border-bottom: 3px solid var(--green); color: var(--green); }
+.study-guide, .practice-guide, .python-guide { width: min(900px, 100%); margin: 2rem auto 0; }
+.lesson-opening, .simple-vocabulary, .study-level, .study-formulas, .simple-mistakes { padding: 2.5rem 0; border-bottom: 1px solid var(--line); }
+.lesson-opening h2, .simple-vocabulary > h2, .plain-section-heading h2 { margin: .2rem 0 1rem; font-family: Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; }
+.lesson-opening > p:not(.eyebrow), .plain-section-heading > p:not(.eyebrow) { color: var(--muted); font-size: 1.05rem; line-height: 1.75; }
+.simple-vocabulary { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem 1.5rem; }
+.simple-vocabulary > .eyebrow, .simple-vocabulary > h2 { grid-column: 1 / -1; }
+.simple-term { padding: 1rem 0; border-top: 1px solid var(--line); }
+.simple-term h3 { margin: 0 0 .5rem; color: var(--green); font-family: Georgia, serif; font-size: 1.45rem; font-weight: 500; }
+.simple-term p { margin: .45rem 0; color: var(--muted); line-height: 1.55; }
+.study-level { scroll-margin-top: 90px; }
+.study-level-heading { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: end; margin-bottom: 1.5rem; }
+.study-level-heading > div { position: relative; padding-left: 3.7rem; }
+.study-level-heading > div > span { position: absolute; left: 0; top: -.2rem; color: var(--green); font-family: Georgia, serif; font-size: 3rem; line-height: 1; }
+.study-level-heading h2 { margin: 0; font-family: Georgia, serif; font-size: clamp(2rem, 4vw, 3.1rem); font-weight: 500; text-transform: capitalize; }
+.study-level-heading > p { margin: 0; color: var(--muted); line-height: 1.65; }
+.level-objectives { margin-bottom: 1.5rem; padding: 1rem 1.2rem; border-left: 3px solid var(--gold); background: #fff9e7; }
+.level-objectives ul { margin-bottom: 0; padding-left: 1.2rem; }
+.level-objectives li { margin-top: .45rem; }
+.explanation-flow { display: grid; gap: 1rem; }
+.explanation-flow article { padding: 0 0 1rem; border-bottom: 1px solid #e4e2d9; }
+.explanation-flow h3 { margin-bottom: .45rem; font-size: 1.25rem; }
+.explanation-flow p { margin: 0; color: var(--muted); line-height: 1.7; }
+.inline-worked-example { max-width: none; margin-top: 1.5rem; box-shadow: none; }
+.inline-worked-example h3 { margin: .2rem 0 1rem; font-family: Georgia, serif; font-size: 1.7rem; font-weight: 500; }
+.level-complete-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; padding-top: 1rem; color: var(--muted); font-size: .85rem; }
+.level-complete-row button { padding: .65rem .9rem; }
+.plain-section-heading { margin-bottom: 1.5rem; }
+.study-formulas .formula-card { box-shadow: none; }
+.simple-mistakes article { padding: .8rem 1rem; border-left: 4px solid var(--coral); background: #fff8f3; }
+.simple-mistakes article p { line-height: 1.6; }
+.study-next-actions { display: flex; gap: .8rem; padding: 2rem 0; }
+.practice-level { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+.practice-level > header { display: flex; align-items: center; gap: 1rem; }
+.practice-level > header > span { color: var(--green); font-family: Georgia, serif; font-size: 2.6rem; }
+.practice-level > header h2 { margin: 0; font-family: Georgia, serif; font-size: 2rem; font-weight: 500; text-transform: capitalize; }
+.python-guide .python-section + .python-section { margin-top: 3rem; }
+.chapter-practice-link { display: flex; align-items: center; justify-content: space-between; gap: 2rem; margin-top: 3rem; padding: 1.5rem 0; border-top: 1px solid var(--line); }
+.chapter-practice-link h2 { margin: 0; font-family: Georgia, serif; font-size: 1.7rem; font-weight: 500; }
 .lesson-content-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1rem; }
 .scenario-card, .concept-card, .worked-example, .exam-card, .assessment-card, .python-lab, .notebook-lab, .content-intro { padding: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid var(--line); border-radius: 1.5rem; background: var(--surface); box-shadow: 0 8px 26px rgb(18 34 31 / 4%); }
 .scenario-card h2, .concept-card h2, .worked-example h2, .content-intro h2 { margin: .3rem 0 1rem; font-family: Georgia, serif; font-size: clamp(1.7rem, 3vw, 2.7rem); font-weight: 500; }
@@ -225,5 +271,5 @@ footer { display: flex; justify-content: space-between; padding: 2rem clamp(1rem
 }
 
 @media (max-width: 680px) {
-  .topbar { min-height: 64px; }.topbar nav { top: 64px; }.page { width: min(100% - 1.1rem, 1220px); padding-top: 1.2rem; }.dashboard-hero { padding: 2rem 1.3rem; border-radius: 1.4rem; }.hero-copy h1 { font-size: clamp(3rem, 15vw, 5rem); }.chapter-grid, .project-grid, .checklist-grid, .symbol-grid, .formula-detail-grid, .formula-card.compact .symbol-grid, .option-grid { grid-template-columns: 1fr; }.section-heading { align-items: start; flex-direction: column; }.lesson-row { grid-template-columns: 45px 1fr; }.lesson-row .project-flag { display: none; }.lesson-row h2 { font-size: 1.55rem; }.chapter-hero { min-height: 290px; }.lesson-tabs { top: 64px; border-radius: 1rem; }.prerequisite-strip { align-items: start; flex-direction: column; }.level-switch { width: 100%; }.level-switch a { flex: 1; text-align: center; }.ml-connection, .lesson-completion, .python-lab-head, .score-panel { align-items: stretch; flex-direction: column; }.lesson-completion button, .score-panel button { margin: 0; }.formula-heading { flex-direction: column; }.block-math { padding: .8rem; }.practice-controls, .filter-bar { align-items: stretch; flex-direction: column; }.practice-controls > div { overflow-x: auto; }.pack-list article { grid-template-columns: 42px 1fr; }.pack-list article a { grid-column: 2; } footer { flex-direction: column; gap: .4rem; }
+  .topbar { min-height: 64px; }.topbar nav { top: 64px; }.page { width: min(100% - 1.1rem, 1220px); padding-top: 1.2rem; }.dashboard-hero { padding: 2rem 1.3rem; border-radius: 1.4rem; }.hero-copy h1 { font-size: clamp(3rem, 15vw, 5rem); }.chapter-grid, .project-grid, .checklist-grid, .symbol-grid, .formula-detail-grid, .formula-card.compact .symbol-grid, .option-grid, .simple-vocabulary { grid-template-columns: 1fr; }.simple-vocabulary > .eyebrow, .simple-vocabulary > h2 { grid-column: auto; }.section-heading { align-items: start; flex-direction: column; }.lesson-row { grid-template-columns: 45px 1fr; }.lesson-row .project-flag { display: none; }.lesson-row h2 { font-size: 1.55rem; }.lesson-row-action, .study-level-heading { align-items: start; grid-template-columns: 1fr; flex-direction: column; }.chapter-hero { min-height: 290px; }.lesson-view-links { gap: 1rem; overflow-x: auto; }.lesson-view-links a { flex: 0 0 auto; }.prerequisite-strip { align-items: start; flex-direction: column; }.level-complete-row, .study-next-actions, .chapter-practice-link, .python-lab-head, .score-panel { align-items: stretch; flex-direction: column; }.level-complete-row button, .score-panel button { margin: 0; }.formula-heading { flex-direction: column; }.block-math { padding: .8rem; }.practice-controls, .filter-bar { align-items: stretch; flex-direction: column; }.practice-controls > div { overflow-x: auto; }.pack-list article { grid-template-columns: 42px 1fr; }.pack-list article a { grid-column: 2; } footer { flex-direction: column; gap: .4rem; }
 }
