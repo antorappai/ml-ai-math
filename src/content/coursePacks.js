@@ -3,7 +3,7 @@ export const coursePacks = [
     id: "masters-math-core",
     title: "Master's Math Core",
     description: "A focused revision pack matching common probability, linear algebra, and multivariable-calculus entrance material.",
-    lessonIds: ["bayes-theorem", "pmf-pdf-cdf", "standard-deviation", "linear-transformations", "covariance-matrices-pca", "gradients-directional-change"],
+    lessonIds: ["bayes-theorem", "cumulative-distribution-function", "standard-deviation", "linear-transformations", "covariance-matrices-pca", "gradients-directional-change"],
     status: "ready"
   },
   {

@@ -9,8 +9,8 @@ describe("curriculum integrity", () => {
     expect(chapters.map((chapter) => chapter.id)).toEqual([
       "foundations", "linear-algebra", "calculus-optimization", "probability-statistics", "classical-ml", "deep-learning"
     ]);
-    expect(lessons.length).toBe(71);
-    expect(chapters.filter((chapter) => chapter.phase === 1).map((chapter) => chapter.lessonIds.length)).toEqual([9, 19, 12, 15]);
+    expect(lessons.length).toBe(73);
+    expect(chapters.filter((chapter) => chapter.phase === 1).map((chapter) => chapter.lessonIds.length)).toEqual([9, 19, 12, 17]);
     for (const lesson of lessons) expect(Object.keys(lesson.levels)).toEqual(["basics", "core", "advanced"]);
     for (const chapter of chapters) {
       const questionCount = getChapterLessons(chapter.id).flatMap(getLessonQuestions).length;
@@ -20,7 +20,7 @@ describe("curriculum integrity", () => {
 
   it("meets the beginner-first Phase 1 teaching standard", () => {
     const phaseOneLessons = chapters.filter((chapter) => chapter.phase === 1).flatMap((chapter) => getChapterLessons(chapter.id));
-    expect(phaseOneLessons).toHaveLength(55);
+    expect(phaseOneLessons).toHaveLength(57);
     for (const lesson of phaseOneLessons) {
       expect(lesson.beginnerFirst).toBe(true);
       expect(getLessonQuestions(lesson)).toHaveLength(5);
@@ -36,7 +36,7 @@ describe("curriculum integrity", () => {
         expect(content.workedExamples).toHaveLength(1);
       }
     }
-    expect(Object.keys(terminology).length).toBeGreaterThanOrEqual(55);
+    expect(Object.keys(terminology).length).toBeGreaterThanOrEqual(57);
   });
 
   it("orders the required explanation chains before their dependants", () => {
@@ -45,6 +45,7 @@ describe("curriculum integrity", () => {
       ["scalars-vectors-tensors", "vector-arithmetic", "matrix-anatomy-types", "linear-transformations", "eigenvalues-eigenvectors", "covariance-matrices-pca"],
       ["functions-domain-range", "graphs-slope-intercept", "change-slope-limits", "derivative-definition", "partial-derivatives", "gradients-directional-change", "chain-rule-computational-graphs"],
       ["experiments-outcomes-events", "conditional-probability", "bayes-theorem"],
+      ["random-variables", "probability-mass-function", "probability-density-function", "cumulative-distribution-function"],
       ["random-variables", "expected-value", "variance-population-sample", "standard-deviation"]
     ];
     for (const chain of chains) for (let index = 1; index < chain.length; index += 1) {
@@ -63,13 +64,25 @@ describe("curriculum integrity", () => {
       "hessians-convexity": "hessian",
       "conditional-probability": "conditional-probability",
       "random-variables": "random-variable-map",
-      "pmf-pdf-cdf": "distribution-functions",
+      "probability-mass-function": "probability-mass-function",
+      "probability-density-function": "probability-density-function",
+      "cumulative-distribution-function": "cumulative-distribution-function",
       "normal-z-scores": "normal-notation",
       "sampling-estimators-clt": "sample-mean",
       "confidence-intervals": "confidence-interval"
     };
     for (const [lessonId, formulaId] of Object.entries(expectedOwners)) {
       expect(lessonById[lessonId].levels.basics.formulaIds).toContain(formulaId);
+    }
+  });
+
+  it("expands probability distribution abbreviations before using them", () => {
+    expect(lessonById["probability-mass-function"].title).toBe("Probability Mass Function (PMF)");
+    expect(lessonById["probability-density-function"].title).toBe("Probability Density Function (PDF)");
+    expect(lessonById["cumulative-distribution-function"].title).toBe("Cumulative Distribution Function (CDF)");
+    for (const lessonId of ["probability-mass-function", "probability-density-function", "cumulative-distribution-function"]) {
+      expect(lessonById[lessonId].vocabulary[0].definition).toBeTruthy();
+      expect(lessonById[lessonId].levels.basics.formulaIds).toHaveLength(1);
     }
   });
 

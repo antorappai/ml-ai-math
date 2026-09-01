@@ -30,7 +30,7 @@ const LEGACY_LESSON_MAP = {
   transformations: "linear-transformations", basis: "basis-coordinates", composition: "composition-matrix-powers", "inverse-spaces": "inverse-systems",
   dot: "dot-product-angle", derivatives: "change-slope-limits", multivariable: "partial-derivatives", "vector-valued": "scalar-vector-functions",
   probability: "experiments-outcomes-events", "random-variables": "random-variables", binomial: "bernoulli-binomial",
-  statistics: "expected-value", regression: "linear-regression-ml", bayes: "bayes-theorem", distributions: "pmf-pdf-cdf",
+  statistics: "expected-value", regression: "linear-regression-ml", bayes: "bayes-theorem", distributions: "probability-mass-function",
   eigen: "eigenvalues-eigenvectors", eigendecomp: "eigendecomposition", "gradient-descent": "gradient-descent-learning-rate", logistic: "logistic-classification", backprop: "forward-backprop"
 };
 

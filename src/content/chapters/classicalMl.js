@@ -155,7 +155,7 @@ export const classicalMlLessons = [
     order: 5,
     title: "Naive Bayes Classification",
     subtitle: "Combine feature evidence using Bayes and a simplifying independence assumption.",
-    prerequisites: ["bayes-theorem", "pmf-pdf-cdf"],
+    prerequisites: ["bayes-theorem", "probability-density-function"],
     tags: ["naive-bayes", "probabilistic-model"],
     scenario: { title: "Word evidence in spam", body: "Words such as free and prize provide evidence about whether an email is spam.", mlParallel: "Naive Bayes multiplies per-feature likelihoods within each candidate class." },
     mlConnection: "It is a fast probabilistic baseline and a practical lesson in modeling assumptions.",

@@ -861,16 +861,38 @@ export const formulas = {
     signs: ["The order matters: P(A|B) generally differs from P(B|A)."],
     mistakes: ["Reversing the conditioning direction."]
   }),
-  "distribution-functions": F({
-    id: "distribution-functions", category: "Probability", label: "PMF, PDF, and CDF roles",
-    latex: "", readAs: "a discrete PMF sums to one; the CDF at x is probability that X is at most x",
-    purpose: "Distinguish point mass, continuous density, and accumulated probability.",
-    symbols: [["p_X(x)", "discrete probability mass"], ["f_X(x)", "continuous density height"], ["F_X(x)", "cumulative probability through x"]],
-    assumptions: ["Masses are non-negative and sum to one; densities are non-negative and integrate to one."],
-    beginnerExample: "If mass at 0 and 1 is 0.2 and 0.5, then F(1)=0.7.",
-    derivation: ["Choose discrete or continuous type.", "Accumulate all probability up to x for the CDF."],
-    signs: ["A PDF may exceed one in height, but area-based probability cannot exceed one."],
-    mistakes: ["Treating continuous density at one exact point as point probability."]
+  "probability-mass-function": F({
+    id: "probability-mass-function", category: "Probability", label: "Probability Mass Function (PMF)",
+    latex: "", readAs: "p sub X of x equals the probability that discrete random variable X is exactly x; all masses add to one",
+    purpose: "Assign an exact probability to each possible value of a discrete, countable random variable.",
+    symbols: [["p_X(x)", "the probability mass assigned to value x"], ["P(X=x)", "probability that X equals exactly x"], ["\\sum_x", "add over every possible discrete value x"], ["1", "all available probability"]],
+    assumptions: ["X is discrete or countable.", "Every mass is between zero and one.", "The masses over all possible values sum to one."],
+    beginnerExample: "If X is heads in one fair coin flip, p_X(0)=0.5 and p_X(1)=0.5; together they sum to 1.",
+    derivation: ["List every possible value of X.", "Assign the probability of each exact value.", "Add every assigned mass and verify the total is one."],
+    signs: ["p_X(x)=0 means that exact value is impossible under the model; larger mass means that value is more likely."],
+    mistakes: ["Using a PMF for a continuous measurement.", "Forgetting to check that all masses sum to one."]
+  }),
+  "probability-density-function": F({
+    id: "probability-density-function", category: "Probability", label: "Probability Density Function (PDF)",
+    latex: "", readAs: "the probability that continuous X lies from a to b equals the area under density f sub X between a and b",
+    purpose: "Represent probability for a continuous random variable using area over intervals.",
+    symbols: [["f_X(x)", "density height at x, not point probability"], ["a,b", "the interval boundaries"], ["\\int_a^b", "accumulate area from a to b"], ["dx", "sum infinitely thin horizontal slices"], ["1", "the total area under the complete density"]],
+    assumptions: ["X is continuous.", "The density is non-negative.", "The total area under the density is one."],
+    beginnerExample: "For a uniform wait from 0 to 4 minutes, f_X(x)=1/4. The probability of waiting from 1 to 3 minutes is width 2 times height 1/4, so 0.5.",
+    derivation: ["Choose the interval whose probability is required.", "Find the area under the density over that interval.", "Check that the answer lies between zero and one."],
+    signs: ["A density height can exceed one when its interval is narrow; probability is the area and cannot exceed one.", "For a continuous X, P(X=x)=0 at any single exact point."],
+    mistakes: ["Reading f_X(x) as the probability of exactly x.", "Adding density heights instead of finding area."]
+  }),
+  "cumulative-distribution-function": F({
+    id: "cumulative-distribution-function", category: "Probability", label: "Cumulative Distribution Function (CDF)",
+    latex: "", readAs: "F sub X of x equals the probability that X is less than or equal to x",
+    purpose: "Give the running total of probability accumulated up to a chosen threshold x.",
+    symbols: [["F_X(x)", "cumulative probability through threshold x"], ["X", "the random variable"], ["x", "the chosen cutoff value"], ["\\le", "less than or equal to"]],
+    assumptions: ["A CDF exists for every random variable, discrete or continuous.", "Its value is always between zero and one and never decreases as x increases."],
+    beginnerExample: "If P(X=0)=0.2, P(X=1)=0.5, and P(X=2)=0.3, then F_X(1)=P(X<=1)=0.2+0.5=0.7.",
+    derivation: ["Choose the cutoff x.", "Collect every possible value at or below x.", "Add their masses, or find the density area to the left of x."],
+    signs: ["F_X(x) near zero means little probability has accumulated by x; near one means almost all probability has accumulated."],
+    mistakes: ["Confusing P(X<=x) with P(X=x).", "Thinking CDF is only for continuous distributions."]
   }),
   "normal-notation": F({
     id: "normal-notation", category: "Statistics", label: "Normal-distribution notation",
@@ -974,7 +996,9 @@ const canonicalLatex = {
   "probability-rules": String.raw`P(A^c)=1-P(A),\qquad P(A\cup B)=P(A)+P(B)-P(A\cap B)`,
   "random-variable-map": String.raw`X:\Omega\to\mathbb R,\qquad \omega\mapsto X(\omega)`,
   "conditional-probability": String.raw`P(A\mid B)=\frac{P(A\cap B)}{P(B)}`,
-  "distribution-functions": String.raw`\sum_x p_X(x)=1,\qquad F_X(x)=P(X\le x)`,
+  "probability-mass-function": String.raw`p_X(x)=P(X=x),\qquad \sum_x p_X(x)=1`,
+  "probability-density-function": String.raw`P(a\le X\le b)=\int_a^b f_X(x)\,dx,\qquad \int_{-\infty}^{\infty}f_X(x)\,dx=1`,
+  "cumulative-distribution-function": String.raw`F_X(x)=P(X\le x)`,
   "normal-notation": String.raw`X\sim\mathcal N(\mu,\sigma^2)`,
   "sample-mean": String.raw`\bar x=\frac{1}{n}\sum_{i=1}^{n}x_i`,
   "confidence-interval": String.raw`\bar x\pm z^*\frac{s}{\sqrt n}`
