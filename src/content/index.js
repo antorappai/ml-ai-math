@@ -1,9 +1,9 @@
 import { defineChapter, validateCurriculum } from "./schema.js";
 import { formulaList, formulas } from "./formulas.js";
-import { foundationLessons } from "./chapters/foundations.js";
-import { linearAlgebraLessons } from "./chapters/linearAlgebra.js";
-import { calculusLessons } from "./chapters/calculus.js";
-import { probabilityLessons } from "./chapters/probability.js";
+import { foundationLessons } from "./chapters/foundationMicro.js";
+import { linearAlgebraLessons } from "./chapters/linearAlgebraMicro.js";
+import { calculusLessons } from "./chapters/calculusMicro.js";
+import { probabilityLessons } from "./chapters/probabilityMicro.js";
 import { classicalMlLessons } from "./chapters/classicalMl.js";
 import { deepLearningLessons } from "./chapters/deepLearning.js";
 import { projects } from "./projects.js";
@@ -27,6 +27,7 @@ export const lessonById = Object.fromEntries(lessons.map((lesson) => [lesson.id,
 export const chapterById = Object.fromEntries(chapters.map((chapter) => [chapter.id, chapter]));
 export const projectById = Object.fromEntries(projects.map((project) => [project.id, project]));
 export const formulaById = formulas;
+export const terminology = Object.fromEntries(lessons.flatMap((lesson) => lesson.vocabulary || []).map((term) => [term.id, term]));
 export { coursePacks, formulaList, formulas, projects };
 
 validateCurriculum(chapters, lessons, formulas, projects);
@@ -38,4 +39,3 @@ export function getLessonQuestions(lesson) {
 export function getChapterLessons(chapterId) {
   return chapters.find((chapter) => chapter.id === chapterId)?.lessonIds.map((id) => lessonById[id]) || [];
 }
-

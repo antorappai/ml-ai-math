@@ -16,7 +16,7 @@ describe("routed application", () => {
   });
 
   it("renders a lesson formula tab without crashing", async () => {
-    window.location.hash = "#/lessons/eigen-pca/basics";
+    window.location.hash = "#/lessons/eigenvalues-eigenvectors/basics";
     render(<App />);
     fireEvent.click(await screen.findByRole("tab", { name: "Formal math" }));
     expect(await screen.findByText("Eigen equation")).toBeInTheDocument();

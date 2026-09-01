@@ -129,9 +129,24 @@ footer { display: flex; justify-content: space-between; padding: 2rem clamp(1rem
 .ml-bridge p { margin-bottom: 0; }
 .concept-card ul, .exam-card ol { padding-left: 1.2rem; }
 .concept-card li, .exam-card li { margin-bottom: .8rem; }
+.vocabulary-section { grid-column: 1 / -1; padding: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid var(--line); border-radius: 1.5rem; background: #edf4ef; }
+.vocabulary-section > h2 { margin: .2rem 0 1.2rem; font-family: Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 500; }
+.vocabulary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: .8rem; }
+.term-card { padding: 1.25rem; border: 1px solid #cbd9ce; border-radius: 1rem; background: var(--surface); }
+.term-card h3 { margin: 0 0 .6rem; color: var(--green); font-family: Georgia, serif; font-size: 1.45rem; font-weight: 500; }
+.term-card p, .term-card dd { color: var(--muted); line-height: 1.55; }
+.term-card dl { margin: 1rem 0 0; }
+.term-card dt { margin-top: .75rem; font-size: .72rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+.term-card dd { margin: .2rem 0 0; }
+.explanation-card, .misconception-card { padding: 1.6rem; border: 1px solid var(--line); border-radius: 1.2rem; background: var(--surface); }
+.explanation-card h2 { margin: .25rem 0 .8rem; font-family: Georgia, serif; font-size: 1.65rem; font-weight: 500; }
+.explanation-card > p:last-child, .misconception-card p { color: var(--muted); line-height: 1.65; }
+.misconception-card { border-left: 6px solid var(--coral); background: #fff8f3; }
+.misconception-card > div + div { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
 .ml-connection { grid-column: 1 / -1; display: flex; align-items: center; gap: 2rem; padding: 1.4rem 2rem; border-radius: 1.25rem; background: var(--green); color: white; }
 .ml-connection p:last-child { margin: 0; font-size: 1.15rem; }
 .worked-example { max-width: 900px; }
+.worked-example-list { display: grid; gap: 1rem; }
 .example-prompt { padding: 1rem; border-radius: .8rem; background: #f0eee5; font-weight: 750; }
 .worked-example ol { display: grid; gap: .65rem; padding-left: 1.5rem; }
 .answer-block { display: flex; gap: 1rem; margin: 1.5rem 0; padding: 1.2rem; border-left: 5px solid var(--lime); background: var(--green); color: white; }
@@ -174,6 +189,12 @@ footer { display: flex; justify-content: space-between; padding: 2rem clamp(1rem
 .grade-pass { color: var(--lime); }.notebook-lab { background: #17243a; color: #eef3fa; }.notebook-lab .eyebrow { color: #9bc6ef; }.notebook-lab pre { padding: 1rem; border-radius: .8rem; background: #0c1422; }.expected-output { color: #b5d898 !important; }
 
 .assessment-card { margin-top: 1rem; }
+.reveal-problems { margin-top: 2rem; }
+.reveal-problem { margin-top: .8rem; padding: 1.35rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); }
+.reveal-problem > p { margin-top: 0; line-height: 1.6; }
+.reveal-problem .button { padding: .6rem .9rem; }
+.revealed-solution { margin-top: 1rem; padding: 1rem 1.2rem; border-left: 4px solid var(--green); border-radius: .5rem; background: #edf4ef; }
+.revealed-solution li, .revealed-solution p { line-height: 1.6; }
 .assessment-card .section-heading h2 { font-size: 2rem; }
 .timer { padding: .7rem 1rem; border-radius: 999px; background: var(--ink); color: var(--lime); font-family: ui-monospace, monospace; }
 .question-card { padding: 1.4rem 0; border-top: 1px solid var(--line); }

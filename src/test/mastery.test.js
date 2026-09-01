@@ -7,18 +7,33 @@ function fakeStorage(values = {}) {
 
 describe("mastery state", () => {
   it("migrates a compatible saved state", () => {
-    const saved = { ...emptyMastery(), completedLevels: { "math-language": { basics: true } } };
+    const saved = { ...emptyMastery(), completedLevels: { "numbers-signs": { basics: true } } };
     expect(migrateMastery(fakeStorage({ [STORAGE_KEY]: JSON.stringify(saved) })).completedLevels).toEqual(saved.completedLevels);
   });
 
+  it("preserves old Phase 1 study as exposure without completing replacement lessons", () => {
+    const previous = {
+      version: 2,
+      completedLevels: { "math-language": { basics: true }, "ml-workflow": { basics: true } },
+      quizScores: { prior: { score: 4, total: 5 } },
+      incorrectAttempts: {}, formulaConfidence: {}, pythonExercises: {}, projects: {},
+      lastVisited: { lessonId: "math-language", level: "core" }
+    };
+    const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v2": JSON.stringify(previous) }));
+    expect(migrated.completedLevels).toEqual({ "ml-workflow": { basics: true } });
+    expect(migrated.legacyExposure).toEqual({ "math-language": { basics: true } });
+    expect(migrated.lastVisited).toEqual({ lessonId: "numbers-signs", level: "core" });
+    expect(migrated.quizScores).toEqual(previous.quizScores);
+  });
+
   it("maps a legacy lesson id into the new curriculum", () => {
-    expect(migrateMastery(fakeStorage({ "ml-math-last-lesson": "eigen" })).lastVisited).toEqual({ lessonId: "eigen-pca", level: "basics" });
+    expect(migrateMastery(fakeStorage({ "ml-math-last-lesson": "eigen" })).lastVisited).toEqual({ lessonId: "eigenvalues-eigenvectors", level: "basics" });
   });
 
   it("recommends the first incomplete level in curriculum order", () => {
     const state = emptyMastery();
-    state.completedLevels["math-language"] = { basics: true };
-    expect(getRecommendedLesson(state)).toEqual({ lessonId: "math-language", level: "core" });
+    state.completedLevels["numbers-signs"] = { basics: true };
+    expect(getRecommendedLesson(state)).toEqual({ lessonId: "numbers-signs", level: "core" });
   });
 
   it("ranks weak skills by incorrect attempts", () => {

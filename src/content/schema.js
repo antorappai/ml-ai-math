@@ -47,9 +47,10 @@ export function level({
   example,
   pythonLab = null,
   questions = [],
-  examNotes = []
+  examNotes = [],
+  ...teachingContent
 }) {
-  return { title, summary, concepts, formulaIds, example, pythonLab, questions, examNotes };
+  return { title, summary, concepts, formulaIds, example, pythonLab, questions, examNotes, ...teachingContent };
 }
 
 export function validateCurriculum(chapters, lessons, formulas, projects) {
@@ -59,6 +60,7 @@ export function validateCurriculum(chapters, lessons, formulas, projects) {
   const lessonIds = new Set(lessons.map((lesson) => lesson.id));
   const formulaIds = new Set(Object.keys(formulas));
   const projectIds = new Set(projects.map((project) => project.id));
+  const introducedTerms = new Set();
 
   for (const lesson of lessons) {
     if (!chapterIds.has(lesson.chapterId)) {
@@ -87,6 +89,21 @@ export function validateCurriculum(chapters, lessons, formulas, projects) {
           errors.push(`Question ${question.id} has an invalid answer definition.`);
         }
         if (!question.explanation) errors.push(`Question ${question.id} is missing answer feedback.`);
+      }
+      if (lesson.beginnerFirst) {
+        for (const field of ["objectives", "vocabulary", "explanationSections", "workedExamples", "misconceptions", "calculationProblems", "examQuestions"]) {
+          if (!content[field]?.length) errors.push(`Beginner-first lesson ${lesson.id}/${levelKey} is missing ${field}.`);
+        }
+        if (!content.realWorldScenario || !content.mlScenario || !content.readinessCheck) errors.push(`Beginner-first lesson ${lesson.id}/${levelKey} is missing scenario or readiness content.`);
+      }
+    }
+    if (lesson.beginnerFirst) {
+      const total = (field) => LEVELS.reduce((count, key) => count + (lesson.levels[key][field]?.length || 0), 0);
+      if (total("questions") < 5 || total("calculationProblems") < 5 || total("examQuestions") < 3) errors.push(`Beginner-first lesson ${lesson.id} does not meet practice minimums.`);
+      for (const termId of lesson.levels.basics.requiredTermIds || []) if (!introducedTerms.has(termId)) errors.push(`Lesson ${lesson.id} requires term ${termId} before it is introduced.`);
+      for (const term of lesson.vocabulary || []) {
+        for (const field of ["definition", "analogy", "example", "nonExample", "mlConnection"]) if (!term[field]) errors.push(`Term ${term.id} is missing ${field}.`);
+        introducedTerms.add(term.id);
       }
     }
     for (const projectId of lesson.projectIds || []) {

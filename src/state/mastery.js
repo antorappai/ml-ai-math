@@ -1,15 +1,37 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { chapters, lessonById, lessons } from "../content/index.js";
 
-export const STORAGE_KEY = "ml-mastery-progress-v2";
-export const MASTERY_VERSION = 2;
+export const STORAGE_KEY = "ml-mastery-progress-v3";
+export const MASTERY_VERSION = 3;
+const PREVIOUS_STORAGE_KEY = "ml-mastery-progress-v2";
+const LEGACY_PHASE_ONE_IDS = new Set([
+  "math-language", "functions-graphs", "algebra-logs", "vectors-geometry", "matrices-operations",
+  "linear-transformations", "eigen-pca", "derivatives-rates", "multivariable-gradients", "optimization-loss",
+  "probability-events-bayes", "random-variables-distributions", "statistics-spread", "sampling-inference"
+]);
+const PHASE_ONE_REPLACEMENTS = {
+  "math-language": "numbers-signs",
+  "functions-graphs": "functions-domain-range",
+  "algebra-logs": "variables-expressions",
+  "vectors-geometry": "scalars-vectors-tensors",
+  "matrices-operations": "matrix-anatomy-types",
+  "linear-transformations": "linear-transformations",
+  "eigen-pca": "eigenvalues-eigenvectors",
+  "derivatives-rates": "change-slope-limits",
+  "multivariable-gradients": "partial-derivatives",
+  "optimization-loss": "loss-functions",
+  "probability-events-bayes": "experiments-outcomes-events",
+  "random-variables-distributions": "random-variables",
+  "statistics-spread": "expected-value",
+  "sampling-inference": "sampling-estimators-clt"
+};
 const LEGACY_LESSON_MAP = {
-  functions: "functions-graphs", vectors: "vectors-geometry", "matrix-basics": "matrices-operations", matrices: "matrices-operations",
-  transformations: "linear-transformations", basis: "linear-transformations", composition: "linear-transformations", "inverse-spaces": "linear-transformations",
-  dot: "vectors-geometry", derivatives: "derivatives-rates", multivariable: "multivariable-gradients", "vector-valued": "multivariable-gradients",
-  probability: "probability-events-bayes", "random-variables": "random-variables-distributions", binomial: "random-variables-distributions",
-  statistics: "statistics-spread", regression: "linear-regression-ml", bayes: "probability-events-bayes", distributions: "random-variables-distributions",
-  eigen: "eigen-pca", eigendecomp: "eigen-pca", "gradient-descent": "optimization-loss", logistic: "logistic-classification", backprop: "forward-backprop"
+  functions: "functions-domain-range", vectors: "scalars-vectors-tensors", "matrix-basics": "matrix-anatomy-types", matrices: "matrix-anatomy-types",
+  transformations: "linear-transformations", basis: "basis-coordinates", composition: "composition-matrix-powers", "inverse-spaces": "inverse-systems",
+  dot: "dot-product-angle", derivatives: "change-slope-limits", multivariable: "partial-derivatives", "vector-valued": "scalar-vector-functions",
+  probability: "experiments-outcomes-events", "random-variables": "random-variables", binomial: "bernoulli-binomial",
+  statistics: "expected-value", regression: "linear-regression-ml", bayes: "bayes-theorem", distributions: "pmf-pdf-cdf",
+  eigen: "eigenvalues-eigenvectors", eigendecomp: "eigendecomposition", "gradient-descent": "gradient-descent-learning-rate", logistic: "logistic-classification", backprop: "forward-backprop"
 };
 
 export function emptyMastery() {
@@ -21,6 +43,7 @@ export function emptyMastery() {
     formulaConfidence: {},
     pythonExercises: {},
     projects: {},
+    legacyExposure: {},
     lastVisited: null
   };
 }
@@ -32,6 +55,30 @@ export function migrateMastery(storage = window.localStorage) {
     if (parsed && parsed.version === MASTERY_VERSION) return { ...base, ...parsed };
   } catch {
     // Invalid prior state is safer to ignore than to block the app.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(PREVIOUS_STORAGE_KEY));
+    if (previous?.version === 2) {
+      const completedLevels = Object.fromEntries(
+        Object.entries(previous.completedLevels || {}).filter(([lessonId]) => !LEGACY_PHASE_ONE_IDS.has(lessonId))
+      );
+      const legacyExposure = Object.fromEntries(
+        Object.entries(previous.completedLevels || {}).filter(([lessonId]) => LEGACY_PHASE_ONE_IDS.has(lessonId))
+      );
+      const oldLastLesson = previous.lastVisited?.lessonId;
+      const mappedLastLesson = PHASE_ONE_REPLACEMENTS[oldLastLesson] || (lessonById[oldLastLesson] ? oldLastLesson : null);
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedLevels,
+        legacyExposure,
+        lastVisited: mappedLastLesson ? { lessonId: mappedLastLesson, level: previous.lastVisited?.level || "basics" } : null
+      };
+    }
+  } catch {
+    // Fall through to the oldest single-lesson preference.
   }
 
   const legacyLesson = storage.getItem("ml-math-last-lesson");

@@ -2,18 +2,86 @@ import fs from "node:fs";
 import path from "node:path";
 import katex from "katex";
 import { describe, expect, it } from "vitest";
-import { chapters, coursePacks, formulaList, getChapterLessons, getLessonQuestions, lessonById, lessons, projects } from "../content/index.js";
+import { chapters, coursePacks, formulaList, getChapterLessons, getLessonQuestions, lessonById, lessons, projects, terminology } from "../content/index.js";
 
 describe("curriculum integrity", () => {
   it("contains the full progressive roadmap", () => {
     expect(chapters.map((chapter) => chapter.id)).toEqual([
       "foundations", "linear-algebra", "calculus-optimization", "probability-statistics", "classical-ml", "deep-learning"
     ]);
-    expect(lessons.length).toBeGreaterThanOrEqual(30);
+    expect(lessons.length).toBe(71);
+    expect(chapters.filter((chapter) => chapter.phase === 1).map((chapter) => chapter.lessonIds.length)).toEqual([9, 19, 12, 15]);
     for (const lesson of lessons) expect(Object.keys(lesson.levels)).toEqual(["basics", "core", "advanced"]);
     for (const chapter of chapters) {
       const questionCount = getChapterLessons(chapter.id).flatMap(getLessonQuestions).length;
       expect(questionCount).toBeGreaterThanOrEqual(10);
+    }
+  });
+
+  it("meets the beginner-first Phase 1 teaching standard", () => {
+    const phaseOneLessons = chapters.filter((chapter) => chapter.phase === 1).flatMap((chapter) => getChapterLessons(chapter.id));
+    expect(phaseOneLessons).toHaveLength(55);
+    for (const lesson of phaseOneLessons) {
+      expect(lesson.beginnerFirst).toBe(true);
+      expect(getLessonQuestions(lesson)).toHaveLength(5);
+      expect(Object.values(lesson.levels).flatMap((content) => content.calculationProblems)).toHaveLength(5);
+      expect(Object.values(lesson.levels).flatMap((content) => content.examQuestions)).toHaveLength(3);
+      expect(lesson.vocabulary.length).toBeGreaterThan(0);
+      for (const term of lesson.vocabulary) {
+        for (const field of ["definition", "analogy", "example", "nonExample", "mlConnection"]) expect(term[field]).toBeTruthy();
+      }
+      for (const content of Object.values(lesson.levels)) {
+        expect(content.realWorldScenario.body).toBeTruthy();
+        expect(content.mlScenario.body).toBeTruthy();
+        expect(content.workedExamples).toHaveLength(1);
+      }
+    }
+    expect(Object.keys(terminology).length).toBeGreaterThanOrEqual(55);
+  });
+
+  it("orders the required explanation chains before their dependants", () => {
+    const position = (id) => lessons.findIndex((lesson) => lesson.id === id);
+    const chains = [
+      ["scalars-vectors-tensors", "vector-arithmetic", "matrix-anatomy-types", "linear-transformations", "eigenvalues-eigenvectors", "covariance-matrices-pca"],
+      ["functions-domain-range", "graphs-slope-intercept", "change-slope-limits", "derivative-definition", "partial-derivatives", "gradients-directional-change", "chain-rule-computational-graphs"],
+      ["experiments-outcomes-events", "conditional-probability", "bayes-theorem"],
+      ["random-variables", "expected-value", "variance-population-sample", "standard-deviation"]
+    ];
+    for (const chain of chains) for (let index = 1; index < chain.length; index += 1) {
+      expect(position(chain[index - 1])).toBeLessThan(position(chain[index]));
+    }
+  });
+
+  it("assigns formal notation to the lesson that introduces each hard concept", () => {
+    const expectedOwners = {
+      "scalars-vectors-tensors": "vector-notation",
+      "inverse-systems": "matrix-inverse",
+      "basis-coordinates": "basis-coordinates",
+      "change-slope-limits": "limit",
+      "partial-derivatives": "partial-derivative",
+      "jacobian-matrices": "jacobian",
+      "hessians-convexity": "hessian",
+      "conditional-probability": "conditional-probability",
+      "random-variables": "random-variable-map",
+      "pmf-pdf-cdf": "distribution-functions",
+      "normal-z-scores": "normal-notation",
+      "sampling-estimators-clt": "sample-mean",
+      "confidence-intervals": "confidence-interval"
+    };
+    for (const [lessonId, formulaId] of Object.entries(expectedOwners)) {
+      expect(lessonById[lessonId].levels.basics.formulaIds).toContain(formulaId);
+    }
+  });
+
+  it("keeps topic-specific Python companions on computational foundations", () => {
+    const phaseOneLessons = chapters.filter((chapter) => chapter.phase === 1).flatMap((chapter) => getChapterLessons(chapter.id));
+    const withPython = phaseOneLessons.filter((lesson) => lesson.levels.basics.pythonLab);
+    expect(withPython.length).toBeGreaterThanOrEqual(12);
+    for (const lessonId of ["vector-magnitude-distance", "matrix-matrix-multiplication", "eigenvalues-eigenvectors", "derivative-definition", "gradients-directional-change", "expected-value", "variance-population-sample"]) {
+      const lab = lessonById[lessonId].levels.basics.pythonLab;
+      expect(lab.code).toBeTruthy();
+      expect(lab.output).toBeTruthy();
+      expect(lab.explanation).toBeTruthy();
     }
   });
 
