@@ -129,7 +129,7 @@ footer { display: flex; justify-content: space-between; padding: 2rem clamp(1rem
 .lesson-view-links { display: flex; gap: 1.5rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--line); }
 .lesson-view-links a { padding: .8rem 0; color: var(--muted); font-size: .9rem; font-weight: 800; text-decoration: none; }
 .lesson-view-links a.active { margin-bottom: -1px; border-bottom: 3px solid var(--green); color: var(--green); }
-.study-guide, .practice-guide, .python-guide { width: min(900px, 100%); margin: 2rem auto 0; }
+.study-guide, .formula-guide, .practice-guide, .python-guide { width: min(900px, 100%); margin: 2rem auto 0; }
 .lesson-opening, .simple-vocabulary, .lesson-explanation, .study-formulas, .simple-mistakes { padding: 2.5rem 0; border-bottom: 1px solid var(--line); }
 .lesson-opening h2, .simple-vocabulary > h2, .plain-section-heading h2 { margin: .2rem 0 1rem; font-family: Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; }
 .lesson-opening > p:not(.eyebrow), .plain-section-heading > p:not(.eyebrow) { color: var(--muted); font-size: 1.05rem; line-height: 1.75; }
@@ -144,6 +144,9 @@ footer { display: flex; justify-content: space-between; padding: 2rem clamp(1rem
 .explanation-flow p { margin: 0; color: var(--muted); line-height: 1.7; }
 .inline-worked-example { max-width: none; margin-top: 1.5rem; box-shadow: none; }
 .inline-worked-example h3 { margin: .2rem 0 1rem; font-family: Georgia, serif; font-size: 1.7rem; font-weight: 500; }
+.example-story, .practice-story { margin: 1rem 0; padding: 1rem 1.15rem; border-left: 4px solid var(--gold); border-radius: .4rem; background: #fff9e7; }
+.example-story p, .practice-story p { margin: .35rem 0; color: var(--muted); line-height: 1.6; }
+.example-ml { margin-top: 1rem; padding: .85rem 1rem; border-radius: .75rem; background: #e7f0ed; color: #315145; line-height: 1.6; }
 .worked-example-stack { display: grid; gap: 1rem; margin-top: 1.5rem; }
 .worked-example-stack .inline-worked-example { margin-top: 0; }
 .lesson-complete-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 2rem 0; border-bottom: 1px solid var(--line); }

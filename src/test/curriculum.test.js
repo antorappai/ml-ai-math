@@ -34,6 +34,12 @@ describe("curriculum integrity", () => {
         expect(content.realWorldScenario.body).toBeTruthy();
         expect(content.mlScenario.body).toBeTruthy();
         expect(content.workedExamples).toHaveLength(1);
+        const [example] = content.workedExamples;
+        expect(example.situation.title).toBeTruthy();
+        expect(example.situation.story).toBeTruthy();
+        expect(example.quantityMap.length).toBeGreaterThan(0);
+        expect(example.realWorldMeaning).toBeTruthy();
+        expect(example.mlParallel).toBeTruthy();
       }
     }
     expect(Object.keys(terminology).length).toBeGreaterThanOrEqual(57);
@@ -89,12 +95,15 @@ describe("curriculum integrity", () => {
   it("keeps topic-specific Python companions on computational foundations", () => {
     const phaseOneLessons = chapters.filter((chapter) => chapter.phase === 1).flatMap((chapter) => getChapterLessons(chapter.id));
     const withPython = phaseOneLessons.filter((lesson) => lesson.levels.basics.pythonLab);
-    expect(withPython.length).toBeGreaterThanOrEqual(12);
-    for (const lessonId of ["vector-magnitude-distance", "matrix-matrix-multiplication", "eigenvalues-eigenvectors", "derivative-definition", "gradients-directional-change", "expected-value", "variance-population-sample"]) {
+    expect(withPython.length).toBeGreaterThanOrEqual(28);
+    for (const lessonId of ["dot-product-angle", "linear-transformations", "eigendecomposition", "covariance-matrices-pca", "partial-derivatives", "bayes-theorem", "normal-z-scores"]) {
       const lab = lessonById[lessonId].levels.basics.pythonLab;
       expect(lab.code).toBeTruthy();
       expect(lab.output).toBeTruthy();
       expect(lab.explanation).toBeTruthy();
+      expect(lab.mathToCode).toBeTruthy();
+      expect(lab.commonTrap).toBeTruthy();
+      expect(lab.exercise.prompt).toBeTruthy();
     }
   });
 

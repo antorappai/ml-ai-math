@@ -9,6 +9,19 @@ export const vocab = (id, name, definition, analogy, example, nonExample, mlConn
 export const worked = (title, prompt, steps, answer, interpretation) => ({ title, prompt, steps, answer, interpretation });
 export const misconception = (wrong, correction) => ({ wrong, correction });
 
+function connectExampleToStory(example, seed, term) {
+  return {
+    ...example,
+    situation: example.situation || { title: seed.realWorld.title, story: seed.realWorld.body },
+    quantityMap: example.quantityMap || [{
+      quantity: term.name,
+      meaning: `This is the mathematical quantity being worked out in the ${seed.realWorld.title.toLowerCase()} situation.`
+    }],
+    realWorldMeaning: example.realWorldMeaning || `${example.interpretation} In this situation, that result is what helps someone make a decision instead of guessing.`,
+    mlParallel: example.mlParallel || seed.ml
+  };
+}
+
 function makeExplanation(levelKey, seed, term) {
   if (levelKey === "basics") return [
     { heading: "Start with the idea", body: seed.plain },
@@ -29,9 +42,10 @@ function makeExplanation(levelKey, seed, term) {
 
 export function beginnerLesson(seed) {
   const term = seed.vocabulary[0];
+  const examples = seed.examples.map((example) => connectExampleToStory(example, seed, term));
   const questions = buildFoundationQuestions(seed.id, seed.vocabulary, seed.misconceptions[0], seed.ml);
-  const problems = buildProblems(seed.id, seed.examples, seed.vocabulary, seed.ml);
-  const exams = buildExamQuestions(seed.id, seed.examples, seed.misconceptions[0]);
+  const problems = buildProblems(seed.id, examples, seed.vocabulary, seed.ml);
+  const exams = buildExamQuestions(seed.id, examples, seed.misconceptions[0]);
   const levelConfigs = [
     { key: "basics", q: questions.slice(0, 2), p: problems.slice(0, 1), exam: exams[0] },
     { key: "core", q: questions.slice(2, 4), p: problems.slice(1, 3), exam: exams[1] },
@@ -57,7 +71,7 @@ export function beginnerLesson(seed) {
       summary: [seed.plain, seed.core || `Apply ${term.name} correctly and explain the result.`, seed.advanced || seed.ml][index],
       concepts: makeExplanation(key, seed, term).map((section) => section.body),
       formulaIds: seed.formulaIds || [],
-      example: seed.examples[index],
+      example: examples[index],
       pythonLab: seed.pythonLabs?.[key] || null,
       questions: q,
       examNotes: ["Define the quantities before calculating.", "Show each step and preserve signs, units, and dimensions.", "Interpret the answer in the original context."],
@@ -68,7 +82,7 @@ export function beginnerLesson(seed) {
       explanationSections: makeExplanation(key, seed, term),
       realWorldScenario: seed.realWorld,
       mlScenario: { title: `${term.name} in ML`, body: seed.ml },
-      workedExamples: [seed.examples[index]],
+      workedExamples: [examples[index]],
       misconceptions: seed.misconceptions,
       calculationProblems: p,
       examQuestions: [exam],

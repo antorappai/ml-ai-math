@@ -13,12 +13,13 @@ function NotebookLab({ lab }) {
   return <article className="notebook-lab"><p className="eyebrow">PyTorch notebook</p><h3>{lab.title}</h3><p>{lab.goal}</p><pre><code>{lab.code}</code></pre><h4>Expected output</h4><pre className="expected-output"><code>{lab.output}</code></pre><p>{lab.explanation}</p><a className="button" href={colabUrl} target="_blank" rel="noreferrer">Open prepared notebook in Colab ↗</a></article>;
 }
 
-function LessonHeader({ lesson, chapter, mode, hasPython }) {
+function LessonHeader({ lesson, chapter, mode, hasFormulas, hasPython }) {
   return <>
     <div className="lesson-breadcrumb"><Link to={`/chapters/${chapter.id}`}>{chapter.shortTitle}</Link><span>/</span><span>{lesson.title}</span></div>
     <header className="lesson-hero simple-lesson-hero"><div><p className="eyebrow">Lesson {lesson.order}</p><h1>{lesson.title}</h1><p>{lesson.subtitle}</p></div></header>
     <nav className="lesson-view-links" aria-label="Lesson pages">
       <Link className={mode === "study" ? "active" : ""} to={`/lessons/${lesson.id}/study`}>Study guide</Link>
+      {hasFormulas && <Link className={mode === "formula" ? "active" : ""} to={`/lessons/${lesson.id}/formula`}>Formula explained</Link>}
       <Link className={mode === "practice" ? "active" : ""} to={`/lessons/${lesson.id}/practice`}>Practice & exam</Link>
       {hasPython && <Link className={mode === "python" ? "active" : ""} to={`/lessons/${lesson.id}/python`}>Python lab</Link>}
     </nav>
@@ -27,14 +28,14 @@ function LessonHeader({ lesson, chapter, mode, hasPython }) {
 
 function WorkedExample({ example }) {
   if (!example) return null;
-  return <article className="worked-example inline-worked-example"><p className="eyebrow">Worked example</p><h3>{example.title}</h3><p className="example-prompt">{example.prompt}</p><ol>{example.steps.map((step) => <li key={step}>{step}</li>)}</ol><div className="answer-block"><strong>Answer</strong><span>{example.answer}</span></div><p><strong>Interpretation:</strong> {example.interpretation}</p></article>;
+  return <article className="worked-example inline-worked-example"><p className="eyebrow">Worked example</p><h3>{example.title}</h3>
+    {example.situation && <div className="example-story"><strong>In the real world: {example.situation.title}</strong><p>{example.situation.story}</p>{example.quantityMap?.map((item) => <p key={item.quantity}><strong>{item.quantity}:</strong> {item.meaning}</p>)}</div>}
+    <p className="example-prompt">{example.prompt}</p><ol>{example.steps.map((step) => <li key={step}>{step}</li>)}</ol><div className="answer-block"><strong>Answer</strong><span>{example.answer}</span></div><p><strong>What this means in the story:</strong> {example.realWorldMeaning || example.interpretation}</p>{example.mlParallel && <div className="example-ml"><strong>ML parallel:</strong> {example.mlParallel}</div>}</article>;
 }
 
 function StudyGuide({ lesson, mastery, completeLesson }) {
   const basics = lesson.levels.basics;
   const vocabulary = lesson.vocabulary || basics.vocabulary || [];
-  const formulaIds = [...new Set(LEVELS.flatMap((level) => lesson.levels[level].formulaIds || []))];
-  const formulas = formulaIds.map((id) => formulaById[id]).filter(Boolean);
   const misconceptions = basics.misconceptions || [];
   const complete = LEVELS.every((level) => mastery.completedLevels[lesson.id]?.[level]);
   const explanationSections = LEVELS.flatMap((level) => {
@@ -62,13 +63,19 @@ function StudyGuide({ lesson, mastery, completeLesson }) {
       <div className="worked-example-stack">{examples.map((example) => <WorkedExample example={example} key={example.title} />)}</div>
     </section>
 
-    {formulas.length > 0 && <section className="study-formulas"><header className="plain-section-heading"><p className="eyebrow">Formal notation</p><h2>The math for this lesson</h2><p>Read the formula, decode each symbol, then connect it to the worked examples above.</p></header><div className="formula-stack">{formulas.map((formula, index) => <FormulaCard formula={formula} compact={index > 0} key={formula.id} />)}</div></section>}
-
     {misconceptions.length > 0 && <section className="simple-mistakes"><p className="eyebrow">Common mistakes</p>{misconceptions.map((item) => <article key={item.wrong}><p><strong>Do not think:</strong> {item.wrong}</p><p><strong>Correct idea:</strong> {item.correction}</p></article>)}</section>}
 
     <div className="lesson-complete-row"><div><strong>{complete ? "Lesson completed" : "Ready to move on?"}</strong><p>{complete ? "You can return to practice whenever you need a refresher." : "Mark this lesson complete when you can explain the main example in your own words."}</p></div><button type="button" onClick={() => completeLesson(lesson.id)}>{complete ? "Completed ✓" : "Mark lesson complete"}</button></div>
     <div className="study-next-actions"><Link className="button" to={`/lessons/${lesson.id}/practice`}>Start practice questions</Link>{LEVELS.some((level) => lesson.levels[level].pythonLab) && <Link className="button secondary" to={`/lessons/${lesson.id}/python`}>Open Python lab</Link>}</div>
   </div>;
+}
+
+function FormulaView({ lesson }) {
+  const formulaIds = [...new Set(LEVELS.flatMap((level) => lesson.levels[level].formulaIds || []))];
+  const formulas = formulaIds.map((id) => formulaById[id]).filter(Boolean);
+  if (!formulas.length) return <Navigate to={`/lessons/${lesson.id}/study`} replace />;
+
+  return <div className="formula-guide"><header className="plain-section-heading"><p className="eyebrow">Formula explained</p><h2>Read the maths without guessing</h2><p>Start with the concrete example from the study guide. Then use these cards to decode every symbol, condition, sign, and common exam trap.</p></header><div className="formula-stack">{formulas.map((formula) => <FormulaCard formula={formula} key={formula.id} />)}</div></div>;
 }
 
 function PracticeView({ lesson }) {
@@ -95,14 +102,14 @@ function PythonView({ lesson, completePython }) {
   });
   if (!labs.length) return <Navigate to={`/lessons/${lesson.id}/study`} replace />;
 
-  return <div className="python-guide"><header className="plain-section-heading"><p className="eyebrow">Python companion</p><h2>Turn this lesson into code</h2><p>Each code line corresponds to a mathematical step from the study guide.</p></header>{labs.map(({ level, lab }) => <section className="python-section" key={`${level}-${lab.title}`}><header className="content-intro"><h2>{lab.title}</h2><p>{lab.goal}</p><div className="code-connection"><strong>Read the code mathematically</strong><span>{lab.explanation}</span></div></header>{lab.runtime === "notebook" ? <NotebookLab lab={lab} /> : <PythonPlayground lessonKey={`${lesson.id}-${level}`} initialCode={lab.code} expectedOutput={lab.output} packages={lab.packages} hiddenTests={lab.hiddenTests} onComplete={() => completePython(`${lesson.id}-${level}`)} />}</section>)}</div>;
+  return <div className="python-guide"><header className="plain-section-heading"><p className="eyebrow">Python companion</p><h2>Turn this lesson into code</h2><p>Each code line corresponds to a mathematical step from the study guide.</p></header>{labs.map(({ level, lab }) => <section className="python-section" key={`${level}-${lab.title}`}><header className="content-intro"><h2>{lab.title}</h2><p>{lab.goal}</p><div className="code-connection"><strong>Math to code</strong><span>{lab.mathToCode}</span></div><p><strong>Common trap:</strong> {lab.commonTrap}</p><p><strong>Try this:</strong> {lab.exercise?.prompt}</p></header>{lab.runtime === "notebook" ? <NotebookLab lab={lab} /> : <PythonPlayground lessonKey={`${lesson.id}-${level}`} initialCode={lab.code} expectedOutput={lab.output} packages={lab.packages} hiddenTests={lab.hiddenTests} onComplete={() => completePython(`${lesson.id}-${level}`)} />}</section>)}</div>;
 }
 
 export default function LessonPage() {
   const { lessonId, level: view = "study" } = useParams();
   const lesson = lessonById[lessonId];
   const { mastery, visit, completeLesson, completePython } = useMastery();
-  const mode = view === "practice" || view === "python" ? view : "study";
+  const mode = view === "formula" || view === "practice" || view === "python" ? view : "study";
 
   useEffect(() => {
     if (!lesson) return;
@@ -112,11 +119,13 @@ export default function LessonPage() {
   if (!lesson) return <Navigate to="/dashboard" replace />;
   const chapter = chapterById[lesson.chapterId];
   const hasPython = LEVELS.some((level) => lesson.levels[level].pythonLab);
+  const hasFormulas = LEVELS.some((level) => lesson.levels[level].formulaIds?.length);
 
   return <div className="page lesson-page simple-lesson-page">
-    <LessonHeader lesson={lesson} chapter={chapter} mode={mode} hasPython={hasPython} />
+    <LessonHeader lesson={lesson} chapter={chapter} mode={mode} hasFormulas={hasFormulas} hasPython={hasPython} />
     {lesson.prerequisites.length > 0 && <aside className="prerequisite-strip"><strong>Study first</strong>{lesson.prerequisites.map((id) => <Link to={`/lessons/${id}/study`} key={id}>{lessonById[id]?.title || id}</Link>)}</aside>}
     {mode === "study" && <StudyGuide lesson={lesson} mastery={mastery} completeLesson={completeLesson} />}
+    {mode === "formula" && <FormulaView lesson={lesson} />}
     {mode === "practice" && <PracticeView lesson={lesson} />}
     {mode === "python" && <PythonView lesson={lesson} completePython={completePython} />}
   </div>;

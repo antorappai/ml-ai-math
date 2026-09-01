@@ -25,6 +25,10 @@ export function buildProblems(lessonId, examples, vocabulary, mlConnection) {
     answer: example.answer,
     steps: example.steps,
     explanation: example.interpretation,
+    situation: example.situation,
+    quantityMap: example.quantityMap,
+    realWorldMeaning: example.realWorldMeaning,
+    mlParallel: example.mlParallel,
     skill: index === 0 ? "calculation" : "application"
   }));
   return [
@@ -40,9 +44,12 @@ export function buildExamQuestions(lessonId, examples, misconception) {
     prompt: `${example.prompt} Show your method and interpret the result.`,
     answer: example.answer,
     solutionSteps: [...example.steps, `Interpretation: ${example.interpretation}`],
+    situation: example.situation,
+    quantityMap: example.quantityMap,
+    realWorldMeaning: example.realWorldMeaning,
+    mlParallel: example.mlParallel,
     markingGuide: ["Correct setup", "Correct working", "Correct answer", "Interpretation in context"],
     commonTrap: index === 2 ? misconception.wrong : "Giving only a final number without showing the method.",
     difficulty: ["basics", "core", "advanced"][index]
   }));
 }
-

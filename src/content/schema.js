@@ -85,6 +85,12 @@ export function validateCurriculum(chapters, lessons, formulas, projects) {
           errors.push(`Lesson ${lesson.id}/${levelKey} references missing formula ${formulaId}.`);
         }
       }
+      if (content.pythonLab) {
+        for (const field of ["code", "output", "mathToCode", "commonTrap", "exercise"]) {
+          if (!content.pythonLab[field]) errors.push(`Python lab for ${lesson.id}/${levelKey} is missing ${field}.`);
+        }
+        if (!content.pythonLab.exercise.prompt) errors.push(`Python lab for ${lesson.id}/${levelKey} is missing an exercise prompt.`);
+      }
       for (const question of content.questions || []) {
         if (questionIds.has(question.id)) errors.push(`Question id ${question.id} is duplicated.`);
         questionIds.add(question.id);
@@ -98,6 +104,12 @@ export function validateCurriculum(chapters, lessons, formulas, projects) {
           if (!content[field]?.length) errors.push(`Beginner-first lesson ${lesson.id}/${levelKey} is missing ${field}.`);
         }
         if (!content.realWorldScenario || !content.mlScenario || !content.readinessCheck) errors.push(`Beginner-first lesson ${lesson.id}/${levelKey} is missing scenario or readiness content.`);
+        for (const example of content.workedExamples || []) {
+          for (const field of ["situation", "quantityMap", "realWorldMeaning", "mlParallel"]) {
+            if (!example[field] || (Array.isArray(example[field]) && !example[field].length)) errors.push(`Worked example ${lesson.id}/${levelKey}/${example.title} is missing ${field}.`);
+          }
+          if (!example.situation?.title || !example.situation?.story) errors.push(`Worked example ${lesson.id}/${levelKey}/${example.title} has an incomplete situation.`);
+        }
       }
     }
     if (lesson.beginnerFirst) {

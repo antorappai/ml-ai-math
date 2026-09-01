@@ -15,7 +15,7 @@ describe("routed application", () => {
     expect(screen.getByText(/From symbols to transformers/i)).toBeInTheDocument();
   });
 
-  it("renders one continuous study guide with a real-world example and formulas", async () => {
+  it("renders one continuous study guide with scenario-linked examples", async () => {
     window.location.hash = "#/lessons/eigenvalues-eigenvectors/basics";
     render(<App />);
     expect(await screen.findByText("Real-world example")).toBeInTheDocument();
@@ -23,7 +23,16 @@ describe("routed application", () => {
     expect(screen.queryByRole("heading", { name: "Basics" })).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Core" })).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Advanced" })).not.toBeInTheDocument();
-    expect(await screen.findByText("Eigen equation")).toBeInTheDocument();
+    expect((await screen.findAllByText(/In the real world:/)).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/What this means in the story:/).length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: "Formula explained" })).toBeInTheDocument();
+  });
+
+  it("keeps formula decoding in its own lesson tab", async () => {
+    window.location.hash = "#/lessons/eigenvalues-eigenvectors/formula";
+    render(<App />);
+    expect(await screen.findByRole("heading", { name: "Read the maths without guessing" })).toBeInTheDocument();
+    expect(screen.getByText("Eigen equation")).toBeInTheDocument();
     expect(document.querySelector(".katex")).toBeInTheDocument();
   });
 
