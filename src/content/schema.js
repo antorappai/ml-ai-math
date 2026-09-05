@@ -113,6 +113,45 @@ export function validateCurriculum(chapters, lessons, formulas, projects) {
       }
     }
     if (lesson.beginnerFirst) {
+      if (lesson.beginnerSteps?.length) {
+        const requiredStepTypes = ["orientation", "scenario", "concept", "worked-example", "check", "notation", "recap"];
+        if (lesson.beginnerSteps.length !== requiredStepTypes.length) errors.push(`Guided lesson ${lesson.id} must contain seven steps.`);
+        for (const [index, stepType] of requiredStepTypes.entries()) {
+          const step = lesson.beginnerSteps[index];
+          if (!step?.id || !step?.title || step.type !== stepType) errors.push(`Guided lesson ${lesson.id} is missing step ${stepType}.`);
+        }
+        const notationStep = lesson.beginnerSteps.find((step) => step.type === "notation");
+        if (!notationStep?.notation?.latex || !notationStep?.notation?.expression || !notationStep?.notation?.readAs || !notationStep?.notation?.symbols?.length || !notationStep?.mlExample) {
+          errors.push(`Guided lesson ${lesson.id} needs notation guidance and an ML example.`);
+        }
+        const scenarioStep = lesson.beginnerSteps.find((step) => step.type === "scenario");
+        const everyday = scenarioStep?.everyday;
+        if (!everyday?.title || everyday?.setup?.length < 2 || everyday?.quantities?.length < 2 || !everyday?.walkthrough?.length || !everyday?.takeaway) {
+          errors.push(`Guided lesson ${lesson.id} needs a complete everyday explanation.`);
+        }
+        for (const quantity of everyday?.quantities || []) {
+          if (!quantity.label || !quantity.value || !quantity.meaning) errors.push(`Guided lesson ${lesson.id} has an incomplete everyday quantity.`);
+        }
+        for (const item of everyday?.walkthrough || []) {
+          if (!item.action || !item.reason) errors.push(`Guided lesson ${lesson.id} has an everyday step without a reason.`);
+        }
+        const mlBridge = notationStep?.mlBridge;
+        if (!mlBridge?.task || !mlBridge?.terms?.length || !mlBridge?.mapping?.length || !mlBridge?.walkthrough?.length || !mlBridge?.takeaway) {
+          errors.push(`Guided lesson ${lesson.id} needs a complete ML bridge.`);
+        }
+        for (const term of mlBridge?.terms || []) {
+          if (!term.name || !term.definition || !["preview", "review"].includes(term.state)) errors.push(`Guided lesson ${lesson.id} has an incomplete ML term definition.`);
+          if (term.lessonId && !lessonIds.has(term.lessonId)) errors.push(`Guided lesson ${lesson.id} links ML term ${term.name} to missing lesson ${term.lessonId}.`);
+        }
+        for (const mapping of mlBridge?.mapping || []) if (!mapping.math || !mapping.ml) errors.push(`Guided lesson ${lesson.id} has an incomplete math-to-ML mapping.`);
+        for (const item of mlBridge?.walkthrough || []) if (!item.action || !item.reason) errors.push(`Guided lesson ${lesson.id} has an ML step without a reason.`);
+        const guidedTeachingCopy = JSON.stringify({ everyday, mlBridge });
+        if (/\b(obvious|trivial|simply)\b/i.test(guidedTeachingCopy)) errors.push(`Guided lesson ${lesson.id} contains discouraged beginner copy.`);
+        const conceptStep = lesson.beginnerSteps.find((step) => step.type === "concept");
+        if (new Set(conceptStep?.body || []).size !== (conceptStep?.body || []).length) errors.push(`Guided lesson ${lesson.id} repeats its main definition.`);
+        const workedStep = lesson.beginnerSteps.find((step) => step.type === "worked-example");
+        if (!workedStep?.example) errors.push(`Guided lesson ${lesson.id} needs an everyday worked example.`);
+      }
       const total = (field) => LEVELS.reduce((count, key) => count + (lesson.levels[key][field]?.length || 0), 0);
       if (total("questions") < 5 || total("calculationProblems") < 5 || total("examQuestions") < 3) errors.push(`Beginner-first lesson ${lesson.id} does not meet practice minimums.`);
       for (const termId of lesson.levels.basics.requiredTermIds || []) if (!introducedTerms.has(termId)) errors.push(`Lesson ${lesson.id} requires term ${termId} before it is introduced.`);

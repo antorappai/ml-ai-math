@@ -1,3 +1,4 @@
+import { MathText } from "./Math.jsx";
 import React, { useEffect, useState } from "react";
 import { useMastery } from "../state/mastery.js";
 
@@ -49,7 +50,7 @@ export default function Assessment({ questions, testId, title = "Quick check", l
         const correct = chosen === question.answerIndex;
         return (
           <article className="question-card" key={question.id}>
-            <p><strong>{index + 1}.</strong> {question.prompt}</p>
+            <p><strong>{index + 1}.</strong> <MathText>{question.prompt}</MathText></p>
             <div className="option-grid">
               {question.options.map((option, optionIndex) => (
                 <button
@@ -59,11 +60,11 @@ export default function Assessment({ questions, testId, title = "Quick check", l
                   aria-pressed={chosen === optionIndex}
                   key={option}
                 >
-                  <span>{String.fromCharCode(65 + optionIndex)}</span>{option}
+                  <span>{String.fromCharCode(65 + optionIndex)}</span><MathText>{option}</MathText>
                 </button>
               ))}
             </div>
-            {submitted && <p className={correct ? "feedback correct-text" : "feedback incorrect-text"}><strong>{correct ? "Correct." : "Not yet."}</strong> {question.explanation}</p>}
+            {submitted && <p className={correct ? "feedback correct-text" : "feedback incorrect-text"}><strong>{correct ? "Correct." : "Not yet."}</strong> <MathText>{question.explanation}</MathText></p>}
           </article>
         );
       })}

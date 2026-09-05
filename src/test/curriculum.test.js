@@ -3,6 +3,7 @@ import path from "node:path";
 import katex from "katex";
 import { describe, expect, it } from "vitest";
 import { chapters, coursePacks, formulaList, getChapterLessons, getLessonQuestions, lessonById, lessons, projects, terminology } from "../content/index.js";
+import { CONTENT_AUDIT_STATES, GUIDED_CONTENT_AUDIT, GUIDED_LESSON_IDS } from "../content/guidedEnhancements.js";
 
 describe("curriculum integrity", () => {
   it("contains the full progressive roadmap", () => {
@@ -43,6 +44,107 @@ describe("curriculum integrity", () => {
       }
     }
     expect(Object.keys(terminology).length).toBeGreaterThanOrEqual(57);
+  });
+
+  it("gives Foundations and the first ML bridge complete guided structure", () => {
+    const bridgeIds = [
+      "scalars-vectors-tensors", "vector-arithmetic", "vector-magnitude-distance", "dot-product-angle",
+      "matrix-anatomy-types", "linear-transformations", "change-slope-limits", "derivative-definition",
+      "partial-derivatives", "gradients-directional-change", "chain-rule-computational-graphs", "gradient-descent-learning-rate",
+      "unit-vectors-normalization", "matrix-vector-multiplication", "derivative-rules", "tangents-stationary-points",
+      "scalar-vector-functions", "loss-functions", "jacobian-matrices", "hessians-convexity",
+      "matrix-matrix-multiplication", "transpose-symmetry", "determinant-collapse", "inverse-systems",
+      "rank-column-null", "basis-coordinates", "change-of-basis", "composition-matrix-powers",
+      "eigenvalues-eigenvectors", "eigendecomposition", "covariance-matrices-pca",
+      "experiments-outcomes-events", "set-operations-counting", "probability-rules", "conditional-probability", "bayes-theorem",
+      "random-variables", "probability-mass-function", "probability-density-function", "cumulative-distribution-function",
+      "expected-value", "variance-population-sample", "standard-deviation", "bernoulli-binomial",
+      "normal-z-scores", "covariance-correlation", "sampling-estimators-clt", "confidence-intervals",
+      "ml-workflow", "linear-regression-ml", "logistic-classification", "knn-distance", "naive-bayes",
+      "trees-ensembles", "support-vector-machines", "clustering-unsupervised", "model-selection-generalization"
+    ];
+    const foundationLessons = getChapterLessons("foundations");
+    const guidedLessons = [...foundationLessons, ...bridgeIds.map((id) => lessonById[id]), ...getChapterLessons("deep-learning")];
+    expect(foundationLessons).toHaveLength(9);
+    expect(guidedLessons).toHaveLength(73);
+    for (const lesson of guidedLessons) {
+      expect(lesson.beginnerSteps.map((step) => step.type)).toEqual([
+        "orientation", "scenario", "concept", "worked-example", "check", "notation", "recap"
+      ]);
+      expect(new Set(lesson.beginnerSteps.map((step) => step.id)).size).toBe(7);
+      expect(lesson.beginnerSteps.find((step) => step.type === "worked-example").example).toBeTruthy();
+      const notation = lesson.beginnerSteps.find((step) => step.type === "notation");
+      expect(notation.notation.readAs).toBeTruthy();
+      expect(notation.notation.symbols.length).toBeGreaterThan(0);
+      expect(notation.mlExample).toBeTruthy();
+      expect(lesson.beginnerSteps.filter((step) => step.check).length).toBeGreaterThanOrEqual(4);
+      expect(lesson.beginnerSteps.find((step) => step.type === "recap").recapQuestions).toHaveLength(3);
+      const interactiveStep = lesson.beginnerSteps.find((step) => step.widget);
+      if (interactiveStep) {
+        expect(interactiveStep.notation?.expression).toBeTruthy();
+        expect(interactiveStep.notation?.readAs).toBeTruthy();
+        expect(Array.isArray(interactiveStep.formulaIds)).toBe(true);
+      }
+    }
+    expect(lessons.filter((lesson) => lesson.beginnerSteps?.length)).toHaveLength(73);
+    expect(lessonById["graphs-slope-intercept"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("slope-explorer");
+    expect(lessonById["gradients-directional-change"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("gradient-explorer");
+    expect(lessonById["unit-vectors-normalization"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("unit-vector-explorer");
+    expect(lessonById["matrix-vector-multiplication"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("matrix-vector-explorer");
+    expect(lessonById["tangents-stationary-points"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("tangent-explorer");
+    expect(lessonById["loss-functions"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("loss-explorer");
+    expect(lessonById["jacobian-matrices"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("jacobian-explorer");
+    expect(lessonById["hessians-convexity"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("curvature-explorer");
+    expect(lessonById["gradient-descent-learning-rate"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("learning-rate-explorer");
+    expect(getChapterLessons("calculus-optimization").every((lesson) => lesson.beginnerSteps?.length === 7)).toBe(true);
+    expect(getChapterLessons("linear-algebra").every((lesson) => lesson.beginnerSteps?.length === 7)).toBe(true);
+    expect(getChapterLessons("probability-statistics").every((lesson) => lesson.beginnerSteps?.length === 7)).toBe(true);
+    expect(getChapterLessons("classical-ml").every((lesson) => lesson.beginnerSteps?.length === 7)).toBe(true);
+    expect(lessonById["determinant-collapse"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("determinant-explorer");
+    expect(lessonById["inverse-systems"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("inverse-system-explorer");
+    expect(lessonById["basis-coordinates"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("basis-explorer");
+    expect(lessonById["eigenvalues-eigenvectors"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("eigenvector-explorer");
+    expect(lessonById["covariance-matrices-pca"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("pca-explorer");
+    expect(lessonById["experiments-outcomes-events"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("sample-space-explorer");
+    expect(lessonById["set-operations-counting"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("set-overlap-explorer");
+    expect(lessonById["probability-rules"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("probability-rule-explorer");
+    expect(lessonById["conditional-probability"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("conditional-explorer");
+    expect(lessonById["bayes-theorem"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("bayes-explorer");
+    expect(lessonById["random-variables"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("random-variable-explorer");
+    expect(lessonById["probability-mass-function"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("pmf-explorer");
+    expect(lessonById["probability-density-function"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("pdf-explorer");
+    expect(lessonById["cumulative-distribution-function"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("cdf-explorer");
+    expect(lessonById["expected-value"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("expected-value-explorer");
+    expect(lessonById["variance-population-sample"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("variance-explorer");
+    expect(lessonById["standard-deviation"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("standard-deviation-explorer");
+  });
+
+  it("keeps all guided everyday stories and ML bridges at the completed teaching standard", () => {
+    expect(GUIDED_LESSON_IDS).toHaveLength(73);
+    expect(new Set(GUIDED_LESSON_IDS).size).toBe(73);
+    expect(Object.keys(GUIDED_CONTENT_AUDIT)).toEqual(GUIDED_LESSON_IDS);
+    for (const lessonId of GUIDED_LESSON_IDS) {
+      const lesson = lessonById[lessonId];
+      const everyday = lesson.beginnerSteps.find((step) => step.type === "scenario").everyday;
+      const concept = lesson.beginnerSteps.find((step) => step.type === "concept");
+      const bridge = lesson.beginnerSteps.find((step) => step.type === "notation").mlBridge;
+      expect(everyday.setup.length).toBeGreaterThanOrEqual(2);
+      expect(everyday.quantities.length).toBeGreaterThanOrEqual(2);
+      expect(everyday.walkthrough.every((item) => item.action && item.reason)).toBe(true);
+      expect(JSON.stringify(everyday.quantities)).toMatch(/[0-9₀-₉⁰-⁹]/);
+      expect(bridge.terms.length).toBeGreaterThanOrEqual(2);
+      expect(bridge.terms.every((item) => item.definition && item.lessonId && ["preview", "review"].includes(item.state))).toBe(true);
+      expect(bridge.mapping.length).toBeGreaterThanOrEqual(2);
+      expect(bridge.walkthrough.every((item) => item.action && item.reason)).toBe(true);
+      expect(JSON.stringify(bridge.mapping)).toMatch(/[0-9₀-₉⁰-⁹]/);
+      expect(new Set(concept.body).size).toBe(concept.body.length);
+      expect(JSON.stringify({ everyday, bridge })).not.toMatch(/\b(obvious|trivial|simply)\b/i);
+      for (const [field, status] of Object.entries(GUIDED_CONTENT_AUDIT[lessonId])) {
+        if (field === "chapterId") continue;
+        expect(CONTENT_AUDIT_STATES).toContain(status);
+        expect(status).toBe("done");
+      }
+    }
   });
 
   it("orders the required explanation chains before their dependants", () => {
@@ -124,6 +226,24 @@ describe("curriculum integrity", () => {
       if (content.pythonLab?.runtime === "notebook") {
         expect(fs.existsSync(path.resolve(content.pythonLab.notebookPath))).toBe(true);
       }
+    }
+  });
+});
+
+describe("Deep Learning teaching audit", () => {
+  it("provides explicit reasons, quantities, definitions, and working review links", () => {
+    for (const lesson of getChapterLessons("deep-learning")) {
+      expect(lesson.beginnerSteps).toHaveLength(7);
+      const [start, story, concept, worked, , notation] = lesson.beginnerSteps;
+      expect(start.body[0].length).toBeGreaterThan(100);
+      expect(story.everyday.quantities.length).toBeGreaterThanOrEqual(2);
+      expect(worked.example.walkthrough.every(({ action, reason }) => action && reason)).toBe(true);
+      expect(notation.mlBridge.walkthrough.every(({ action, reason }) => action && reason)).toBe(true);
+      for (const term of notation.mlBridge.terms) expect(lessonById[term.lessonId].beginnerSteps.some((step) => step.id === "plain-idea")).toBe(true);
+      expect(concept.vocabulary.every((term) => term.definition && term.example && term.nonExample)).toBe(true);
+      expect(notation.formulaIds).toEqual([...new Set(Object.values(lesson.levels).flatMap((level) => level.formulaIds))]);
+      expect(Object.values(lesson.levels).some((level) => level.pythonLab)).toBe(true);
+      expect(GUIDED_CONTENT_AUDIT[lesson.id].chapterId).toBe("deep-learning");
     }
   });
 });

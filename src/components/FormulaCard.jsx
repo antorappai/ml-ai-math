@@ -1,5 +1,5 @@
 import React from "react";
-import { BlockMath, InlineMath } from "./Math.jsx";
+import { BlockMath, InlineMath, MathText } from "./Math.jsx";
 
 export default function FormulaCard({ formula, compact = false }) {
   if (!formula) return null;
@@ -30,19 +30,19 @@ export default function FormulaCard({ formula, compact = false }) {
         <div className="formula-detail-grid">
           <section>
             <h4>Beginner example</h4>
-            <p>{formula.beginnerExample}</p>
+            <p><MathText>{formula.beginnerExample}</MathText></p>
           </section>
           <section>
             <h4>How to process it</h4>
-            <ol>{formula.derivation.map((step) => <li key={step}>{step}</li>)}</ol>
+            <ol>{formula.derivation.map((step) => <li key={step}><MathText>{step}</MathText></li>)}</ol>
           </section>
           <section>
             <h4>Signs & conditions</h4>
-            <ul>{[...formula.assumptions, ...formula.signs].map((item) => <li key={item}>{item}</li>)}</ul>
+            <ul>{[...formula.assumptions, ...formula.signs].map((item) => <li key={item}><MathText>{item}</MathText></li>)}</ul>
           </section>
           <section>
             <h4>Common mistakes</h4>
-            <ul>{formula.mistakes.map((item) => <li key={item}>{item}</li>)}</ul>
+            <ul>{formula.mistakes.map((item) => <li key={item}><MathText>{item}</MathText></li>)}</ul>
           </section>
         </div>
       )}

@@ -1,5 +1,6 @@
 import { defineLesson, level } from "./schema.js";
 import { buildExamQuestions, buildFoundationQuestions, buildProblems } from "./questionBank.js";
+import { buildBeginnerSteps } from "./foundationGuides.js";
 
 export const vocab = (id, name, definition, analogy, example, nonExample, mlConnection, prerequisites = []) => ({
   id, name, definition, analogy, example, nonExample, mlConnection, prerequisites,
@@ -46,6 +47,7 @@ export function beginnerLesson(seed) {
   const questions = buildFoundationQuestions(seed.id, seed.vocabulary, seed.misconceptions[0], seed.ml);
   const problems = buildProblems(seed.id, examples, seed.vocabulary, seed.ml);
   const exams = buildExamQuestions(seed.id, examples, seed.misconceptions[0]);
+  const beginnerSteps = buildBeginnerSteps(seed, examples, questions);
   const levelConfigs = [
     { key: "basics", q: questions.slice(0, 2), p: problems.slice(0, 1), exam: exams[0] },
     { key: "core", q: questions.slice(2, 4), p: problems.slice(1, 3), exam: exams[1] },
@@ -65,6 +67,7 @@ export function beginnerLesson(seed) {
     scenario: { title: seed.realWorld.title, body: seed.realWorld.body, mlParallel: seed.ml },
     mlConnection: seed.ml,
     vocabulary: seed.vocabulary,
+    beginnerSteps,
     projectIds: seed.projectIds || [],
     levels: Object.fromEntries(levelConfigs.map(({ key, q, p, exam }, index) => [key, level({
       title: key[0].toUpperCase() + key.slice(1),

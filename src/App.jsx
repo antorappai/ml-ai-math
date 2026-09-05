@@ -8,6 +8,7 @@ import LessonPage from "./pages/LessonPage.jsx";
 import FormulaLibraryPage from "./pages/FormulaLibraryPage.jsx";
 import PracticePage from "./pages/PracticePage.jsx";
 import ProjectsPage from "./pages/ProjectsPage.jsx";
+import PythonLibraryPage from "./pages/PythonLibraryPage.jsx";
 import CoursePackPage from "./pages/CoursePackPage.jsx";
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="chapters/:chapterId" element={<ChapterPage />} />
             <Route path="lessons/:lessonId/:level" element={<LessonPage />} />
+            <Route path="python" element={<PythonLibraryPage />} />
             <Route path="practice" element={<PracticePage />} />
             <Route path="formulas" element={<FormulaLibraryPage />} />
             <Route path="projects" element={<ProjectsPage />} />

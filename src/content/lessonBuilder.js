@@ -1,4 +1,5 @@
 import { defineLesson, level, mcq } from "./schema.js";
+import { buildProgressiveBeginnerSteps } from "./foundationGuides.js";
 
 export function check(id, prompt, options, answerIndex, explanation, skill = "concept") {
   return mcq(id, prompt, options, answerIndex, explanation, skill);
@@ -34,6 +35,12 @@ export function progressiveLesson({
   advanced,
   projectIds = []
 }) {
+  const levels = {
+    basics: level({ title: "Basics", ...basics, example: connectExampleToStory(basics.example, scenario, mlConnection) }),
+    core: level({ title: "Core", ...core, example: connectExampleToStory(core.example, scenario, mlConnection) }),
+    advanced: level({ title: "Advanced", ...advanced, example: connectExampleToStory(advanced.example, scenario, mlConnection) })
+  };
+  const beginnerSteps = buildProgressiveBeginnerSteps({ id, prerequisites, scenario, mlConnection }, levels);
   return defineLesson({
     id,
     slug: id,
@@ -46,10 +53,7 @@ export function progressiveLesson({
     scenario,
     mlConnection,
     projectIds,
-    levels: {
-      basics: level({ title: "Basics", ...basics, example: connectExampleToStory(basics.example, scenario, mlConnection) }),
-      core: level({ title: "Core", ...core, example: connectExampleToStory(core.example, scenario, mlConnection) }),
-      advanced: level({ title: "Advanced", ...advanced, example: connectExampleToStory(advanced.example, scenario, mlConnection) })
-    }
+    beginnerSteps,
+    levels
   });
 }

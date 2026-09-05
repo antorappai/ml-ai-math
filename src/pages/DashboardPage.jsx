@@ -1,79 +1,75 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { chapters, formulaList, lessonById } from "../content/index.js";
+import { chapters, getChapterLessons, lessonById, lessons } from "../content/index.js";
 import { useMastery } from "../state/mastery.js";
 
-const essentials = ["vector-magnitude", "dot-product", "matrix-product", "determinant", "derivative-definition", "gradient", "expected-value", "variance", "standard-deviation", "z-score", "bayes", "linear-regression", "sigmoid", "backprop", "attention"];
+function guidedLessonComplete(mastery, lesson) {
+  return lesson.beginnerSteps?.every((step) => mastery.completedSteps?.[lesson.id]?.[step.id]);
+}
 
 export default function DashboardPage() {
-  const { mastery, recommendation, weakSkills } = useMastery();
+  const { mastery, recommendation } = useMastery();
+  const foundations = chapters.find((chapter) => chapter.id === "foundations");
+  const foundationLessons = getChapterLessons(foundations.id);
+  const laterChapters = chapters.filter((chapter) => chapter.id !== foundations.id);
+  const guidedLessons = lessons.filter((lesson) => lesson.beginnerSteps?.length);
   const next = lessonById[recommendation.lessonId];
-  const lessonIsComplete = (lessonId) => ["basics", "core", "advanced"].every((level) => mastery.completedLevels[lessonId]?.[level]);
-  const completed = chapters.flatMap((chapter) => chapter.lessonIds).filter(lessonIsComplete).length;
-  const total = chapters.reduce((sum, chapter) => sum + chapter.lessonIds.length, 0);
+  const nextStep = next.beginnerSteps?.find((step) => step.id === recommendation.level);
+  const completedLessons = foundationLessons.filter((lesson) => guidedLessonComplete(mastery, lesson)).length;
+  const completedGuidedLessons = guidedLessons.filter((lesson) => guidedLessonComplete(mastery, lesson)).length;
+  const visitedGuidedSteps = guidedLessons.reduce((count, lesson) => count + lesson.beginnerSteps.filter((step) => mastery.completedSteps?.[lesson.id]?.[step.id]).length, 0);
+  const totalGuidedSteps = guidedLessons.reduce((count, lesson) => count + lesson.beginnerSteps.length, 0);
+  const nextPath = next.beginnerSteps?.length ? `/lessons/${next.id}/${nextStep?.id || "start"}` : `/lessons/${next.id}/study`;
 
   return (
-    <div className="page dashboard-page">
-      <section className="dashboard-hero">
-        <div className="hero-copy">
-          <p className="eyebrow light">Master's-level ML, built from the ground up</p>
-          <h1>Learn the math.<br />Build the model.<br /><em>Explain both.</em></h1>
-          <p>Start with plain-language intuition, decode real mathematical notation, implement it in Python, then prove your understanding through exams and projects.</p>
-          <div className="button-row">
-            <Link className="button primary light-button" to={`/lessons/${next.id}/${recommendation.level}`}>Continue: {next.title}</Link>
-            <Link className="button ghost-light" to="/practice">Take a mixed mock</Link>
-          </div>
+    <div className="page learning-home">
+      <header className="learning-home-heading">
+        <p className="section-label">Your learning path</p>
+        <h1>Learn the maths behind machine learning—one idea at a time.</h1>
+        <p>Every Foundations lesson begins with an everyday example. Symbols and ML applications come after the idea makes sense.</p>
+      </header>
+
+      <section className="continue-panel" aria-labelledby="continue-title">
+        <div>
+          <p className="section-label">Continue learning</p>
+          <h2 id="continue-title">{next.title}</h2>
+          <p>{nextStep?.title || next.subtitle}</p>
+          <Link className="button primary-action" to={nextPath}>{visitedGuidedSteps ? "Continue lesson" : "Start with the first lesson"}</Link>
         </div>
-        <aside className="progress-orbit">
-          <span>Current mastery</span>
-          <strong>{Math.round((completed / total) * 100)}%</strong>
-          <div className="progress-track"><i style={{ width: `${(completed / total) * 100}%` }} /></div>
-          <p>{completed} of {total} lessons completed</p>
-        </aside>
+        <div className="foundation-progress">
+          <span>Guided-path progress</span>
+          <strong>{completedGuidedLessons} of {guidedLessons.length} lessons</strong>
+          <div><i style={{ width: `${(visitedGuidedSteps / totalGuidedSteps) * 100}%` }} /></div>
+          <small>{visitedGuidedSteps} of {totalGuidedSteps} small steps visited · Foundations {completedLessons}/{foundationLessons.length}</small>
+        </div>
       </section>
 
-      <section className="start-grid">
-        <article className="start-card featured">
-          <span className="card-index">01</span><p className="eyebrow">Recommended next</p>
-          <h2>{next.title}</h2><p>{next.subtitle}</p>
-          <Link to={`/lessons/${next.id}/study`}>Open lesson →</Link>
-        </article>
-        <article className="start-card">
-          <span className="card-index">02</span><p className="eyebrow">Python practice</p>
-          <h2>Math becomes code</h2><p>Run NumPy and scikit-learn in-browser; use prepared Colab notebooks for PyTorch.</p>
-          <Link to="/chapters/classical-ml">Start coding →</Link>
-        </article>
-        <article className="start-card">
-          <span className="card-index">03</span><p className="eyebrow">Weak-area coach</p>
-          <h2>{weakSkills.length ? weakSkills[0].skill : "Build your first signal"}</h2>
-          <p>{weakSkills.length ? `${weakSkills[0].count} incorrect attempt(s) detected here.` : "Complete checks and the studio will identify what to revise."}</p>
-          <Link to="/practice">Open revision set →</Link>
-        </article>
-      </section>
-
-      <section className="dashboard-section">
-        <div className="section-heading"><div><p className="eyebrow">Progressive roadmap</p><h2>From symbols to transformers</h2></div><p>Real-world meaning → formal notation → practice → code.</p></div>
-        <div className="chapter-grid">
-          {chapters.map((chapter) => {
-            const chapterDone = chapter.lessonIds.filter(lessonIsComplete).length;
-            const chapterTotal = chapter.lessonIds.length;
-            return <Link className={`chapter-card accent-${chapter.accent}`} to={`/chapters/${chapter.id}`} key={chapter.id}><span>Phase {chapter.phase}</span><h3>{chapter.title}</h3><p>{chapter.purpose}</p><div className="mini-progress"><i style={{ width: `${(chapterDone / chapterTotal) * 100}%` }} /></div><small>{chapterDone}/{chapterTotal} lessons</small></Link>;
+      <section className="foundation-roadmap" aria-labelledby="roadmap-title">
+        <div className="quiet-section-heading"><div><p className="section-label">Start from the beginning</p><h2 id="roadmap-title">Foundations roadmap</h2></div><p>Nine short lessons build the language needed for later ML topics.</p></div>
+        <ol className="roadmap-list">
+          {foundationLessons.map((lesson, index) => {
+            const completed = guidedLessonComplete(mastery, lesson);
+            const currentStep = lesson.beginnerSteps.find((step) => !mastery.completedSteps?.[lesson.id]?.[step.id]) || lesson.beginnerSteps[0];
+            const lessonVisited = lesson.beginnerSteps.filter((step) => mastery.completedSteps?.[lesson.id]?.[step.id]).length;
+            return (
+              <li key={lesson.id} className={completed ? "complete" : ""}>
+                <Link to={`/lessons/${lesson.id}/${currentStep.id}`}>
+                  <span className="roadmap-number">{completed ? "✓" : index + 1}</span>
+                  <div><h3>{lesson.title}</h3><p>{lesson.subtitle}</p></div>
+                  <small>{completed ? "Completed" : lessonVisited ? `${lessonVisited}/7 steps` : "Not started"}</small>
+                </Link>
+              </li>
+            );
           })}
-        </div>
+        </ol>
       </section>
 
-      <section className="dashboard-section formula-checklist">
-        <div className="section-heading"><div><p className="eyebrow">Foundation audit</p><h2>Core formula checklist</h2></div><Link to="/formulas">Search all {formulaList.length} formulas →</Link></div>
-        <div className="checklist-grid">
-          {essentials.map((id) => {
-            const formula = formulaList.find((item) => item.id === id);
-            const confident = mastery.formulaConfidence[id];
-            return <Link to={`/formulas?focus=${id}`} key={id} className="checklist-item"><span className={confident ? "checked" : ""}>{confident ? "✓" : "○"}</span><div><strong>{formula.label}</strong><small>{formula.category} · {confident || "not rated"}</small></div></Link>;
-          })}
+      <section className="later-learning" aria-labelledby="later-title">
+        <div className="quiet-section-heading"><div><p className="section-label">When you feel ready</p><h2 id="later-title">Continue into ML mathematics</h2></div><p>These chapters remain available, but Foundations is the recommended starting point.</p></div>
+        <div className="later-chapter-grid">
+          {laterChapters.map((chapter) => <Link to={`/chapters/${chapter.id}`} key={chapter.id}><span>Phase {chapter.phase}</span><h3>{chapter.shortTitle}</h3><p>{chapter.purpose}</p></Link>)}
         </div>
       </section>
-
-      <section className="outcome-banner"><p className="eyebrow light">What this prepares you for</p><h2>Read graduate ML notation, solve exam questions, implement models, and defend your decisions.</h2><div><Link className="button light-button" to="/projects">Browse guided projects</Link><Link className="button ghost-light" to="/course-packs/masters-math-core">Open course pack</Link></div></section>
     </div>
   );
 }

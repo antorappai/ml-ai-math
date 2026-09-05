@@ -55,7 +55,7 @@ export const classicalMlLessons = [
       summary: "Predict a continuous number using a weighted sum.",
       concepts: ["Weights describe conditional feature contributions.", "Residual equals actual minus predicted.", "Intercept is the baseline prediction."],
       formulaIds: ["linear-regression", "mse"],
-      example: { title: "Make a prediction", prompt: "yhat=2x+5 for x=4.", steps: ["Multiply 2 by 4.", "Add 5."], answer: "13", interpretation: "A one-unit x increase raises prediction by two." },
+      example: { title: "Make a prediction", prompt: "\\(\\hat{y}=2x+5\\) for \\(x=4\\).", steps: ["Multiply 2 by 4.", "Add 5."], answer: "13", interpretation: "A one-unit x increase raises prediction by two." },
       pythonLab: sklearnLab({ title: "Fit linear regression", goal: "Learn slope and intercept.", code: "import numpy as np\nfrom sklearn.linear_model import LinearRegression\nX = np.array([[1],[2],[3],[4]])\ny = np.array([3,5,7,9])\nmodel = LinearRegression().fit(X, y)\nprint(model.coef_)\nprint(model.intercept_)\nprint(model.predict([[5]]))", output: "[2.]\n1.0\n[11.]", explanation: "The model recovers y=2x+1." }),
       questions: [check("linreg-b1", "What is a residual?", ["Weight minus feature", "Actual value minus prediction", "Mean target", "Learning rate"], 1, "Residuals are observed prediction errors.")],
       examNotes: ["Keep prediction, residual, and loss as separate quantities."]

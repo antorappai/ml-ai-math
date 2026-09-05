@@ -30,3 +30,13 @@ export function InlineMath({ children, className }) {
 export function BlockMath({ children, className }) {
   return <MathMarkup latex={String(children)} displayMode className={className} />;
 }
+
+// Only explicitly delimited mathematics is parsed. Ordinary prose, prices, and
+// Python code are never guessed to be TeX.
+export function MathText({ children }) {
+  const text = String(children ?? "");
+  const parts = text.split(/(\\\([\s\S]*?\\\))/g);
+  return <>{parts.map((part, index) => part.startsWith("\\(") && part.endsWith("\\)")
+    ? <InlineMath key={index}>{part.slice(2, -2)}</InlineMath>
+    : <React.Fragment key={index}>{part}</React.Fragment>)}</>;
+}

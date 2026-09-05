@@ -1,9 +1,18 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { chapters, lessonById, lessons } from "../content/index.js";
 
-export const STORAGE_KEY = "ml-mastery-progress-v3";
-export const MASTERY_VERSION = 3;
-const PREVIOUS_STORAGE_KEY = "ml-mastery-progress-v2";
+export const STORAGE_KEY = "ml-mastery-progress-v12";
+export const MASTERY_VERSION = 12;
+const PREVIOUS_STORAGE_KEY = "ml-mastery-progress-v11";
+const LEGACY_V10_STORAGE_KEY = "ml-mastery-progress-v10";
+const LEGACY_V9_STORAGE_KEY = "ml-mastery-progress-v9";
+const LEGACY_V8_STORAGE_KEY = "ml-mastery-progress-v8";
+const LEGACY_V7_STORAGE_KEY = "ml-mastery-progress-v7";
+const LEGACY_V6_STORAGE_KEY = "ml-mastery-progress-v6";
+const LEGACY_V5_STORAGE_KEY = "ml-mastery-progress-v5";
+const LEGACY_V4_STORAGE_KEY = "ml-mastery-progress-v4";
+const LEGACY_V3_STORAGE_KEY = "ml-mastery-progress-v3";
+const LEGACY_V2_STORAGE_KEY = "ml-mastery-progress-v2";
 const LEGACY_PHASE_ONE_IDS = new Set([
   "math-language", "functions-graphs", "algebra-logs", "vectors-geometry", "matrices-operations",
   "linear-transformations", "eigen-pca", "derivatives-rates", "multivariable-gradients", "optimization-loss",
@@ -38,6 +47,9 @@ export function emptyMastery() {
   return {
     version: MASTERY_VERSION,
     completedLevels: {},
+    completedSteps: {},
+    lastGuidedSteps: {},
+    guidedCheckAttempts: {},
     quizScores: {},
     incorrectAttempts: {},
     formulaConfidence: {},
@@ -46,6 +58,22 @@ export function emptyMastery() {
     legacyExposure: {},
     lastVisited: null
   };
+}
+
+function mapCompletedGuidedSteps(completedLevels = {}, existingSteps = {}) {
+  const completedSteps = Object.fromEntries(
+    Object.entries(existingSteps).map(([lessonId, steps]) => [lessonId, { ...steps }])
+  );
+  for (const [lessonId, levels] of Object.entries(completedLevels)) {
+    const steps = lessonById[lessonId]?.beginnerSteps || [];
+    if (steps.length && ["basics", "core", "advanced"].every((level) => levels?.[level])) {
+      completedSteps[lessonId] = {
+        ...Object.fromEntries(steps.map((step) => [step.id, true])),
+        ...completedSteps[lessonId]
+      };
+    }
+  }
+  return completedSteps;
 }
 
 export function migrateMastery(storage = window.localStorage) {
@@ -59,6 +87,133 @@ export function migrateMastery(storage = window.localStorage) {
 
   try {
     const previous = JSON.parse(storage.getItem(PREVIOUS_STORAGE_KEY));
+    if (previous?.version === 11) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels, previous.completedSteps)
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V10_STORAGE_KEY));
+    if (previous?.version === 10) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels, previous.completedSteps)
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V9_STORAGE_KEY));
+    if (previous?.version === 9) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels, previous.completedSteps)
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V8_STORAGE_KEY));
+    if (previous?.version === 8) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels, previous.completedSteps)
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V7_STORAGE_KEY));
+    if (previous?.version === 7) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels, previous.completedSteps)
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V6_STORAGE_KEY));
+    if (previous?.version === 6) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels, previous.completedSteps)
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V5_STORAGE_KEY));
+    if (previous?.version === 5) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels, previous.completedSteps)
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V4_STORAGE_KEY));
+    if (previous?.version === 4) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels, previous.completedSteps)
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V3_STORAGE_KEY));
+    if (previous?.version === 3) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels),
+        guidedCheckAttempts: {}
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V2_STORAGE_KEY));
     if (previous?.version === 2) {
       const completedLevels = Object.fromEntries(
         Object.entries(previous.completedLevels || {}).filter(([lessonId]) => !LEGACY_PHASE_ONE_IDS.has(lessonId))
@@ -73,6 +228,7 @@ export function migrateMastery(storage = window.localStorage) {
         ...previous,
         version: MASTERY_VERSION,
         completedLevels,
+        completedSteps: mapCompletedGuidedSteps(completedLevels),
         legacyExposure,
         lastVisited: mappedLastLesson ? { lessonId: mappedLastLesson, level: previous.lastVisited?.level || "basics" } : null
       };
@@ -98,6 +254,12 @@ export function getWeakSkills(state) {
 export function getRecommendedLesson(state) {
   for (const chapter of chapters) {
     for (const lessonId of chapter.lessonIds) {
+      const guidedSteps = lessonById[lessonId]?.beginnerSteps || [];
+      if (guidedSteps.length) {
+        const nextStep = guidedSteps.find((step) => !state.completedSteps?.[lessonId]?.[step.id]);
+        if (nextStep) return { lessonId, level: nextStep.id };
+        continue;
+      }
       const completed = state.completedLevels[lessonId] || {};
       if (!["basics", "core", "advanced"].every((level) => completed[level])) return { lessonId, level: "study" };
     }
@@ -122,11 +284,45 @@ export function MasteryProvider({ children }) {
     visit(lessonId, level) {
       update((state) => ({ ...state, lastVisited: { lessonId, level } }));
     },
+    visitStep(lessonId, stepId) {
+      update((state) => ({
+        ...state,
+        lastVisited: { lessonId, level: stepId },
+        lastGuidedSteps: { ...state.lastGuidedSteps, [lessonId]: stepId },
+        completedSteps: {
+          ...state.completedSteps,
+          [lessonId]: { ...state.completedSteps?.[lessonId], [stepId]: true }
+        }
+      }));
+    },
     completeLevel(lessonId, level) {
       update((state) => ({ ...state, completedLevels: { ...state.completedLevels, [lessonId]: { ...state.completedLevels[lessonId], [level]: true } } }));
     },
     completeLesson(lessonId) {
-      update((state) => ({ ...state, completedLevels: { ...state.completedLevels, [lessonId]: { basics: true, core: true, advanced: true } } }));
+      const steps = lessonById[lessonId]?.beginnerSteps || [];
+      update((state) => ({
+        ...state,
+        completedLevels: { ...state.completedLevels, [lessonId]: { basics: true, core: true, advanced: true } },
+        completedSteps: steps.length ? {
+          ...state.completedSteps,
+          [lessonId]: Object.fromEntries(steps.map((step) => [step.id, true]))
+        } : state.completedSteps
+      }));
+    },
+    recordGuidedCheck(question, correct) {
+      update((state) => {
+        const current = state.guidedCheckAttempts?.[question.id];
+        const incorrectAttempts = { ...state.incorrectAttempts };
+        if (!correct) incorrectAttempts[question.id] = { skill: question.skill, count: (incorrectAttempts[question.id]?.count || 0) + 1 };
+        return {
+          ...state,
+          incorrectAttempts,
+          guidedCheckAttempts: {
+            ...state.guidedCheckAttempts,
+            [question.id]: { attempts: (current?.attempts || 0) + 1, correct, answeredAt: Date.now() }
+          }
+        };
+      });
     },
     recordAnswer(question, correct) {
       update((state) => {
