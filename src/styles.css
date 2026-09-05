@@ -573,3 +573,28 @@ summary { cursor: pointer; color: var(--green); font-weight: 700; }
   .step-navigation .next { white-space: normal; text-align: center; }
   .python-example-group .python-section { padding: 0 .7rem .7rem; }
 }
+
+/* Give every chapter equal prominence before the optional resume panel. */
+.chapter-first-home .learning-home-heading { max-width: none; margin-bottom: 1.4rem; }
+.chapter-first-home .learning-home-heading h1 { max-width: none; font-size: clamp(1.65rem, 3.2vw, 2.5rem); }
+.chapter-first-home .learning-home-heading > p:last-child { margin-bottom: 0; }
+.home-chapters > h2 { margin: 0 0 .8rem; font-size: 1.1rem; }
+.home-chapter-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
+.home-chapter-box { display: flex; flex-direction: column; min-width: 0; padding: 1.1rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); color: inherit; text-decoration: none; }
+.home-chapter-box:hover { border-color: var(--green); background: #eef2eb; }
+.home-chapter-box:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+.home-chapter-meta, .home-chapter-footer { display: flex; align-items: center; justify-content: space-between; gap: .5rem; font-size: .76rem; color: var(--muted); }
+.home-chapter-box h3 { margin: .6rem 0 .4rem; font-size: 1.2rem; }
+.home-chapter-box p { margin: 0 0 .8rem; color: var(--muted); font-size: .85rem; line-height: 1.5; }
+.home-chapter-footer { margin-top: auto; color: var(--green); font-weight: 600; }
+.chapter-first-home .continue-panel { margin-top: 1.5rem; }
+@media (max-width: 850px) {
+  .home-chapter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .home-chapter-grid { gap: .55rem; }
+  .home-chapter-box { padding: .8rem; }
+  .home-chapter-box h3 { font-size: 1rem; }
+  .home-chapter-box p { display: none; }
+  .home-chapter-meta { align-items: start; flex-direction: column; gap: .15rem; }
+}

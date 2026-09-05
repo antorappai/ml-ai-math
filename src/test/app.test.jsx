@@ -12,7 +12,13 @@ describe("routed application", () => {
   it("renders the dashboard launchpad", async () => {
     render(<App />);
     expect(await screen.findByRole("heading", { name: /Learn the maths behind machine learning/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Foundations roadmap" })).toBeInTheDocument();
+    const chapterGrid = screen.getByRole("region", { name: "Choose a chapter" });
+    expect(within(chapterGrid).getAllByRole("link")).toHaveLength(6);
+    for (const id of ["foundations", "linear-algebra", "calculus-optimization", "probability-statistics", "classical-ml", "deep-learning"]) {
+      expect(chapterGrid.querySelector(`a[href="#/chapters/${id}"]`)).toBeTruthy();
+    }
+    expect(screen.queryByRole("heading", { name: "Foundations roadmap" })).not.toBeInTheDocument();
+    expect(chapterGrid.compareDocumentPosition(document.querySelector(".continue-panel")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getByRole("link", { name: /Start with the first lesson/i })).toHaveAttribute("href", "#/lessons/numbers-signs/start");
   });
 

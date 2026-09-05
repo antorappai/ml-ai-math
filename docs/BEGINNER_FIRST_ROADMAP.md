@@ -106,6 +106,12 @@ One lesson offers both execution locations. There are **44 distinct per-lesson e
 
 Suggested next content additions: short labs for loss functions, conditional probability, and model selection. Add them when they clarify the mathematical idea; not every elementary lesson needs code.
 
+### Chapter-first homepage — 2026-09-05
+
+- All six chapters now appear as clickable boxes above the continue-learning panel, with lesson counts and saved completion counts. Foundations lessons remain available on their chapter page.
+- Desktop preview confirms all six boxes fit together. Responsive CSS uses two columns on smaller screens; a phone-size visual preview was not completed.
+- Validation: 72 tests passed and the production build passed.
+
 ### Remaining release work
 
 - Check responsive layout and keyboard focus in a real browser for story cards, term links, formula references, widgets, and Python companions. This session's UI checks ran in jsdom, not a visual browser.
