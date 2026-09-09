@@ -13,7 +13,7 @@ describe("routed application", () => {
     render(<App />);
     expect(await screen.findByRole("heading", { name: /Learn the maths behind machine learning/i })).toBeInTheDocument();
     const chapterGrid = screen.getByRole("region", { name: "Choose a chapter" });
-    expect(within(chapterGrid).getAllByRole("link")).toHaveLength(6);
+    expect(within(chapterGrid).getAllByRole("link")).toHaveLength(7);
     for (const id of ["foundations", "linear-algebra", "calculus-optimization", "probability-statistics", "classical-ml", "deep-learning"]) {
       expect(chapterGrid.querySelector(`a[href="#/chapters/${id}"]`)).toBeTruthy();
     }

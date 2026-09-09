@@ -125,3 +125,9 @@ Saved progress now uses `ml-mastery-progress-v12`. The v11 migration maps fully 
 ## Design rules
 
 Keep the warm neutral background, readable dark text, muted green accent, restrained borders, comfortable reading width, and minimal motion. Prefer clear teaching structure over decorative density. New graphs or Python labs should be added only when they clarify a concept and can be kept small enough for a beginner to explore.
+
+### NLP study unit — 2026-09-09
+
+- Added the supplied `classical_nlp_study_guide.md` unchanged as a separate NLP study unit, accessible from the homepage at `#/nlp`.
+- Its 17 numbered sections and Final Mental Model are presented as 18 individually navigable sections, with previous/next links and Markdown tables and examples.
+- No additional teaching content, labs, or assessments were authored. The existing 73 guided lessons and saved progress remain unchanged.

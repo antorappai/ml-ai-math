@@ -598,3 +598,14 @@ summary { cursor: pointer; color: var(--green); font-weight: 700; }
   .home-chapter-box p { display: none; }
   .home-chapter-meta { align-items: start; flex-direction: column; gap: .15rem; }
 }
+
+.nlp-page { max-width: 1100px; }
+.nlp-navigation { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.5rem 0; }
+.nlp-markdown { line-height: 1.75; overflow-wrap: anywhere; }
+.nlp-markdown h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+.nlp-markdown h2, .nlp-markdown h3, .nlp-markdown h4 { margin-top: 1.8rem; }
+.nlp-markdown pre { overflow-x: auto; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: .6rem; line-height: 1.5; }
+.nlp-markdown table { display: block; overflow-x: auto; border-collapse: collapse; margin: 1.5rem 0; }
+.nlp-markdown th, .nlp-markdown td { border: 1px solid var(--line); padding: .6rem; min-width: 120px; text-align: left; }
+.nlp-markdown blockquote { border-left: 3px solid var(--line); margin-left: 0; padding-left: 1rem; }
+.nlp-page .home-chapter-box h2 { font-size: 1.05rem; margin: 0; }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { chapters, getChapterLessons, lessonById, lessons } from "../content/index.js";
+import { nlpSections } from "../content/nlpGuide.js";
 import { useMastery } from "../state/mastery.js";
 
 function guidedLessonComplete(mastery, lesson) {
@@ -38,6 +39,7 @@ export default function DashboardPage() {
               <div className="home-chapter-footer"><span>{complete ? `${complete}/${chapterLessons.length} completed` : "Explore lessons"}</span><span aria-hidden="true">→</span></div>
             </Link>;
           })}
+          <Link className="home-chapter-box" to="/nlp"><div className="home-chapter-meta"><span>Study unit</span><span>{nlpSections.length} sections</span></div><h3>NLP</h3><p>Classical NLP Study Guide</p><div className="home-chapter-footer"><span>Explore sections</span><span aria-hidden="true">→</span></div></Link>
         </div>
       </section>
 

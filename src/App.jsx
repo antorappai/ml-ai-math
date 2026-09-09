@@ -11,6 +11,8 @@ import ProjectsPage from "./pages/ProjectsPage.jsx";
 import PythonLibraryPage from "./pages/PythonLibraryPage.jsx";
 import CoursePackPage from "./pages/CoursePackPage.jsx";
 
+import NlpPage from "./pages/NlpPage.jsx";
+
 export default function App() {
   return (
     <MasteryProvider>
@@ -21,6 +23,8 @@ export default function App() {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="chapters/:chapterId" element={<ChapterPage />} />
             <Route path="lessons/:lessonId/:level" element={<LessonPage />} />
+            <Route path="nlp" element={<NlpPage />} />
+            <Route path="nlp/:sectionId" element={<NlpPage />} />
             <Route path="python" element={<PythonLibraryPage />} />
             <Route path="practice" element={<PracticePage />} />
             <Route path="formulas" element={<FormulaLibraryPage />} />
