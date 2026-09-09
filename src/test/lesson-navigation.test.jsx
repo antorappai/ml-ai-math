@@ -90,3 +90,15 @@ describe("lesson navigation and grouped Python", () => {
     expect(pythonExamples(lessonById["functions-domain-range"])[0].levels).toHaveLength(3);
   });
 });
+
+it("renders all seven sections with a course sidebar without marking unseen sections complete", async () => {
+  window.location.hash = "#/lessons/numbers-signs/start";
+  render(<App />);
+  await screen.findByRole("heading", { name: "Start here" });
+  expect(document.querySelectorAll('.lesson-reading-section')).toHaveLength(7);
+  expect(screen.getByRole('navigation', { name: 'Course units and lessons' })).toBeInTheDocument();
+  expect(document.querySelectorAll('.course-sidebar details')).toHaveLength(6);
+  const state = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  expect(state.completedSteps['numbers-signs']).toEqual({ start: true });
+  expect(screen.getByRole('link', { name: 'NLP study guide →' })).toHaveAttribute('href', '#/nlp');
+});

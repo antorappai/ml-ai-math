@@ -1,8 +1,9 @@
 import { MathText } from "./Math.jsx";
-import React, { useState } from "react";
+import React, { useState, useId } from "react";
 import { useMastery } from "../state/mastery.js";
 
 export default function GuidedCheck({ question, compact = false }) {
+  const checkId = useId();
   const [answer, setAnswer] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const { recordGuidedCheck } = useMastery();
@@ -21,9 +22,9 @@ export default function GuidedCheck({ question, compact = false }) {
   }
 
   return (
-    <section className={`guided-check ${compact ? "compact" : ""}`} aria-labelledby={`check-${question.id}`}>
+    <section className={`guided-check ${compact ? "compact" : ""}`} aria-labelledby={`check-${checkId}`}>
       <p className="section-label">Your turn</p>
-      <h3 id={`check-${question.id}`}><MathText>{question.prompt}</MathText></h3>
+      <h3 id={`check-${checkId}`}><MathText>{question.prompt}</MathText></h3>
       <div className="guided-options">
         {question.options.map((option, index) => (
           <button

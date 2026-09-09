@@ -35,8 +35,9 @@ describe("routed application", () => {
     window.location.hash = "#/lessons/numbers-signs/everyday-story";
     render(<App />);
     expect(await screen.findByRole("heading", { name: "See it in everyday life" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /A quantity used to count/i }));
-    fireEvent.click(screen.getByRole("button", { name: "Check my answer" }));
+    const story = within(document.getElementById("reading-numbers-signs-everyday-story"));
+    fireEvent.click(story.getByRole("button", { name: /A quantity used to count/i }));
+    fireEvent.click(story.getByRole("button", { name: "Check my answer" }));
     expect(await screen.findByText("That’s right.")).toBeInTheDocument();
     expect(within(screen.getByRole("navigation", { name: "Lesson step navigation" })).getByRole("link", { name: /^Next/ })).toHaveAttribute("href", "#/lessons/numbers-signs/plain-idea");
   });
@@ -49,7 +50,7 @@ describe("routed application", () => {
     expect(screen.getByRole("region", { name: "Everyday example walkthrough" })).toBeInTheDocument();
     expect(screen.getByText("What the answer tells us")).toBeInTheDocument();
     expect(screen.getAllByText("Why:").length).toBeGreaterThan(0);
-    expect(screen.getByText(/12\/20=0.6/)).toBeInTheDocument();
+    expect(within(document.getElementById("reading-conditional-probability-everyday-story")).getByText(/12\/20=0.6/)).toBeInTheDocument();
   });
 
   it("defines unfamiliar ML terms and links previews without blocking progress", async () => {

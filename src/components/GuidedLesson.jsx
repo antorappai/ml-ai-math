@@ -1,8 +1,8 @@
 import LessonNavigation from "./LessonNavigation.jsx";
 import { adjacentLessons, lessonStart } from "../utils/lessonNavigation.js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { formulaById, lessonById } from "../content/index.js";
+import { chapters, formulaById, lessonById } from "../content/index.js";
 import { useMastery } from "../state/mastery.js";
 import { BlockMath, InlineMath, MathText } from "./Math.jsx";
 import FormulaCard from "./FormulaCard.jsx";
@@ -189,19 +189,45 @@ export default function GuidedLesson({ lesson, chapter, stepId }) {
   const { mastery, visitStep, completeLesson } = useMastery();
   const { next: nextLesson } = adjacentLessons(lesson);
   const steps = lesson.beginnerSteps;
-  const stepIndex = steps.findIndex((step) => step.id === stepId);
+  const [activeId, setActiveId] = useState(stepId);
+  const visitRef = useRef(visitStep);
+  visitRef.current = visitStep;
+  const stepIndex = steps.findIndex((step) => step.id === activeId) < 0 ? 0 : steps.findIndex((step) => step.id === activeId);
   const step = steps[stepIndex];
   const previous = steps[stepIndex - 1];
   const next = steps[stepIndex + 1];
   const completedCount = steps.filter((item) => mastery.completedSteps?.[lesson.id]?.[item.id]).length;
 
+  const jump = (id) => document.getElementById(`reading-${lesson.id}-${id}`)?.scrollIntoView?.({ block: "start", behavior: "instant" });
   useEffect(() => {
-    visitStep(lesson.id, step.id);
-    if (!/jsdom/i.test(window.navigator.userAgent)) window.scrollTo({ top: 0, behavior: "auto" });
-  }, [lesson.id, step.id]);
+    setActiveId(stepId);
+    visitRef.current(lesson.id, stepId);
+    jump(stepId);
+  }, [lesson.id, stepId]);
+
+  useEffect(() => {
+    let frame;
+    let last = stepId;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        let current = steps[0].id;
+        for (const item of steps) {
+          if (document.getElementById(`reading-${lesson.id}-${item.id}`)?.getBoundingClientRect().top <= 150) current = item.id;
+        }
+        if (current !== last) {
+          last = current;
+          setActiveId(current);
+          visitRef.current(lesson.id, current);
+        }
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(frame); };
+  }, [lesson.id, steps, stepId]);
 
   return (
-    <div className="guided-lesson-shell">
+    <div className="guided-lesson-shell scrolling-lesson">
       <header className="guided-lesson-header">
         <div className="guided-breadcrumb"><Link to="/dashboard">Learn</Link><span>/</span><Link to={`/chapters/${chapter.id}`}>{chapter.shortTitle}</Link></div>
         <div className="guided-title-row"><div><p>Lesson {lesson.order} of {chapter.lessonIds.length}</p><h1>{lesson.title}</h1></div><button type="button" className="outline-button" onClick={() => setOutlineOpen((value) => !value)} aria-expanded={outlineOpen} aria-controls="lesson-outline">Lesson outline</button></div>
@@ -211,14 +237,25 @@ export default function GuidedLesson({ lesson, chapter, stepId }) {
       <LessonNavigation lesson={lesson} />
       <div className="guided-lesson-layout">
         <aside id="lesson-outline" className={`lesson-outline ${outlineOpen ? "open" : ""}`} aria-label="Lesson steps">
+          <nav aria-label="Course units and lessons" className="course-sidebar">
+            <p>Course units</p>
+            {chapters.map(unit => <details key={`${lesson.id}-${unit.id}`} open={unit.id === chapter.id}>
+              <summary>{unit.shortTitle}</summary>
+              {unit.lessonIds.map(id => <Link key={id} to={lessonStartPath(id)} aria-current={id === lesson.id ? "page" : undefined}>{lessonById[id].title}</Link>)}
+            </details>)}
+            <Link to="/nlp">NLP study guide →</Link>
+          </nav>
           <p>Lesson steps</p>
-          <ol>{steps.map((item, index) => <li key={item.id}><Link className={`${item.id === step.id ? "active" : ""} ${mastery.completedSteps?.[lesson.id]?.[item.id] ? "visited" : ""}`} to={`/lessons/${lesson.id}/${item.id}`} onClick={() => setOutlineOpen(false)}><span>{mastery.completedSteps?.[lesson.id]?.[item.id] ? "✓" : index + 1}</span>{item.title}</Link></li>)}</ol>
+          <ol>{steps.map((item, index) => <li key={item.id}><Link className={`${item.id === step.id ? "active" : ""} ${mastery.completedSteps?.[lesson.id]?.[item.id] ? "visited" : ""}`} to={`/lessons/${lesson.id}/${item.id}`} onClick={() => { setOutlineOpen(false); jump(item.id); }}><span>{mastery.completedSteps?.[lesson.id]?.[item.id] ? "✓" : index + 1}</span>{item.title}</Link></li>)}</ol>
         </aside>
 
         <article className="guided-step">
-          <header><p className="step-count">Step {stepIndex + 1} of {steps.length}</p><h2>{step.title}</h2></header>
-          <div className="guided-step-content"><StepBody step={step} lesson={lesson} /></div>
-          {!next && <aside className="next-lesson-preview"><strong>{nextLesson ? "Up next" : "End of the course"}</strong><p>{nextLesson ? nextLesson.title : "You can revisit lessons, practise, or explore the Python examples."}</p>{nextLesson && nextLesson.chapterId !== lesson.chapterId && <p>You have reached the end of this unit. Continue into the next unit.</p>}</aside>}
+          {steps.map((item, index) => <section className="lesson-reading-section" id={`reading-${lesson.id}-${item.id}`} key={`${lesson.id}-${item.id}`} aria-labelledby={`reading-title-${lesson.id}-${item.id}`}>
+            <header><p className="step-count">Step {index + 1} of {steps.length}</p><h2 id={`reading-title-${lesson.id}-${item.id}`}>{item.title}</h2></header>
+            <div className="guided-step-content"><StepBody step={item} lesson={lesson} /></div>
+          </section>)}
+          {<aside className="next-lesson-preview"><strong>{nextLesson ? "Up next" : "End of the course"}</strong><p>{nextLesson ? nextLesson.title : "You can revisit lessons, practise, or explore the Python examples."}</p>{nextLesson && nextLesson.chapterId !== lesson.chapterId && <p>You have reached the end of this unit. Continue into the next unit.</p>}</aside>}
+          {next && <div className="reading-finish"><Link className="button" to={nextLesson ? lessonStart(nextLesson) : "/dashboard"} onClick={() => completeLesson(lesson.id)}>{nextLesson ? "Finish & next lesson →" : "Finish course →"}</Link></div>}
           <nav className="step-navigation" aria-label="Lesson step navigation">
             {previous ? <Link className="back" to={`/lessons/${lesson.id}/${previous.id}`}>← Back</Link> : <Link className="back" to={`/chapters/${chapter.id}`}>← Course map</Link>}
             {next ? <Link className="skip" to={`/lessons/${lesson.id}/${next.id}`}>Skip for now</Link> : <span>You can return to any step.</span>}

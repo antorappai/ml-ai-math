@@ -137,3 +137,10 @@ Keep the warm neutral background, readable dark text, muted green accent, restra
 - The full NLP guide now reads continuously downward, with a sticky section menu on the left and a highlight for the current section. Existing section URLs jump to the corresponding heading.
 - On narrow screens the section menu appears above the guide. Source content and existing mastery data are unchanged.
 - Validation: 74 tests passed, production build passed, and desktop sidebar/deep-link layout visually verified.
+
+### Scrolling lessons and course sidebar — 2026-09-09
+
+- All 73 guided lessons now render their seven existing sections as one continuous reading page, with a sticky sidebar for units, lessons, and section links.
+- Existing step URLs jump to their section. Scrolling updates the current section and existing visit/resume progress; rendering all sections does not automatically mark them visited. Explicit finish actions still complete a lesson and continue to the next.
+- Check controls use unique rendered IDs when a question appears again in the recap. All existing teaching content, widgets, labs, and resource routes are preserved.
+- Validation: 75 tests passed, production build passed, desktop reading/sidebar layout visually verified. NLP retains its continuous guide layout.
