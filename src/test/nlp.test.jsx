@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import NlpPage from '../pages/NlpPage.jsx';
@@ -11,12 +11,19 @@ describe('NLP study unit', () => {
     expect(nlpSections).toHaveLength(18);
     expect(nlpIntroduction + nlpSections.map(section => section.markdown).join('')).toBe(source);
   });
-  it('opens sections and navigates forward with tables rendered', () => {
-    render(<MemoryRouter initialEntries={['/nlp/2']}><Routes><Route path="/nlp/:sectionId" element={<NlpPage />} /></Routes></MemoryRouter>);
-    expect(screen.getByRole('heading', { name: '2. The Classical NLP Pipeline' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('link', { name: 'Next section →' }));
-    expect(screen.getByRole('heading', { name: '3. Historical Timeline' })).toBeInTheDocument();
-    expect(screen.getByRole('table')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: '← Previous section' })).toHaveAttribute('href', '/nlp/2');
+  it('shows the full guide and jumps from the sidebar without hiding sections', () => {
+    const scroll = vi.fn();
+    const original = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = scroll;
+    try {
+      render(<MemoryRouter initialEntries={['/nlp/2']}><Routes><Route path="/nlp/:sectionId" element={<NlpPage />} /></Routes></MemoryRouter>);
+      expect(document.querySelectorAll('.nlp-reading-section')).toHaveLength(18);
+      expect(scroll).toHaveBeenCalled();
+      fireEvent.click(screen.getByRole('link', { name: '3. Historical Timeline' }));
+      expect(scroll.mock.instances.at(-1).id).toBe('nlp-section-3');
+      expect(screen.getByRole('heading', { name: '2. The Classical NLP Pipeline' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Final Mental Model' })).toBeInTheDocument();
+      expect(screen.getAllByRole('table').length).toBeGreaterThan(0);
+    } finally { Element.prototype.scrollIntoView = original; }
   });
 });

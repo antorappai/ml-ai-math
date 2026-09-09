@@ -621,3 +621,15 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 .progress-track i, .mini-progress i { background: var(--green); }
 .python-editor:focus { border-color: var(--green); }
 .card-index { color: var(--muted); }
+
+.nlp-reading-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2.5rem; margin-top: 1.5rem; align-items: start; }
+.nlp-sidebar { position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; padding: .8rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.nlp-sidebar h2 { margin: .3rem .5rem .8rem; font-size: 1rem; }
+.nlp-sidebar a { display: block; padding: .55rem .65rem; margin-bottom: .2rem; border-radius: .4rem; font-size: .82rem; line-height: 1.4; color: var(--muted); text-decoration: none; }
+.nlp-sidebar a:hover, .nlp-sidebar a[aria-current] { background: var(--lime); color: var(--ink); }
+.nlp-reading-layout > article { min-width: 0; }
+.nlp-reading-section { scroll-margin-top: 90px; }
+@media (max-width: 700px) {
+  .nlp-reading-layout { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .nlp-sidebar { position: relative; top: auto; max-height: 220px; }
+}

@@ -131,3 +131,9 @@ Keep the warm neutral background, readable dark text, muted green accent, restra
 - Added the supplied `classical_nlp_study_guide.md` unchanged as a separate NLP study unit, accessible from the homepage at `#/nlp`.
 - Its 17 numbered sections and Final Mental Model are presented as 18 individually navigable sections, with previous/next links and Markdown tables and examples.
 - No additional teaching content, labs, or assessments were authored. The existing 73 guided lessons and saved progress remain unchanged.
+
+### NLP scrolling layout — 2026-09-09
+
+- The full NLP guide now reads continuously downward, with a sticky section menu on the left and a highlight for the current section. Existing section URLs jump to the corresponding heading.
+- On narrow screens the section menu appears above the guide. Source content and existing mastery data are unchanged.
+- Validation: 74 tests passed, production build passed, and desktop sidebar/deep-link layout visually verified.
