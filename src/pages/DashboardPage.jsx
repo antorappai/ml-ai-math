@@ -38,7 +38,7 @@ export default function DashboardPage() {
               <div className="home-chapter-meta"><span>Chapter {index + 1}</span><span>{chapterLessons.length} lessons</span></div>
               <h3>{chapter.shortTitle}</h3>
               <p>{chapter.purpose}</p>
-              <div className="home-chapter-footer"><span>{complete ? `${complete}/${chapterLessons.length} completed` : "Explore lessons"}</span><span aria-hidden="true">→</span></div>
+              <div className="home-chapter-footer"><span>{complete ? `${complete}/${chapterLessons.length} completed` : "Open unit"}</span><span aria-hidden="true">→</span></div>
             </Link>;
           })}
           <Link className="home-chapter-box" to="/nlp"><div className="home-chapter-meta"><span>Study unit</span><span>{nlpSections.length} sections</span></div><h3>NLP</h3><p>Classical NLP Study Guide</p><div className="home-chapter-footer"><span>Explore sections</span><span aria-hidden="true">→</span></div></Link>

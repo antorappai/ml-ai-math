@@ -653,6 +653,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 .course-sidebar { padding-bottom: 1rem; border-bottom: 1px solid var(--line); margin-bottom: 1rem; }
 .course-sidebar details { margin: .4rem 0; }
 .course-sidebar summary { cursor: pointer; padding: .6rem; color: var(--ink); font-weight: 600; }
+.course-sidebar details.current-unit summary { border-left: 3px solid var(--green); background: var(--lime); color: var(--ink); }
 .course-sidebar details > a { display: block; padding: .5rem .6rem .5rem 1rem; font-size: .8rem; line-height: 1.4; text-decoration: none; color: var(--muted); }
 .course-sidebar a[aria-current], .course-sidebar a:hover { color: var(--ink); background: var(--lime); border-radius: .4rem; }
 .lesson-reading-section { scroll-margin-top: 90px; padding-bottom: 2.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--line); }

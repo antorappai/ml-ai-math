@@ -239,7 +239,7 @@ export default function GuidedLesson({ lesson, chapter, stepId }) {
         <aside id="lesson-outline" className={`lesson-outline ${outlineOpen ? "open" : ""}`} aria-label="Lesson steps">
           <nav aria-label="Course units and lessons" className="course-sidebar">
             <p>Course units</p>
-            {chapters.map(unit => <details key={`${lesson.id}-${unit.id}`} open={unit.id === chapter.id}>
+            {chapters.map(unit => <details className={unit.id === chapter.id ? "current-unit" : ""} key={`${lesson.id}-${unit.id}`} open={unit.id === chapter.id}>
               <summary>{unit.shortTitle}</summary>
               {unit.lessonIds.map(id => <Link key={id} to={lessonStartPath(id)} aria-current={id === lesson.id ? "page" : undefined}>{lessonById[id].title}</Link>)}
             </details>)}

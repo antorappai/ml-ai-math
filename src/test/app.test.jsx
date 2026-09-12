@@ -28,6 +28,7 @@ describe("routed application", () => {
     expect(await screen.findByRole("heading", { name: "Start here" })).toBeInTheDocument();
     expect(window.location.hash).toBe("#/lessons/tensors-perceptrons/start");
     expect(screen.getByRole("navigation", { name: "Course units and lessons" })).toBeInTheDocument();
+    expect(document.querySelector(".course-sidebar .current-unit")).toHaveTextContent("Deep Learning");
   });
 
   it("embeds a runnable browser Python example in every project", async () => {
