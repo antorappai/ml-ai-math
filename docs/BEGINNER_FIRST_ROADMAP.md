@@ -156,3 +156,9 @@ Keep the warm neutral background, readable dark text, muted green accent, restra
 - The Gradient formula now begins with a plain-language explanation, a small loss-setting example, and a sign guide for positive, negative, and zero partial changes before displaying the formula.
 - This is a single-formula trial. Apply the same pre-formula pattern to other references only after reviewing it.
 - Validation: 77 tests passed and the production build passed.
+
+### Formula reference expansion — 2026-09-12
+
+- Extended the Gradient trial to all 71 Formula Library entries. Every full reference now opens with the formula's purpose, a small concrete example, a pre-formula symbol guide, and sign or condition notes.
+- Compact formula cards inside lessons remain concise; the expanded preparation appears in the dedicated Formula Library where learners need it.
+- Validation: 78 tests passed and the production build passed.

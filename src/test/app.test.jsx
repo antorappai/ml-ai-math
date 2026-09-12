@@ -39,8 +39,18 @@ describe("routed application", () => {
     fireEvent.change(search, { target: { value: "gradient" } });
     expect(screen.getByRole("heading", { name: "First, what does a gradient do?" })).toBeInTheDocument();
     expect(screen.getByText(/Imagine standing on a hill in fog/i)).toBeInTheDocument();
-    expect(screen.getByText("positive")).toBeInTheDocument();
-    expect(screen.getByText("negative")).toBeInTheDocument();
+    expect(screen.getByText(/positive: increasing that input/i)).toBeInTheDocument();
+    expect(screen.getByText(/negative: increasing that input/i)).toBeInTheDocument();
+  });
+
+  it("puts a plain-language formula preview before every reference formula", async () => {
+    window.location.hash = "#/formulas";
+    render(<App />);
+    await screen.findByRole("heading", { name: "Formula Library" });
+    expect(document.querySelectorAll(".formula-card")).toHaveLength(71);
+    expect(document.querySelectorAll(".formula-intuition")).toHaveLength(71);
+    expect(screen.getAllByRole("heading", { name: "Symbols to notice" })).toHaveLength(71);
+    expect(screen.getAllByRole("heading", { name: "Signs & conditions" })).toHaveLength(71);
   });
 
   it("renders a guided Foundations lesson with direct step navigation", async () => {

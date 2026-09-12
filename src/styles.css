@@ -202,10 +202,14 @@ footer { display: flex; justify-content: space-between; padding: 2rem clamp(1rem
 .formula-intuition { margin: 1.2rem 0; padding: 1.1rem 1.2rem; border-left: 4px solid var(--green); background: #1b2c23; }
 .formula-intuition h4 { margin: .15rem 0 .5rem; font-size: 1.05rem; }
 .formula-intuition p { margin: .55rem 0; line-height: 1.6; }
-.formula-intuition dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin: 1rem 0 0; }
-.formula-intuition dl div { padding: .65rem; border: 1px solid var(--line); background: var(--surface); }
-.formula-intuition dt { color: var(--green); font-weight: 800; text-transform: capitalize; }
-.formula-intuition dd { margin: .25rem 0 0; color: var(--muted); font-size: .82rem; line-height: 1.4; }
+.formula-preview-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 1rem; margin-top: 1rem; }
+.formula-preview-grid section { padding: .85rem; border: 1px solid var(--line); background: var(--surface); }
+.formula-preview-grid h5 { margin: 0 0 .65rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+.formula-preview-grid dl { display: grid; gap: .45rem; margin: 0; }
+.formula-preview-grid dl div { display: grid; grid-template-columns: minmax(60px, auto) 1fr; gap: .55rem; align-items: center; }
+.formula-preview-grid dt { color: var(--green); font-weight: 800; }
+.formula-preview-grid dd { margin: 0; color: var(--muted); font-size: .82rem; line-height: 1.4; }
+.formula-preview-grid ul { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: .82rem; line-height: 1.5; }
 .formula-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
 .formula-heading h3 { margin: 0; font-family: Georgia, serif; font-size: 1.8rem; font-weight: 500; }
 .formula-id { padding: .35rem .55rem; border-radius: 999px; background: #1b2c23; color: var(--muted); font: .72rem ui-monospace, monospace; }
@@ -654,4 +658,4 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 .lesson-reading-section { scroll-margin-top: 90px; padding-bottom: 2.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--line); }
 .reading-finish { margin: 2rem 0; }
 @media (max-width: 760px) { .scrolling-lesson .lesson-outline { max-height: 45vh; } }
-@media (max-width: 560px) { .formula-intuition dl { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .formula-preview-grid { grid-template-columns: 1fr; } }
