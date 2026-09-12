@@ -14,12 +14,20 @@ describe("routed application", () => {
     expect(await screen.findByRole("heading", { name: /Learn the maths behind machine learning/i })).toBeInTheDocument();
     const chapterGrid = screen.getByRole("region", { name: "Choose a chapter" });
     expect(within(chapterGrid).getAllByRole("link")).toHaveLength(7);
-    for (const id of ["foundations", "linear-algebra", "calculus-optimization", "probability-statistics", "classical-ml", "deep-learning"]) {
-      expect(chapterGrid.querySelector(`a[href="#/chapters/${id}"]`)).toBeTruthy();
+    for (const [chapterId, lessonId] of [["foundations", "numbers-signs"], ["linear-algebra", "scalars-vectors-tensors"], ["calculus-optimization", "change-slope-limits"], ["probability-statistics", "experiments-outcomes-events"], ["classical-ml", "ml-workflow"], ["deep-learning", "tensors-perceptrons"]]) {
+      expect(chapterGrid.querySelector(`a[href="#/lessons/${lessonId}/start"]`), chapterId).toBeTruthy();
     }
     expect(screen.queryByRole("heading", { name: "Foundations roadmap" })).not.toBeInTheDocument();
     expect(chapterGrid.compareDocumentPosition(document.querySelector(".continue-panel")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getByRole("link", { name: /Start with the first lesson/i })).toHaveAttribute("href", "#/lessons/numbers-signs/start");
+  });
+
+  it("redirects legacy chapter URLs into the unit's scrolling lesson", async () => {
+    window.location.hash = "#/chapters/deep-learning";
+    render(<App />);
+    expect(await screen.findByRole("heading", { name: "Start here" })).toBeInTheDocument();
+    expect(window.location.hash).toBe("#/lessons/tensors-perceptrons/start");
+    expect(screen.getByRole("navigation", { name: "Course units and lessons" })).toBeInTheDocument();
   });
 
   it("embeds a runnable browser Python example in every project", async () => {

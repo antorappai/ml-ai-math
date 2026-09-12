@@ -229,7 +229,7 @@ export default function GuidedLesson({ lesson, chapter, stepId }) {
   return (
     <div className="guided-lesson-shell scrolling-lesson">
       <header className="guided-lesson-header">
-        <div className="guided-breadcrumb"><Link to="/dashboard">Learn</Link><span>/</span><Link to={`/chapters/${chapter.id}`}>{chapter.shortTitle}</Link></div>
+        <div className="guided-breadcrumb"><Link to="/dashboard">All units</Link><span>/</span><span>{chapter.shortTitle}</span></div>
         <div className="guided-title-row"><div><p>Lesson {lesson.order} of {chapter.lessonIds.length}</p><h1>{lesson.title}</h1></div><button type="button" className="outline-button" onClick={() => setOutlineOpen((value) => !value)} aria-expanded={outlineOpen} aria-controls="lesson-outline">Lesson outline</button></div>
         <div className="guided-progress" aria-label={`${completedCount} of ${steps.length} lesson steps visited`}><span style={{ width: `${(completedCount / steps.length) * 100}%` }} /></div>
       </header>
@@ -257,7 +257,7 @@ export default function GuidedLesson({ lesson, chapter, stepId }) {
           {<aside className="next-lesson-preview"><strong>{nextLesson ? "Up next" : "End of the course"}</strong><p>{nextLesson ? nextLesson.title : "You can revisit lessons, practise, or explore the Python examples."}</p>{nextLesson && nextLesson.chapterId !== lesson.chapterId && <p>You have reached the end of this unit. Continue into the next unit.</p>}</aside>}
           {next && <div className="reading-finish"><Link className="button" to={nextLesson ? lessonStart(nextLesson) : "/dashboard"} onClick={() => completeLesson(lesson.id)}>{nextLesson ? "Finish & next lesson →" : "Finish course →"}</Link></div>}
           <nav className="step-navigation" aria-label="Lesson step navigation">
-            {previous ? <Link className="back" to={`/lessons/${lesson.id}/${previous.id}`}>← Back</Link> : <Link className="back" to={`/chapters/${chapter.id}`}>← Course map</Link>}
+            {previous ? <Link className="back" to={`/lessons/${lesson.id}/${previous.id}`}>← Back</Link> : <Link className="back" to="/dashboard">← All units</Link>}
             {next ? <Link className="skip" to={`/lessons/${lesson.id}/${next.id}`}>Skip for now</Link> : <span>You can return to any step.</span>}
             {next ? <Link className="next" to={`/lessons/${lesson.id}/${next.id}`}>Next →</Link> : <Link className="next" to={nextLesson ? lessonStart(nextLesson) : "/dashboard"} onClick={() => completeLesson(lesson.id)}>{nextLesson ? "Finish & next lesson →" : "Finish course →"}</Link>}
           </nav>

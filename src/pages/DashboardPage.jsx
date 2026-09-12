@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { chapters, getChapterLessons, lessonById, lessons } from "../content/index.js";
+import { resumeStudy } from "../utils/lessonNavigation.js";
 import { nlpSections } from "../content/nlpGuide.js";
 import { useMastery } from "../state/mastery.js";
 
@@ -32,7 +33,8 @@ export default function DashboardPage() {
           {chapters.map((chapter, index) => {
             const chapterLessons = getChapterLessons(chapter.id);
             const complete = chapterLessons.filter((lesson) => guidedLessonComplete(mastery, lesson)).length;
-            return <Link className="home-chapter-box" to={`/chapters/${chapter.id}`} key={chapter.id}>
+            const nextLesson = chapterLessons.find((lesson) => !guidedLessonComplete(mastery, lesson)) || chapterLessons[0];
+            return <Link className="home-chapter-box" to={resumeStudy(nextLesson, mastery)} key={chapter.id}>
               <div className="home-chapter-meta"><span>Chapter {index + 1}</span><span>{chapterLessons.length} lessons</span></div>
               <h3>{chapter.shortTitle}</h3>
               <p>{chapter.purpose}</p>

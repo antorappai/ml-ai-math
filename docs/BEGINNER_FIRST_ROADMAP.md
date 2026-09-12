@@ -162,3 +162,9 @@ Keep the warm neutral background, readable dark text, muted green accent, restra
 - Extended the Gradient trial to all 71 Formula Library entries. Every full reference now opens with the formula's purpose, a small concrete example, a pre-formula symbol guide, and sign or condition notes.
 - Compact formula cards inside lessons remain concise; the expanded preparation appears in the dedicated Formula Library where learners need it.
 - Validation: 78 tests passed and the production build passed.
+
+### Direct unit entry — 2026-09-12
+
+- Unit boxes on the homepage now open the next unfinished lesson directly. Its unit is expanded and highlighted in the scrolling lesson's course sidebar, removing the separate chapter lesson-list page.
+- Existing `#/chapters/:chapterId` links redirect to the same next unfinished lesson, so old links continue to work. Lesson navigation now links back to the all-units dashboard rather than the removed chapter landing page.
+- Validation: 79 tests passed and the production build passed.

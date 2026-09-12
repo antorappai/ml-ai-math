@@ -19,7 +19,7 @@ export default function LessonNavigation({ lesson, mode = "study" }) {
       {hasPython && <Link aria-current={mode === "python" ? "page" : undefined} to={`/lessons/${lesson.id}/python`}>Python lab</Link>}
     </nav>
     <div className="lesson-switcher">
-      <Link to={`/chapters/${chapter.id}`}>All lessons in {chapter.shortTitle}</Link>
+      <Link to={lessonStart(lessonById[chapter.lessonIds[0]])}>First lesson in {chapter.shortTitle}</Link>
       <label>Jump to lesson<select aria-label="Jump to lesson" value={lesson.id} onChange={(event) => navigate(lessonStart(lessonById[event.target.value]))}>
         {chapter.lessonIds.map((id, index) => <option key={id} value={id}>{index + 1}. {lessonById[id].title}</option>)}
       </select></label>
