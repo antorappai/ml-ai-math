@@ -22,6 +22,16 @@ describe("routed application", () => {
     expect(screen.getByRole("link", { name: /Start with the first lesson/i })).toHaveAttribute("href", "#/lessons/numbers-signs/start");
   });
 
+  it("embeds a runnable browser Python example in every project", async () => {
+    window.location.hash = "#/projects";
+    render(<App />);
+    expect(await screen.findByRole("heading", { name: "Projects & capstones" })).toBeInTheDocument();
+    expect(screen.getAllByText("Try a small browser example")).toHaveLength(13);
+    fireEvent.click(screen.getAllByText("Try a small browser example")[0]);
+    expect(screen.getAllByLabelText("Editable code")).toHaveLength(13);
+    expect(screen.getAllByRole("button", { name: "Run code" })).toHaveLength(13);
+  });
+
   it("renders a guided Foundations lesson with direct step navigation", async () => {
     window.location.hash = "#/lessons/numbers-signs/start";
     render(<App />);

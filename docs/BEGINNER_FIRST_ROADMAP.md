@@ -144,3 +144,9 @@ Keep the warm neutral background, readable dark text, muted green accent, restra
 - Existing step URLs jump to their section. Scrolling updates the current section and existing visit/resume progress; rendering all sections does not automatically mark them visited. Explicit finish actions still complete a lesson and continue to the next.
 - Check controls use unique rendered IDs when a question appears again in the recap. All existing teaching content, widgets, labs, and resource routes are preserved.
 - Validation: 75 tests passed, production build passed, desktop reading/sidebar layout visually verified. NLP retains its continuous guide layout.
+
+### Runnable project examples — 2026-09-12
+
+- Each of the 13 project cards now includes a small editable Python example that runs in the browser. The examples introduce the core calculation behind the project, from vector similarity and gradient descent to CNN output shapes and attention-weighted values.
+- Python remains lazy-loaded: opening a project does not start a runtime; it starts only when the learner clicks **Run code**. The deeper PyTorch work remains in the existing prepared notebooks.
+- Validation: 76 tests passed and the production build passed.
