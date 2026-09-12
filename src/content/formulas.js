@@ -239,6 +239,12 @@ export const formulas = {
     latex: "\nabla f(\mathbf x)=\begin{pmatrix}\frac{\partial f}{\partial x_1}\\\vdots\\\frac{\partial f}{\partial x_n}\end{pmatrix}",
     readAs: "gradient of f is the vector of all partial derivatives",
     purpose: "Collect sensitivity to every input direction.",
+    beforeFormula: {
+      title: "First, what does a gradient do?",
+      explanation: "Imagine standing on a hill in fog. The gradient is an arrow that points in the direction that climbs uphill fastest. Its numbers also say how strongly the height changes if you move along each input direction.",
+      example: "For a loss that depends on two settings, a gradient of (6,-2) means increasing the first setting raises the loss strongly, while increasing the second lowers it a little. To reduce loss, move the opposite way: (-6,2).",
+      signGuide: [["positive", "increasing that input raises the output locally"], ["negative", "increasing that input lowers the output locally"], ["zero", "a tiny move in that input makes no local first-order change"]]
+    },
     symbols: [["\\nabla", "gradient operator"], ["\\partial f/\\partial x_i", "change in f when x_i moves"], ["\\mathbf x", "input vector"]],
     assumptions: ["Required partial derivatives exist."],
     beginnerExample: "For f=x^2+y^2, gradient=(2x,2y).",

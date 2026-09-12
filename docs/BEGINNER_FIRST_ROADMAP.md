@@ -150,3 +150,9 @@ Keep the warm neutral background, readable dark text, muted green accent, restra
 - Each of the 13 project cards now includes a small editable Python example that runs in the browser. The examples introduce the core calculation behind the project, from vector similarity and gradient descent to CNN output shapes and attention-weighted values.
 - Python remains lazy-loaded: opening a project does not start a runtime; it starts only when the learner clicks **Run code**. The deeper PyTorch work remains in the existing prepared notebooks.
 - Validation: 76 tests passed and the production build passed.
+
+### Formula reference trial: Gradient — 2026-09-12
+
+- The Gradient formula now begins with a plain-language explanation, a small loss-setting example, and a sign guide for positive, negative, and zero partial changes before displaying the formula.
+- This is a single-formula trial. Apply the same pre-formula pattern to other references only after reviewing it.
+- Validation: 77 tests passed and the production build passed.

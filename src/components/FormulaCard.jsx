@@ -13,6 +13,13 @@ export default function FormulaCard({ formula, compact = false }) {
         </div>
         <span className="formula-id">{formula.id}</span>
       </header>
+      {formula.beforeFormula && <section className="formula-intuition" aria-label={`Before the ${formula.label} formula`}>
+        <p className="eyebrow">Before the formula</p>
+        <h4>{formula.beforeFormula.title}</h4>
+        <p>{formula.beforeFormula.explanation}</p>
+        <p><strong>Tiny example:</strong> {formula.beforeFormula.example}</p>
+        <dl>{formula.beforeFormula.signGuide.map(([sign, meaning]) => <div key={sign}><dt>{sign}</dt><dd>{meaning}</dd></div>)}</dl>
+      </section>}
       <BlockMath>{formula.latex}</BlockMath>
       <p className="read-aloud"><strong>Read aloud:</strong> {formula.readAs}.</p>
       <p>{formula.purpose}</p>

@@ -32,6 +32,17 @@ describe("routed application", () => {
     expect(screen.getAllByRole("button", { name: "Run code" })).toHaveLength(13);
   });
 
+  it("explains what the gradient does before showing its formula", async () => {
+    window.location.hash = "#/formulas";
+    render(<App />);
+    const search = await screen.findByRole("searchbox");
+    fireEvent.change(search, { target: { value: "gradient" } });
+    expect(screen.getByRole("heading", { name: "First, what does a gradient do?" })).toBeInTheDocument();
+    expect(screen.getByText(/Imagine standing on a hill in fog/i)).toBeInTheDocument();
+    expect(screen.getByText("positive")).toBeInTheDocument();
+    expect(screen.getByText("negative")).toBeInTheDocument();
+  });
+
   it("renders a guided Foundations lesson with direct step navigation", async () => {
     window.location.hash = "#/lessons/numbers-signs/start";
     render(<App />);
