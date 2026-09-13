@@ -30,7 +30,12 @@ export const formulaById = formulas;
 export const terminology = Object.fromEntries(lessons.flatMap((lesson) => lesson.vocabulary || []).map((term) => [term.id, term]));
 export { coursePacks, formulaList, formulas, projects };
 
-validateCurriculum(chapters, lessons, formulas, projects);
+// Curriculum validation is valuable during development and automated tests, but an
+// editorial validation warning should never prevent the production learning site
+// from rendering for students.
+if (import.meta.env.DEV) {
+  validateCurriculum(chapters, lessons, formulas, projects);
+}
 
 export function getLessonQuestions(lesson) {
   return Object.values(lesson.levels).flatMap((level) => level.questions || []);
