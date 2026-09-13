@@ -5,68 +5,102 @@ import { nlpSections } from "../content/nlpGuide.js";
 import { lessonStart } from "../utils/lessonNavigation.js";
 import "./CourseSidebar.css";
 
-function NlpUnit({ currentChapterId, currentLessonId }) {
-  const isCurrentUnit = currentChapterId === "nlp";
+function buildUnits() {
+  return chapters.flatMap((chapter) => {
+    const chapterUnit = {
+      id: chapter.id,
+      title: chapter.shortTitle,
+      count: chapter.lessonIds.length,
+      startPath: lessonStart(lessonById[chapter.lessonIds[0]]),
+      items: chapter.lessonIds.map((id, index) => ({
+        id,
+        number: index + 1,
+        title: lessonById[id]?.title || id,
+        path: lessonStart(lessonById[id])
+      }))
+    };
+
+    if (chapter.id !== "deep-learning") return [chapterUnit];
+
+    return [
+      {
+        id: "nlp",
+        title: "NLP",
+        count: nlpSections.length,
+        startPath: "/nlp/1",
+        items: nlpSections.map((section, index) => ({
+          id: section.id,
+          number: index + 1,
+          title: section.title,
+          path: `/nlp/${section.id}`
+        }))
+      },
+      chapterUnit
+    ];
+  });
+}
+
+const courseUnits = buildUnits();
+
+function CompactCourseSidebar({ currentChapterId }) {
+  const currentUnit = courseUnits.find((unit) => unit.id === currentChapterId) || courseUnits[0];
+
   return (
-    <details className={isCurrentUnit ? "current-unit" : ""} open={isCurrentUnit}>
-      <summary>
-        <span>NLP</span>
-        <small>{nlpSections.length}</small>
-      </summary>
-      <div className="course-sidebar-lessons">
-        {nlpSections.map((section, index) => {
-          const isCurrentLesson = isCurrentUnit && section.id === currentLessonId;
-          return (
+    <nav className="course-sidebar course-sidebar-compact" aria-label="Course unit navigation">
+      <p className="course-sidebar-label">Course</p>
+      <details className="course-unit-picker">
+        <summary>
+          <span>{currentUnit.title}</span>
+          <small>Change unit</small>
+        </summary>
+        <div className="course-unit-options">
+          {courseUnits.map((unit) => (
             <Link
-              key={section.id}
-              to={`/nlp/${section.id}`}
-              aria-current={isCurrentLesson ? "page" : undefined}
-              className={isCurrentLesson ? "current-lesson-link" : ""}
+              key={unit.id}
+              to={unit.startPath}
+              aria-current={unit.id === currentChapterId ? "page" : undefined}
             >
-              <span className="course-lesson-number">{index + 1}</span>
-              <span>{section.title}</span>
+              <span>{unit.title}</span>
+              <small>{unit.count}</small>
             </Link>
-          );
-        })}
-      </div>
-    </details>
+          ))}
+        </div>
+      </details>
+    </nav>
   );
 }
 
-export default function CourseSidebar({ currentChapterId, currentLessonId }) {
+export default function CourseSidebar({ currentChapterId, currentLessonId, compact = false }) {
+  if (compact) return <CompactCourseSidebar currentChapterId={currentChapterId} />;
+
   return (
-    <nav className="course-sidebar" aria-label="Course units and lessons">
+    <nav className="course-sidebar course-sidebar-full" aria-label="Course units and lessons">
       <p className="course-sidebar-label">Course units</p>
-      {chapters.map((unit) => {
+      {courseUnits.map((unit) => {
         const isCurrentUnit = unit.id === currentChapterId;
         return (
-          <React.Fragment key={unit.id}>
-            {unit.id === "deep-learning" && <NlpUnit currentChapterId={currentChapterId} currentLessonId={currentLessonId} />}
-            <details className={isCurrentUnit ? "current-unit" : ""} open={isCurrentUnit}>
-              <summary>
-                <span>{unit.shortTitle}</span>
-                <small>{unit.lessonIds.length}</small>
-              </summary>
-              <div className="course-sidebar-lessons">
-                {unit.lessonIds.map((id, index) => {
-                  const target = lessonById[id];
-                  if (!target) return null;
-                  const isCurrentLesson = id === currentLessonId;
-                  return (
-                    <Link
-                      key={id}
-                      to={lessonStart(target)}
-                      aria-current={isCurrentLesson ? "page" : undefined}
-                      className={isCurrentLesson ? "current-lesson-link" : ""}
-                    >
-                      <span className="course-lesson-number">{index + 1}</span>
-                      <span>{target.title}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </details>
-          </React.Fragment>
+          <details className={isCurrentUnit ? "current-unit" : ""} key={unit.id} open={isCurrentUnit}>
+            <summary>
+              <span>{unit.title}</span>
+              <small>{unit.count}</small>
+            </summary>
+            <div className="course-sidebar-lessons">
+              {unit.items.map((item) => {
+                const isCurrentLesson = isCurrentUnit && item.id === currentLessonId;
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.path}
+                    aria-current={isCurrentLesson ? "page" : undefined}
+                    className={isCurrentLesson ? "current-lesson-link" : ""}
+                  >
+                    <span className="course-lesson-number">{item.number}</span>
+                    <span>{item.title}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </details>
         );
       })}
     </nav>
