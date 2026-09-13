@@ -15,7 +15,7 @@ const chapterDefinitions = [
   { id: "calculus-optimization", phase: 1, title: "Calculus & Optimization", shortTitle: "Calculus", purpose: "Understand slopes, gradients, chain rule, loss functions, and learning.", accent: "gold", lessons: calculusLessons },
   { id: "probability-statistics", phase: 1, title: "Probability & Statistics", shortTitle: "Probability", purpose: "Reason about uncertainty, distributions, evidence, variation, and sampling.", accent: "green", lessons: probabilityLessons },
   { id: "classical-ml", phase: 2, title: "Classical Machine Learning", shortTitle: "Classical ML", purpose: "Connect mathematical foundations to models, evaluation, and reliable workflows.", accent: "red", lessons: classicalMlLessons },
-  { id: "deep-learning", phase: 3, title: "Deep Learning", shortTitle: "Deep Learning", purpose: "Build from tensors and backpropagation to CNNs, sequences, and transformers.", accent: "navy", lessons: deepLearningLessons }
+  { id: "deep-learning", phase: 3, title: "Deep Learning Fundamentals + PyTorch", shortTitle: "Deep Learning", purpose: "Connect regression, neural networks, PyTorch training, CNNs, sequences, attention, and transformers.", accent: "navy", lessons: [...deepLearningLessons].sort((left, right) => left.order - right.order) }
 ];
 
 export const chapters = chapterDefinitions.map(({ lessons: chapterLessons, ...chapter }) =>

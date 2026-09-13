@@ -33,7 +33,7 @@ describe("mastery state", () => {
       quizScores: {}, incorrectAttempts: {}, formulaConfidence: {}, pythonExercises: {}, projects: {}
     };
     const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v3": JSON.stringify(previous) }));
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(Object.keys(migrated.completedSteps["numbers-signs"])).toHaveLength(7);
     expect(Object.values(migrated.completedSteps["numbers-signs"]).every(Boolean)).toBe(true);
   });
@@ -46,7 +46,7 @@ describe("mastery state", () => {
       guidedCheckAttempts: { check: { attempts: 1, correct: true } }
     };
     const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v4": JSON.stringify(previous) }));
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(migrated.completedSteps["numbers-signs"].start).toBe(true);
     expect(Object.keys(migrated.completedSteps["gradients-directional-change"])).toHaveLength(7);
     expect(migrated.guidedCheckAttempts).toEqual(previous.guidedCheckAttempts);
@@ -59,7 +59,7 @@ describe("mastery state", () => {
       completedSteps: { "gradients-directional-change": { start: true } }
     };
     const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v5": JSON.stringify(previous) }));
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(Object.keys(migrated.completedSteps["loss-functions"])).toHaveLength(7);
     expect(migrated.completedSteps["gradients-directional-change"].start).toBe(true);
   });
@@ -71,7 +71,7 @@ describe("mastery state", () => {
       completedSteps: { "loss-functions": { start: true } }
     };
     const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v6": JSON.stringify(previous) }));
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(Object.keys(migrated.completedSteps["jacobian-matrices"])).toHaveLength(7);
     expect(migrated.completedSteps["loss-functions"].start).toBe(true);
   });
@@ -83,7 +83,7 @@ describe("mastery state", () => {
       completedSteps: { "jacobian-matrices": { start: true } }
     };
     const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v7": JSON.stringify(previous) }));
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(Object.keys(migrated.completedSteps["eigenvalues-eigenvectors"])).toHaveLength(7);
     expect(migrated.completedSteps["jacobian-matrices"].start).toBe(true);
   });
@@ -95,7 +95,7 @@ describe("mastery state", () => {
       completedSteps: { "eigenvalues-eigenvectors": { start: true } }
     };
     const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v8": JSON.stringify(previous) }));
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(Object.keys(migrated.completedSteps["bayes-theorem"])).toHaveLength(7);
     expect(migrated.completedSteps["eigenvalues-eigenvectors"].start).toBe(true);
   });
@@ -103,7 +103,7 @@ describe("mastery state", () => {
   it("maps completed v9 distribution lessons into their new guided steps", () => {
     const previous = { version: 9, completedLevels: { "standard-deviation": { basics: true, core: true, advanced: true } }, completedSteps: { "bayes-theorem": { start: true } } };
     const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v9": JSON.stringify(previous) }));
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(Object.keys(migrated.completedSteps["standard-deviation"])).toHaveLength(7);
     expect(migrated.completedSteps["bayes-theorem"].start).toBe(true);
   });
@@ -111,7 +111,7 @@ describe("mastery state", () => {
   it("maps completed v10 Classical ML lessons into their new guided steps", () => {
     const previous = { version: 10, completedLevels: { "ml-workflow": { basics: true, core: true, advanced: true } }, completedSteps: { "standard-deviation": { start: true } } };
     const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v10": JSON.stringify(previous) }));
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     expect(Object.keys(migrated.completedSteps["ml-workflow"])).toHaveLength(7);
     expect(migrated.completedSteps["standard-deviation"].start).toBe(true);
   });
@@ -146,7 +146,7 @@ describe("Deep Learning progress migration", () => {
       lastVisited: { lessonId: "forward-backprop", level: "core" }
     };
     const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v11": JSON.stringify(previous) }));
-    expect(migrated.version).toBe(12);
+    expect(migrated.version).toBe(13);
     for (const id of ids) {
       expect(Object.keys(migrated.completedSteps[id])).toHaveLength(7);
       expect(migrated.completedSteps[id].recap).toBe(true);
@@ -155,6 +155,20 @@ describe("Deep Learning progress migration", () => {
     expect(migrated.completedSteps["numbers-signs"]).toEqual({ start: true });
     for (const field of ["completedLevels", "guidedCheckAttempts", "quizScores", "incorrectAttempts", "formulaConfidence", "pythonExercises", "projects", "lastVisited", "legacyExposure"]) expect(migrated[field]).toEqual(previous[field]);
     expect(migrateMastery(fakeStorage({ [STORAGE_KEY]: JSON.stringify(migrated) }))).toEqual(migrated);
+  });
+  it("preserves v12 study records and leaves the new PyTorch lesson available", () => {
+    const previous = {
+      ...emptyMastery(), version: 12,
+      completedSteps: { "forward-backprop": { start: true, recap: true } },
+      lastVisited: { lessonId: "attention-transformers", level: "advanced" },
+      projects: { "deep-capstone": true }
+    };
+    const migrated = migrateMastery(fakeStorage({ "ml-mastery-progress-v12": JSON.stringify(previous) }));
+    expect(migrated.version).toBe(13);
+    expect(migrated.completedSteps).toEqual(previous.completedSteps);
+    expect(migrated.lastVisited).toEqual(previous.lastVisited);
+    expect(migrated.projects).toEqual(previous.projects);
+    expect(migrated.completedSteps["pytorch-training-loop"]).toBeUndefined();
   });
   it("does not mark a partially completed legacy lesson as fully visited", () => {
     const previous = { version: 11, completedLevels: { "cnn-convolution": { basics: true } }, completedSteps: { "cnn-convolution": { start: true } } };

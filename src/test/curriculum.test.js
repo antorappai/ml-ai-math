@@ -10,7 +10,7 @@ describe("curriculum integrity", () => {
     expect(chapters.map((chapter) => chapter.id)).toEqual([
       "foundations", "linear-algebra", "calculus-optimization", "probability-statistics", "classical-ml", "deep-learning"
     ]);
-    expect(lessons.length).toBe(73);
+    expect(lessons.length).toBe(74);
     expect(chapters.filter((chapter) => chapter.phase === 1).map((chapter) => chapter.lessonIds.length)).toEqual([9, 19, 12, 17]);
     for (const lesson of lessons) expect(Object.keys(lesson.levels)).toEqual(["basics", "core", "advanced"]);
     for (const chapter of chapters) {
@@ -66,7 +66,7 @@ describe("curriculum integrity", () => {
     const foundationLessons = getChapterLessons("foundations");
     const guidedLessons = [...foundationLessons, ...bridgeIds.map((id) => lessonById[id]), ...getChapterLessons("deep-learning")];
     expect(foundationLessons).toHaveLength(9);
-    expect(guidedLessons).toHaveLength(73);
+    expect(guidedLessons).toHaveLength(74);
     for (const lesson of guidedLessons) {
       expect(lesson.beginnerSteps.map((step) => step.type)).toEqual([
         "orientation", "scenario", "concept", "worked-example", "check", "notation", "recap"
@@ -86,7 +86,7 @@ describe("curriculum integrity", () => {
         expect(Array.isArray(interactiveStep.formulaIds)).toBe(true);
       }
     }
-    expect(lessons.filter((lesson) => lesson.beginnerSteps?.length)).toHaveLength(73);
+    expect(lessons.filter((lesson) => lesson.beginnerSteps?.length)).toHaveLength(74);
     expect(lessonById["graphs-slope-intercept"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("slope-explorer");
     expect(lessonById["gradients-directional-change"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("gradient-explorer");
     expect(lessonById["unit-vectors-normalization"].beginnerSteps.find((step) => step.id === "plain-idea").widget).toBe("unit-vector-explorer");
@@ -120,8 +120,8 @@ describe("curriculum integrity", () => {
   });
 
   it("keeps all guided everyday stories and ML bridges at the completed teaching standard", () => {
-    expect(GUIDED_LESSON_IDS).toHaveLength(73);
-    expect(new Set(GUIDED_LESSON_IDS).size).toBe(73);
+    expect(GUIDED_LESSON_IDS).toHaveLength(74);
+    expect(new Set(GUIDED_LESSON_IDS).size).toBe(74);
     expect(Object.keys(GUIDED_CONTENT_AUDIT)).toEqual(GUIDED_LESSON_IDS);
     for (const lessonId of GUIDED_LESSON_IDS) {
       const lesson = lessonById[lessonId];

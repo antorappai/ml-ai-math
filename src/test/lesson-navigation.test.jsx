@@ -44,7 +44,7 @@ describe("lesson navigation and grouped Python", () => {
     expect(window.location.hash).toBe("#/lessons/cnn-convolution/start");
   });
 
-  it("has correct previous and next links throughout all 73 lessons", () => {
+  it("has correct previous and next links throughout all 74 lessons", () => {
     for (let index = 0; index < lessons.length; index++) {
       expect(adjacentLessons(lessons[index])).toEqual({ previous: lessons[index - 1], next: lessons[index + 1] });
     }
@@ -63,12 +63,12 @@ describe("lesson navigation and grouped Python", () => {
     window.location.hash = "#/python";
     render(<App />);
     await screen.findByRole("heading", { name: "Learn the maths, then run it" });
-    expect(screen.getByRole("status")).toHaveTextContent("43 lessons");
+    expect(screen.getByRole("status")).toHaveTextContent("44 lessons");
     expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(6);
     fireEvent.change(screen.getByLabelText("Show examples"), { target: { value: "browser" } });
     expect(screen.getByRole("status")).toHaveTextContent("38 lessons");
     fireEvent.change(screen.getByLabelText("Show examples"), { target: { value: "notebook" } });
-    expect(screen.getByRole("status")).toHaveTextContent("6 lessons");
+    expect(screen.getByRole("status")).toHaveTextContent("7 lessons");
   });
 
   it("keeps grouped editors mounted when closed and distinguishes notebooks from runnable examples", async () => {

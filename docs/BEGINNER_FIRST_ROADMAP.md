@@ -1,6 +1,6 @@
 # ML Math Studio — Beginner-First Roadmap
 
-Last updated: 2026-09-05
+Last updated: 2026-09-13
 
 ## Product goal
 
@@ -15,8 +15,8 @@ Help learners who are not confident with school mathematics understand the ideas
 | Calculus & Optimization | 12 | 12 | Complete |
 | Probability & Statistics | 17 | 17 | Complete |
 | Classical Machine Learning | 9 | 9 | Complete |
-| Deep Learning | 7 | 7 | Complete |
-| **Total** | **73** | **73** | Complete |
+| Deep Learning Fundamentals + PyTorch | 8 | 8 | Complete |
+| **Total** | **74** | **74** | Complete |
 
 ## Guided lesson standard
 
@@ -43,7 +43,7 @@ Each guided lesson must have:
 - no repeated concept-definition paragraphs;
 - no unexplained beginner copy using “obvious,” “trivial,” or “simply.”
 
-The machine-readable audit contains one entry per guided lesson in `GUIDED_CONTENT_AUDIT`. Valid editorial states are `todo`, `drafted`, `reviewed`, and `done`. All 73 guided entries are marked `done`, including the seven Deep Learning lessons. Their reviewed teaching content is in `src/content/deepLearningGuides.js`; the audit records everyday explanations, numeric examples, ML explanations, term definitions, duplication review, and final content review.
+The machine-readable audit contains one entry per guided lesson in `GUIDED_CONTENT_AUDIT`. Valid editorial states are `todo`, `drafted`, `reviewed`, and `done`. All 74 guided entries are marked `done`, including the eight Deep Learning lessons. Their reviewed teaching content is in `src/content/deepLearningGuides.js`; the audit records everyday explanations, numeric examples, ML explanations, term definitions, duplication review, and final content review.
 
 ## Remaining work
 
@@ -53,11 +53,12 @@ The machine-readable audit contains one entry per guided lesson in `GUIDED_CONTE
 - Activation Functions & Losses
 - Forward Propagation & Backpropagation
 - Deep Optimizers, Initialization & Regularization
+- PyTorch MLPs, Training & Inference
 - Convolutional Neural Networks
 - Embeddings, RNNs & LSTMs
 - Attention & Transformer Mathematics
 
-All seven now have the seven-step structure, concrete quantities, reasoned numeric examples, supportive checks, symbol mappings, and recaps. Tensor, activation, backpropagation, regularization, convolution, sequence, embedding, attention, and transformer are introduced in plain language before the guided calculations. Original level content, formulas, projects, Python labs, exercises, routes, and widgets are preserved. No lesson migrations remain.
+All eight now have the seven-step structure, concrete quantities, reasoned numeric examples, supportive checks, symbol mappings, and recaps. Tensor, activation, backpropagation, regularization, PyTorch, inference, convolution, sequence, embedding, attention, and transformer are introduced in plain language before the guided calculations. Original level content, formulas, projects, Python labs, exercises, routes, and widgets are preserved. No lesson migrations remain.
 
 ### Verification completed — 2026-09-05
 
@@ -70,10 +71,10 @@ All seven now have the seven-step structure, concrete quantities, reasoned numer
 
 ### Formula rendering audit — 2026-09-05
 
-- All 73 guided notation panels and their symbol keys now use explicit LaTeX from `src/content/guidedNotation.js`, rendered by the same KaTeX components as the reference library. Widget formula companions use this rendering too.
+- All 74 guided notation panels and their symbol keys now use explicit LaTeX from `src/content/guidedNotation.js`, rendered by the same KaTeX components as the reference library. Widget formula companions use this rendering too.
 - Fixed the literal `yhat` in the Linear Regression From Math To Model example. Its story, quantity list, and worked example now render a proper prediction hat using authored inline LaTeX.
 - Added a shared inline-math renderer for authored formulas in lesson prose, checks, practice solutions, reference explanations, and Python companion explanations. Executable code remains code; ordinary prose is not heuristically interpreted as mathematics.
-- Strict KaTeX validation passes for all 73 guided formulas, all 71 canonical reference formulas, and their symbol keys. Rendering tests cover every guided notation page and widget formula companion, reject math error markup, and check the regression prediction hat.
+- Strict KaTeX validation passes for all 74 guided formulas, all 71 canonical reference formulas, and their symbol keys. Rendering tests cover every guided notation page and widget formula companion, reject math error markup, and check the regression prediction hat.
 - Visually verified the regression worked example and full notation panel in the local browser. Plain-language read-aloud explanations remain alongside typeset formulas.
 - No progress schema, lesson IDs, routes, numerical answers, or Python programs changed in this formula-rendering update.
 
@@ -99,12 +100,20 @@ Original levels, advanced examples, formula references, Python labs, projects, a
 | Calculus | 5 / 12 | 5 | 0 |
 | Probability | 10 / 17 | 10 | 0 |
 | Classical ML | 8 / 9 | 8 | 0 |
-| Deep Learning | 7 / 7 | 2 | 6 |
-| **Total** | **43 / 73** | **38** | **6** |
+| Deep Learning | 8 / 8 | 2 | 7 |
+| **Total** | **44 / 74** | **38** | **7** |
 
 One lesson offers both execution locations. There are **44 distinct per-lesson examples** after deduplicating repeated level entries; 30 lessons have no Python lab. Counts describe authored content and configured execution locations, not a fresh execution of every lab. The built-in feature runs editable Python code using Pyodide.
 
 Suggested next content additions: short labs for loss functions, conditional probability, and model selection. Add them when they clarify the mathematical idea; not every elementary lesson needs code.
+
+### Deep Learning Fundamentals + PyTorch refresh — 2026-09-13
+
+- Reframed the Deep Learning unit around the supplied learner-question curriculum: the bridge from linear and logistic regression to perceptrons and MLPs; architecture choices versus learned parameters; activation, loss, forward propagation, gradient descent, and backpropagation; generalization; CNNs, sequence models, attention, and transformers.
+- Added **PyTorch MLPs, Training & Inference** between optimization and CNNs. It walks through the full tensor → logits → loss → `backward()` → optimizer update loop, distinguishes training from ordinary LLM chat inference, and includes an existing prepared PyTorch notebook companion.
+- Expanded transformer guidance to define attention heads as parallel calculations inside an attention block, distinguish them from hidden layers, and explain how head count is chosen while Q/K/V weights are learned.
+- Saved progress now uses `ml-mastery-progress-v13`. The v12 migration retains all saved steps, checks, labs, projects, and resume position; the new PyTorch lesson starts uncompleted. Earlier migrations remain supported.
+- The machine-readable guided audit now records all eight Deep Learning lessons as complete. Total guided lesson count: **74**. Remaining guided lesson migrations: **0**.
 
 ### Chapter-first homepage — 2026-09-05
 
@@ -140,7 +149,7 @@ Keep the warm neutral background, readable dark text, muted green accent, restra
 
 ### Scrolling lessons and course sidebar — 2026-09-09
 
-- All 73 guided lessons now render their seven existing sections as one continuous reading page, with a sticky sidebar for units, lessons, and section links.
+- All 74 guided lessons now render their seven existing sections as one continuous reading page, with a sticky sidebar for units, lessons, and section links.
 - Existing step URLs jump to their section. Scrolling updates the current section and existing visit/resume progress; rendering all sections does not automatically mark them visited. Explicit finish actions still complete a lesson and continue to the next.
 - Check controls use unique rendered IDs when a question appears again in the recap. All existing teaching content, widgets, labs, and resource routes are preserved.
 - Validation: 75 tests passed, production build passed, desktop reading/sidebar layout visually verified. NLP retains its continuous guide layout.

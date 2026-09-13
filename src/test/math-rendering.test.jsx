@@ -24,7 +24,7 @@ describe("curriculum LaTeX rendering", () => {
     }
   });
 
-  it("renders all 73 guided notation pages and every widget formula companion with KaTeX", () => {
+  it("renders all 74 guided notation pages and every widget formula companion with KaTeX", () => {
     for (const lesson of lessons) {
       const stepIds = ["math-to-ml", ...lesson.beginnerSteps.filter((step) => step.widget).map((step) => step.id)];
       for (const stepId of stepIds) {

@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { chapters, lessonById, lessons } from "../content/index.js";
 
-export const STORAGE_KEY = "ml-mastery-progress-v12";
-export const MASTERY_VERSION = 12;
-const PREVIOUS_STORAGE_KEY = "ml-mastery-progress-v11";
+export const STORAGE_KEY = "ml-mastery-progress-v13";
+export const MASTERY_VERSION = 13;
+const PREVIOUS_STORAGE_KEY = "ml-mastery-progress-v12";
+const LEGACY_V11_STORAGE_KEY = "ml-mastery-progress-v11";
 const LEGACY_V10_STORAGE_KEY = "ml-mastery-progress-v10";
 const LEGACY_V9_STORAGE_KEY = "ml-mastery-progress-v9";
 const LEGACY_V8_STORAGE_KEY = "ml-mastery-progress-v8";
@@ -87,6 +88,20 @@ export function migrateMastery(storage = window.localStorage) {
 
   try {
     const previous = JSON.parse(storage.getItem(PREVIOUS_STORAGE_KEY));
+    if (previous?.version === 12) {
+      return {
+        ...base,
+        ...previous,
+        version: MASTERY_VERSION,
+        completedSteps: mapCompletedGuidedSteps(previous.completedLevels, previous.completedSteps)
+      };
+    }
+  } catch {
+    // Fall through to the older curriculum migration.
+  }
+
+  try {
+    const previous = JSON.parse(storage.getItem(LEGACY_V11_STORAGE_KEY));
     if (previous?.version === 11) {
       return {
         ...base,

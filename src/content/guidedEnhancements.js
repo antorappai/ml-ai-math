@@ -1,5 +1,3 @@
-import { DEEP_LEARNING_GUIDES } from "./deepLearningGuides.js";
-
 const CHAPTER_GUIDED_LESSONS = {
   foundations: [
     "numbers-signs", "fractions-ratios-percentages", "powers-roots-scientific", "variables-expressions",
@@ -30,7 +28,10 @@ const CHAPTER_GUIDED_LESSONS = {
     "ml-workflow", "linear-regression-ml", "logistic-classification", "knn-distance", "naive-bayes",
     "trees-ensembles", "support-vector-machines", "clustering-unsupervised", "model-selection-generalization"
   ],
-  "deep-learning": Object.keys(DEEP_LEARNING_GUIDES)
+  "deep-learning": [
+    "tensors-perceptrons", "activations-losses", "forward-backprop", "deep-optimization-regularization",
+    "pytorch-training-loop", "cnn-convolution", "sequence-models", "attention-transformers"
+  ]
 };
 
 export const GUIDED_LESSON_IDS = Object.values(CHAPTER_GUIDED_LESSONS).flat();
@@ -42,6 +43,8 @@ export const ML_TERM_GLOSSARY = {
   convolution: term("convolution", "In a CNN, applying shared filter weights to neighbouring inputs at successive positions.", "cnn-convolution"),
   sequence: term("sequence", "An ordered list of items, such as words or measurements over time.", "sequence-models"),
   transformer: term("transformer", "A neural network built from attention and per-position processing stages with position information.", "attention-transformers"),
+  pytorch: term("PyTorch", "A Python library for tensors, neural-network modules, and automatic differentiation.", "pytorch-training-loop"),
+  inference: term("inference", "Using fixed learned model parameters to produce an output for new input.", "pytorch-training-loop"),
   optimizer: term("optimizer", "A rule that uses gradients and possibly their history to adjust model parameters.", "deep-optimization-regularization"),
   model: term("model", "A rule learned from data that turns inputs into useful outputs.", "functions-domain-range"),
   feature: term("feature", "One input value supplied to a model, such as distance, age, or temperature.", "scalars-vectors-tensors"),
@@ -121,6 +124,7 @@ const LESSON_TERM_IDS = {
   "activations-losses": ["activation", "loss", "cross-entropy"],
   "forward-backprop": ["backpropagation", "gradient", "parameter"],
   "deep-optimization-regularization": ["optimizer", "regularization", "validation"],
+  "pytorch-training-loop": ["pytorch", "inference", "optimizer"],
   "cnn-convolution": ["convolution", "weight", "feature"],
   "sequence-models": ["sequence", "embedding", "backpropagation"],
   "attention-transformers": ["attention", "embedding", "transformer"],

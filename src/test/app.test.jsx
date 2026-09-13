@@ -325,7 +325,7 @@ describe("routed application", () => {
 
 describe("Deep Learning guided routes", () => {
   beforeEach(() => window.localStorage.clear());
-  const ids = ["tensors-perceptrons", "activations-losses", "forward-backprop", "deep-optimization-regularization", "cnn-convolution", "sequence-models", "attention-transformers"];
+  const ids = ["tensors-perceptrons", "activations-losses", "forward-backprop", "deep-optimization-regularization", "pytorch-training-loop", "cnn-convolution", "sequence-models", "attention-transformers"];
   it.each(ids)("renders every step and keeps companion routes for %s", async (id) => {
     window.location.hash = `#/lessons/${id}/start`;
     render(<App />);

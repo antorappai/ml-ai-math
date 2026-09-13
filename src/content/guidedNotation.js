@@ -144,6 +144,27 @@ export const GUIDED_NOTATION = {
       ]
     ]
   },
+  "pytorch-training-loop": {
+    "latex": "w_{\\mathrm{new}} = w - \\eta\\frac{\\partial L}{\\partial w}",
+    "symbols": [
+      [
+        "w",
+        "Current learned weight, 3."
+      ],
+      [
+        "\\eta",
+        "Learning rate, 0.1."
+      ],
+      [
+        "\\frac{\\partial L}{\\partial w}",
+        "Gradient calculated by backpropagation, 4."
+      ],
+      [
+        "w_{\\mathrm{new}}",
+        "Updated weight, 2.6."
+      ]
+    ]
+  },
   "numbers-signs": {
     "latex": "-3 - 4 = -7",
     "symbols": [

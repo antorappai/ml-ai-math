@@ -152,7 +152,7 @@ export const deepLearningLessons = [
   progressiveLesson({
     id: "cnn-convolution",
     chapterId: "deep-learning",
-    order: 5,
+    order: 6,
     title: "Convolutional Neural Networks",
     subtitle: "Use local receptive fields and shared kernels to learn spatial patterns.",
     prerequisites: ["tensors-perceptrons", "activations-losses"],
@@ -189,7 +189,7 @@ export const deepLearningLessons = [
   progressiveLesson({
     id: "sequence-models",
     chapterId: "deep-learning",
-    order: 6,
+    order: 7,
     title: "Embeddings, RNNs & LSTMs",
     subtitle: "Represent discrete tokens and carry information through ordered sequences.",
     prerequisites: ["forward-backprop", "vector-magnitude-distance"],
@@ -225,7 +225,7 @@ export const deepLearningLessons = [
   progressiveLesson({
     id: "attention-transformers",
     chapterId: "deep-learning",
-    order: 7,
+    order: 8,
     title: "Attention & Transformer Mathematics",
     subtitle: "Connect embeddings, dot products, softmax, residual paths, and token mixing.",
     prerequisites: ["sequence-models", "covariance-matrices-pca", "activations-losses"],
@@ -257,6 +257,43 @@ export const deepLearningLessons = [
       example: { title: "Quadratic attention", prompt: "What happens to score-matrix entries if sequence length doubles?", steps: ["Score matrix is L by L.", "Doubling each dimension multiplies entries by four."], answer: "Approximately four times as many", interpretation: "Long context creates memory and compute pressure." },
       questions: [check("attention-a1", "What does a causal mask enforce?", ["Every token sees future tokens", "A token cannot attend to future positions", "All attention weights are equal", "Values are removed"], 1, "Autoregressive prediction must not use unseen future tokens.")],
       examNotes: ["Separate architectural flow from training objective and decoding procedure."]
+    }
+  }),
+  progressiveLesson({
+    id: "pytorch-training-loop",
+    chapterId: "deep-learning",
+    order: 5,
+    title: "PyTorch MLPs, Training & Inference",
+    subtitle: "Build a small neural network, train its parameters, and separate training from a normal chat response.",
+    prerequisites: ["deep-optimization-regularization", "logistic-classification"],
+    tags: ["pytorch", "mlp", "training-loop", "inference"],
+    scenario: { title: "Practise, then perform", body: "A musician changes technique during rehearsal after feedback, then plays using the technique already learned during the concert.", mlParallel: "Training updates a model's parameters using data and feedback; inference uses its fixed parameters to produce an output." },
+    mlConnection: "PyTorch makes the same loop visible: tensors move through a model, a loss compares logits with labels, backpropagation produces gradients, and an optimizer updates parameters.",
+    projectIds: ["mlp-mini", "deep-capstone"],
+    basics: {
+      summary: "An MLP is a stack of Linear layers and activations; people choose its architecture before training.",
+      concepts: ["PyTorch is a Python library for tensor computations and automatic gradients.", "An architecture specifies layers, widths, activations, and outputs; training learns weights and biases inside that architecture.", "A logit is an unrestricted score. BCEWithLogitsLoss combines a binary-loss calculation with a stable sigmoid step."],
+      formulaIds: ["neuron", "binary-cross-entropy"],
+      example: { title: "Choose structure, learn numbers", prompt: "A pass/fail model has 3 input features, hidden layers of 8 then 4 units, and 1 output logit. Which parts are fixed before training?", steps: ["Set the layer widths as 3 → 8 → 4 → 1.", "Let training adjust the weights and biases in those chosen layers."], answer: "The architecture is chosen; the parameters are learned.", interpretation: "Training does not normally invent layers; it changes the numbers already placed inside them." },
+      questions: [check("pytorch-b1", "Which quantity normally changes during training?", ["The chosen number of layers", "Weights and biases", "The meaning of a label", "The tensor rank"], 1, "Architecture is chosen before training; parameters are adjusted during it.")],
+      examNotes: ["State architecture choices separately from learned parameters."]
+    },
+    core: {
+      summary: "A training step has five visible operations: clear old gradients, predict, calculate loss, backpropagate, and update.",
+      concepts: ["model.train() enables training behaviour such as dropout; model.eval() prepares a model for evaluation.", "optimizer.zero_grad() is needed because PyTorch accumulates gradients by default.", "loss.backward() calculates gradients; optimizer.step() changes parameters using those gradients."],
+      formulaIds: ["gradient-descent", "binary-cross-entropy"],
+      example: { title: "One gradient update", prompt: "A weight is 3, its loss gradient is 4, and the learning rate is 0.1. Find the new weight.", steps: ["Scale the gradient: 0.1 × 4 = 0.4.", "Move against the positive gradient: 3 − 0.4 = 2.6."], answer: "2.6", interpretation: "The optimizer uses a gradient calculated by backpropagation to make a small parameter update." },
+      pythonLab: notebookLab({ title: "PyTorch MLP training loop", goal: "Read the complete loop that trains a binary MLP from tensors.", code: "import torch\nimport torch.nn as nn\n\nX = torch.tensor([[5., .9, .8], [2., .6, .5]])\ny = torch.tensor([[1.], [0.]])\nmodel = nn.Sequential(nn.Linear(3, 8), nn.ReLU(), nn.Linear(8, 1))\nloss_fn = nn.BCEWithLogitsLoss()\noptimizer = torch.optim.Adam(model.parameters(), lr=0.001)\n\noptimizer.zero_grad()\nloss = loss_fn(model(X), y)\nloss.backward()\noptimizer.step()\nprint(loss.ndim)", output: "0", explanation: "The scalar loss drives backpropagation; Adam updates every trainable weight and bias after gradients are calculated.", notebookPath: "notebooks/deep-learning-foundations.ipynb" }),
+      questions: [check("pytorch-c1", "What comes directly after loss.backward() in a normal training step?", ["Create new layers", "optimizer.step()", "Delete the labels", "Convert labels to strings"], 1, "After backpropagation has filled gradients, the optimizer can use them to update parameters.")],
+      examNotes: ["Keep logits and probabilities distinct: BCEWithLogitsLoss expects logits."]
+    },
+    advanced: {
+      summary: "Inference uses the learned weights without updating them; this also explains normal LLM chat behaviour.",
+      concepts: ["Inference runs a forward pass with fixed parameters. A user correction in an ordinary chat becomes new context, not a backpropagation update to model weights.", "For next-token generation, text becomes token IDs, embeddings, transformer representations, output logits, softmax probabilities, and a selected next token.", "A neural network is not a mystery in architecture or mathematics; the hard part is interpreting a learned behaviour distributed across many parameters and layers."],
+      formulaIds: ["softmax", "multiclass-cross-entropy"],
+      example: { title: "Correcting a chat answer", prompt: "A model predicts the wrong answer and the user supplies a correction. What changes in a normal chat?", steps: ["Add the correction to the conversation context.", "Run another forward pass using the same stored model weights."], answer: "Context changes; the model weights do not.", interpretation: "A training dataset and training loop are required before feedback can update a model's parameters." },
+      questions: [check("pytorch-a1", "Does an ordinary correction to an LLM response normally run backpropagation?", ["Yes, every chat updates weights", "No, it supplies context for another inference pass", "Only if the prompt is short", "Only after softmax"], 1, "Normal chat uses fixed learned weights. Training is the separate process that computes loss, gradients, and updates.")],
+      examNotes: ["Use the sequence inference → fixed weights, training → loss → backpropagation → optimizer → updated weights."]
     }
   })
 ];
