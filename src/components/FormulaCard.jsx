@@ -11,13 +11,20 @@ function FormulaIntuition({ formula }) {
     || [...formula.assumptions, ...formula.signs];
 
   return <section className="formula-intuition" aria-label={`Before the ${formula.label} formula`}>
-    <p className="eyebrow">Before the formula</p>
+    <p className="eyebrow">Understand it before memorising it</p>
     <h4>{introduction.title}</h4>
     <p>{introduction.explanation}</p>
-    <p><strong>Tiny example:</strong> <MathText>{introduction.example}</MathText></p>
+    <p><strong>Anchor example:</strong> <MathText>{introduction.example}</MathText></p>
     <div className="formula-preview-grid">
-      <section><h5>Symbols to notice</h5><dl>{formula.symbols.map(([symbol, meaning]) => <div key={`${formula.id}-preview-${symbol}`}><dt><InlineMath>{symbol}</InlineMath></dt><dd>{meaning}</dd></div>)}</dl></section>
-      <section><h5>Signs & conditions</h5><ul>{signNotes.map((note) => <li key={note}><MathText>{note}</MathText></li>)}</ul></section>
+      <section>
+        <h5>Symbol-by-symbol reminder</h5>
+        <p>Read each symbol as a named quantity, not as a mysterious letter.</p>
+        <dl>{formula.symbols.map(([symbol, meaning]) => <div key={`${formula.id}-preview-${symbol}`}><dt><InlineMath>{symbol}</InlineMath></dt><dd>{meaning}</dd></div>)}</dl>
+      </section>
+      <section>
+        <h5>Conditions and sign clues</h5>
+        <ul>{signNotes.map((note) => <li key={note}><MathText>{note}</MathText></li>)}</ul>
+      </section>
     </div>
   </section>;
 }
@@ -35,9 +42,13 @@ export default function FormulaCard({ formula, compact = false }) {
         <span className="formula-id">{formula.id}</span>
       </header>
       {!compact && <FormulaIntuition formula={formula} />}
-      <BlockMath>{formula.latex}</BlockMath>
-      <p className="read-aloud"><strong>Read aloud:</strong> {formula.readAs}.</p>
-      <p>{formula.purpose}</p>
+
+      <section aria-label={`${formula.label} notation`}>
+        <p className="eyebrow">Now read the notation</p>
+        <BlockMath>{formula.latex}</BlockMath>
+        <p className="read-aloud"><strong>Say it aloud:</strong> {formula.readAs}.</p>
+        <p><strong>What the whole formula is doing:</strong> {formula.purpose}</p>
+      </section>
 
       {compact && <div className="symbol-grid">
         {formula.symbols.map(([symbol, meaning]) => (
@@ -51,15 +62,16 @@ export default function FormulaCard({ formula, compact = false }) {
       {!compact && (
         <div className="formula-detail-grid">
           <section>
-            <h4>Beginner example</h4>
+            <h4>Put numbers into it</h4>
             <p><MathText>{formula.beginnerExample}</MathText></p>
+            <p><strong>Reminder:</strong> go back to the symbol box and match each number or quantity in this example to its symbol before calculating.</p>
           </section>
           <section>
-            <h4>How to process it</h4>
+            <h4>Calculate it step by step</h4>
             <ol>{formula.derivation.map((step) => <li key={step}><MathText>{step}</MathText></li>)}</ol>
           </section>
           <section>
-            <h4>Common mistakes</h4>
+            <h4>Common trap</h4>
             <ul>{formula.mistakes.map((item) => <li key={item}><MathText>{item}</MathText></li>)}</ul>
           </section>
         </div>
