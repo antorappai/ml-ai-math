@@ -26,7 +26,7 @@ export default function App() {
             <Route path="lessons/:lessonId/:level" element={<LessonPage />} />
             <Route path="nlp" element={<NlpPage />} />
             <Route path="nlp/:sectionId" element={<NlpPage />} />
-            <Route path="deep-learning" element={<DeepLearningPage />} />
+            <Route path="deep-learning" element={<Navigate to="/lessons/tensors-perceptrons/start" replace />} />
             <Route path="deep-learning/:sectionId" element={<DeepLearningPage />} />
             <Route path="python" element={<PythonLibraryPage />} />
             <Route path="practice" element={<PracticePage />} />
