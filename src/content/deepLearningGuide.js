@@ -10,5 +10,7 @@ export const deepLearningSections = Array.from(
 export function prepareDeepMarkdown(markdown) {
   return markdown
     .replace(/\$\$\s*\n?([\s\S]*?)\n?\s*\$\$/g, (_, latex) => `\n\n\`\`\`math\n${latex.trim()}\n\`\`\`\n\n`)
-    .replace(/(^|[^$])\$([^$\n]+?)\$(?!\$)/g, (_, before, latex) => `${before}\\(${latex}\\)`);
+    // Markdown treats backslashes as escapes. Keep inline LaTeX in a text token
+    // until MathText receives it, then decode and send it to KaTeX.
+    .replace(/(^|[^$])\$([^$\n]+?)\$(?!\$)/g, (_, before, latex) => `${before}[[math:${encodeURIComponent(latex.trim())}]]`);
 }

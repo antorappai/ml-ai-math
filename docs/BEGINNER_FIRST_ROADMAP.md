@@ -193,3 +193,9 @@ Keep the warm neutral background, readable dark text, muted green accent, restra
 
 - Homepage unit cards now say **Open unit**, and the selected unit has a clear green edge and highlighted heading in the scrolling lesson sidebar.
 - Validation: 79 tests passed and the production build passed.
+
+### Formula rendering audit — 2026-09-13
+
+- Moved all 71 Formula Library expressions to raw LaTeX strings so JavaScript cannot consume LaTeX commands such as `\\sum`, `\\frac`, or `\\hat{y}`.
+- Fixed the Deep Learning Markdown path so its 33 display equations and 16 inline equations reach KaTeX. Inline notation, including prediction hats, no longer disappears during Markdown parsing.
+- Added strict KaTeX and rendered-page coverage for every reference formula, all guided notation, and all Deep Learning formulas.

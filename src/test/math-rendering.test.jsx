@@ -7,6 +7,7 @@ import katex from "katex";
 import App from "../App.jsx";
 import GuidedLesson from "../components/GuidedLesson.jsx";
 import { MathText } from "../components/Math.jsx";
+import FormulaCard from "../components/FormulaCard.jsx";
 import { chapterById, lessons, formulaList } from "../content/index.js";
 import { GUIDED_NOTATION } from "../content/guidedNotation.js";
 import { MasteryProvider } from "../state/mastery.js";
@@ -22,6 +23,17 @@ describe("curriculum LaTeX rendering", () => {
         expect(() => strictRender(latex), latex).not.toThrow();
       }
     }
+  });
+
+  it("renders every Formula Library card with proper LaTeX, including prediction hats", () => {
+    const html = renderToStaticMarkup(<>{formulaList.map((formula) => <FormulaCard formula={formula} key={formula.id} />)}</>);
+    const doc = new DOMParser().parseFromString(html, "text/html");
+
+    expect(doc.querySelectorAll(".formula-card")).toHaveLength(formulaList.length);
+    expect(doc.querySelectorAll(".formula-card > .block-math .katex")).toHaveLength(formulaList.length);
+    expect(doc.querySelector(".katex-error, .math-fallback")).toBeNull();
+    expect(formulaList.find((formula) => formula.id === "linear-regression")?.latex).toBe("\\hat{y}=\\mathbf w^\\top\\mathbf x+b");
+    expect(formulaList.find((formula) => formula.id === "mse")?.latex).toContain("\\hat{y}_i");
   });
 
   it("renders all 74 guided notation pages and every widget formula companion with KaTeX", () => {
