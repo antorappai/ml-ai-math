@@ -919,6 +919,14 @@ Every learned internal concept
 
 Optimizers use gradients to update parameters.
 
+For example, if $w=0.8$, $\frac{\partial L}{\partial w}=0.4$, and the learning rate is $\eta=0.1$:
+
+$$
+w_{new}=0.8-(0.1)(0.4)=0.76
+$$
+
+The gradient describes the local direction in which loss increases. The optimizer moves the weight in the opposite direction to reduce loss.
+
 ---
 
 ## 16.1 SGD
@@ -1203,6 +1211,20 @@ High Variance
 
 # 20. Generalization Techniques
 
+## Optimization and Regularization
+
+Optimization and regularization have different jobs:
+
+```text
+Optimization
+→ reduce the training loss
+
+Regularization
+→ prevent the model from fitting training details too specifically
+```
+
+SGD, Momentum, RMSprop, Adam, and AdamW control how a model updates parameters. Dropout, L1, L2, weight decay, early stopping, augmentation, and smaller models help it generalize.
+
 ## Train / Validation / Test
 
 ```text
@@ -1337,6 +1359,32 @@ fewer parameters
 ```
 
 generalizes better.
+
+## Bias and Variance
+
+```text
+High bias
+→ underfitting
+
+High variance
+→ overfitting
+```
+
+Regularization often reduces variance, but too much can create underfitting. The best model is the one that performs well on unseen data, not necessarily the one with the highest training accuracy.
+
+```text
+No regularization:
+Train = 99%
+Validation = 70%
+
+Useful regularization:
+Train = 92%
+Validation = 89%
+
+Too much regularization:
+Train = 65%
+Validation = 64%
+```
 
 ---
 

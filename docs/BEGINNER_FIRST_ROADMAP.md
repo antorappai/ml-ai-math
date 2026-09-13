@@ -122,6 +122,7 @@ Suggested next content additions: short labs for loss functions, conditional pro
 - Existing Python and PyTorch resources remain available inside the relevant sections: neurons and tensors, activations, backpropagation, optimizers, the PyTorch MLP training loop, attention, CNNs, and sequence models. Existing direct lesson, formula, practice, project, and Python-library routes remain compatible for saved links and progress.
 - Dashboard and old Deep Learning chapter URLs now open the continuous guide rather than a sequence of separate lesson pages.
 - Rewrote the guide's framing so it teaches the concepts directly. It no longer refers to a learner's questions, doubts, or an AI textbook agent; the final practice and review sections are now natural parts of the learning sequence.
+- Added the missing optimization-and-regularization clarifications: a numerical gradient update, an explicit separation between optimization and regularization, and bias–variance examples that show too little, useful, and too much regularization.
 
 ### Chapter-first homepage — 2026-09-05
 
