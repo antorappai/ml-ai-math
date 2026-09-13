@@ -1,4 +1,5 @@
 import LessonNavigation from "../components/LessonNavigation.jsx";
+import CourseSidebar from "../components/CourseSidebar.jsx";
 import { pythonExamples } from "../utils/lessonNavigation.js";
 import { MathText } from "../components/Math.jsx";
 import React, { useEffect } from "react";
@@ -137,10 +138,17 @@ export default function LessonPage() {
 
   return <div className="page lesson-page simple-lesson-page">
     <LessonHeader lesson={lesson} chapter={chapter} mode={mode} hasFormulas={hasFormulas} hasPython={hasPython} />
-    {lesson.prerequisites.length > 0 && <aside className="prerequisite-strip"><strong>Study first</strong>{lesson.prerequisites.map((id) => <Link to={studyPath(id)} key={id}>{lessonById[id]?.title || id}</Link>)}</aside>}
-    {mode === "study" && <StudyGuide lesson={lesson} mastery={mastery} completeLesson={completeLesson} />}
-    {mode === "formula" && <FormulaView lesson={lesson} />}
-    {mode === "practice" && <PracticeView lesson={lesson} />}
-    {mode === "python" && <PythonView lesson={lesson} completePython={completePython} />}
+    <div className="lesson-support-layout">
+      <aside className="lesson-support-sidebar">
+        <CourseSidebar currentChapterId={chapter.id} currentLessonId={lesson.id} />
+      </aside>
+      <main className="lesson-support-main">
+        {lesson.prerequisites.length > 0 && <aside className="prerequisite-strip"><strong>Study first</strong>{lesson.prerequisites.map((id) => <Link to={studyPath(id)} key={id}>{lessonById[id]?.title || id}</Link>)}</aside>}
+        {mode === "study" && <StudyGuide lesson={lesson} mastery={mastery} completeLesson={completeLesson} />}
+        {mode === "formula" && <FormulaView lesson={lesson} />}
+        {mode === "practice" && <PracticeView lesson={lesson} />}
+        {mode === "python" && <PythonView lesson={lesson} completePython={completePython} />}
+      </main>
+    </div>
   </div>;
 }
