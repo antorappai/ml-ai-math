@@ -18,6 +18,36 @@ const sectionLabs = {
   "27": ["cnn-convolution", "sequence-models"]
 };
 
+const sectionChecks = {
+  "16": [
+    { prompt: "A weight is 0.8, its gradient is 0.4, and the learning rate is 0.1. What is the next weight after one gradient-descent step?", options: ["0.76", "0.84", "0.4"], answer: 0, explanation: "Subtract the scaled gradient: 0.8 − 0.1 × 0.4 = 0.76." },
+    { prompt: "What does backpropagation provide to an optimizer?", options: ["A gradient for each parameter", "A new network architecture", "A validation score only"], answer: 0, explanation: "Backpropagation calculates gradients; the optimizer uses them to update parameters." }
+  ],
+  "20": [
+    { prompt: "Which question is regularization trying to answer?", options: ["How can training loss fall fastest?", "How can the model avoid fitting training details too specifically?", "How can more layers be created during training?"], answer: 1, explanation: "Regularization aims for useful performance on unseen data, not only the smallest training loss." },
+    { prompt: "Training accuracy is 99% and validation accuracy is 70%. What is the most likely issue?", options: ["Underfitting", "Overfitting", "A perfect generalization result"], answer: 1, explanation: "A large gap between training and validation performance is a common sign of overfitting." },
+    { prompt: "What does model.eval() do to dropout?", options: ["Keeps it active", "Disables it for evaluation", "Turns it into weight decay"], answer: 1, explanation: "Dropout is a training-time regularization technique and is disabled during evaluation." }
+  ]
+};
+
+function SectionChecks({ checks }) {
+  const [answers, setAnswers] = useState({});
+  if (!checks?.length) return null;
+  return <section className="deep-section-checks" aria-label="Quick checks">
+    <p className="section-label">Quick checks</p>
+    <h3>Check the idea before moving on</h3>
+    {checks.map((check, index) => {
+      const chosen = answers[index];
+      const answered = chosen !== undefined;
+      return <article key={check.prompt}>
+        <p><strong>{index + 1}. {check.prompt}</strong></p>
+        <div>{check.options.map((option, optionIndex) => <button type="button" className={answered && optionIndex === check.answer ? "correct" : ""} onClick={() => setAnswers((current) => ({ ...current, [index]: optionIndex }))} key={option}>{option}</button>)}</div>
+        {answered && <p className={chosen === check.answer ? "check-correct" : "check-retry"}>{chosen === check.answer ? "Correct. " : "Try again. "}{check.explanation}</p>}
+      </article>;
+    })}
+  </section>;
+}
+
 function Text({ children }) {
   return <MathText>{React.Children.toArray(children).filter((child) => typeof child === "string").join("")}</MathText>;
 }
@@ -94,6 +124,7 @@ export default function DeepLearningPage() {
         <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{prepareDeepMarkdown(deepLearningIntroduction)}</Markdown>
         {deepLearningSections.map((section) => <section id={`deep-learning-section-${section.id}`} key={section.id} className="deep-reading-section">
           <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{prepareDeepMarkdown(section.markdown)}</Markdown>
+          <SectionChecks checks={sectionChecks[section.id]} />
           {(sectionLabs[section.id] || []).map((lessonId) => <PythonLab key={lessonId} lessonId={lessonId} />)}
         </section>)}
         <Link to="/dashboard">Back to all units →</Link>

@@ -661,6 +661,15 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 .deep-reading-section { scroll-margin-top: 90px; }
 
 .deep-python-labs { margin: 2rem 0; padding: 1.25rem; border: 1px solid var(--line); border-radius: .75rem; background: var(--surface); }
+.deep-section-checks { margin: 2rem 0; padding: 1.25rem; border: 1px solid var(--green); border-radius: .75rem; background: var(--surface); }
+.deep-section-checks h3 { margin-top: .2rem; }
+.deep-section-checks article { padding: 1rem 0; border-top: 1px solid var(--line); }
+.deep-section-checks article:first-of-type { border-top: 0; }
+.deep-section-checks article > div { display: flex; flex-wrap: wrap; gap: .5rem; }
+.deep-section-checks button { padding: .55rem .7rem; border: 1px solid var(--line); border-radius: .4rem; background: var(--page); color: var(--ink); cursor: pointer; text-align: left; }
+.deep-section-checks button:hover, .deep-section-checks button.correct { border-color: var(--green); background: var(--lime); }
+.check-correct { color: var(--green); font-weight: 700; }
+.check-retry { color: var(--coral); }
 .deep-python-labs h3 { margin-top: .2rem; }
 .deep-python-labs details { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--line); }
 .deep-python-labs summary { cursor: pointer; font-weight: 700; }

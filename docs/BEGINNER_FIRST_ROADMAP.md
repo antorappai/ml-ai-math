@@ -123,6 +123,7 @@ Suggested next content additions: short labs for loss functions, conditional pro
 - Dashboard and old Deep Learning chapter URLs now open the continuous guide rather than a sequence of separate lesson pages.
 - Rewrote the guide's framing so it teaches the concepts directly. It no longer refers to a learner's questions, doubts, or an AI textbook agent; the final practice and review sections are now natural parts of the learning sequence.
 - Added the missing optimization-and-regularization clarifications: a numerical gradient update, an explicit separation between optimization and regularization, and bias–variance examples that show too little, useful, and too much regularization.
+- Added five compact interactive MCQs directly to the optimizer and generalization sections, covering a gradient update, backpropagation's role, regularization, overfitting, and evaluation-time dropout.
 
 ### Chapter-first homepage — 2026-09-05
 
