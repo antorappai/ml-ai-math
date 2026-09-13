@@ -1,10 +1,12 @@
 import { lessons } from "../content/index.js";
 
 export function lessonStart(lesson) {
+  if (lesson?.chapterId === "deep-learning") return "/deep-learning";
   return `/lessons/${lesson.id}/${lesson.beginnerSteps?.[0]?.id || "study"}`;
 }
 
 export function resumeStudy(lesson, mastery) {
+  if (lesson?.chapterId === "deep-learning") return "/deep-learning";
   const stepId = mastery.lastGuidedSteps?.[lesson.id];
   return lesson.beginnerSteps?.some((step) => step.id === stepId)
     ? `/lessons/${lesson.id}/${stepId}` : lessonStart(lesson);

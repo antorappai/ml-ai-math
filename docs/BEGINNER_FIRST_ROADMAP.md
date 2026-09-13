@@ -115,6 +115,13 @@ Suggested next content additions: short labs for loss functions, conditional pro
 - Saved progress now uses `ml-mastery-progress-v13`. The v12 migration retains all saved steps, checks, labs, projects, and resume position; the new PyTorch lesson starts uncompleted. Earlier migrations remain supported.
 - The machine-readable guided audit now records all eight Deep Learning lessons as complete. Total guided lesson count: **74**. Remaining guided lesson migrations: **0**.
 
+### Continuous Deep Learning guide — 2026-09-13
+
+- Replaced the main Deep Learning unit journey with the supplied **Deep Learning Fundamentals + PyTorch** notes as one continuous 32-section guide. The sticky left menu jumps to each numbered section and follows the reader while scrolling.
+- The notes are stored unchanged in `src/content/guides/deep_learning_pytorch_curriculum_chat_context.md`. Displayed equations are converted to KaTeX from their authored LaTeX.
+- Existing Python and PyTorch resources remain available inside the relevant sections: neurons and tensors, activations, backpropagation, optimizers, the PyTorch MLP training loop, attention, CNNs, and sequence models. Existing direct lesson, formula, practice, project, and Python-library routes remain compatible for saved links and progress.
+- Dashboard and old Deep Learning chapter URLs now open the continuous guide rather than a sequence of separate lesson pages.
+
 ### Chapter-first homepage — 2026-09-05
 
 - All six chapters now appear as clickable boxes above the continue-learning panel, with lesson counts and saved completion counts. Foundations lessons remain available on their chapter page.

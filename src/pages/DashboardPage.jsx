@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { chapters, getChapterLessons, lessonById, lessons } from "../content/index.js";
 import { resumeStudy } from "../utils/lessonNavigation.js";
 import { nlpSections } from "../content/nlpGuide.js";
+import { deepLearningSections } from "../content/deepLearningGuide.js";
 import { useMastery } from "../state/mastery.js";
 
 function guidedLessonComplete(mastery, lesson) {
@@ -34,11 +35,12 @@ export default function DashboardPage() {
             const chapterLessons = getChapterLessons(chapter.id);
             const complete = chapterLessons.filter((lesson) => guidedLessonComplete(mastery, lesson)).length;
             const nextLesson = chapterLessons.find((lesson) => !guidedLessonComplete(mastery, lesson)) || chapterLessons[0];
-            return <Link className="home-chapter-box" to={resumeStudy(nextLesson, mastery)} key={chapter.id}>
-              <div className="home-chapter-meta"><span>Chapter {index + 1}</span><span>{chapterLessons.length} lessons</span></div>
+            const isDeepLearning = chapter.id === "deep-learning";
+            return <Link className="home-chapter-box" to={isDeepLearning ? "/deep-learning" : resumeStudy(nextLesson, mastery)} key={chapter.id}>
+              <div className="home-chapter-meta"><span>Chapter {index + 1}</span><span>{isDeepLearning ? `${deepLearningSections.length} sections` : `${chapterLessons.length} lessons`}</span></div>
               <h3>{chapter.shortTitle}</h3>
               <p>{chapter.purpose}</p>
-              <div className="home-chapter-footer"><span>{complete ? `${complete}/${chapterLessons.length} completed` : "Open unit"}</span><span aria-hidden="true">→</span></div>
+              <div className="home-chapter-footer"><span>{isDeepLearning ? "Read the guide" : complete ? `${complete}/${chapterLessons.length} completed` : "Open unit"}</span><span aria-hidden="true">→</span></div>
             </Link>;
           })}
           <Link className="home-chapter-box" to="/nlp"><div className="home-chapter-meta"><span>Study unit</span><span>{nlpSections.length} sections</span></div><h3>NLP</h3><p>Classical NLP Study Guide</p><div className="home-chapter-footer"><span>Explore sections</span><span aria-hidden="true">→</span></div></Link>

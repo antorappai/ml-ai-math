@@ -40,8 +40,8 @@ describe("lesson navigation and grouped Python", () => {
     render(<App />);
     await screen.findByRole("heading", { name: "Read the maths without guessing" });
     fireEvent.change(screen.getByLabelText("Jump to lesson"), { target: { value: "cnn-convolution" } });
-    await screen.findByRole("heading", { name: "Start here" });
-    expect(window.location.hash).toBe("#/lessons/cnn-convolution/start");
+    await screen.findByRole("heading", { name: "Deep Learning Fundamentals + PyTorch" });
+    expect(window.location.hash).toBe("#/deep-learning");
   });
 
   it("has correct previous and next links throughout all 74 lessons", () => {
@@ -97,7 +97,8 @@ it("renders all seven sections with a course sidebar without marking unseen sect
   await screen.findByRole("heading", { name: "Start here" });
   expect(document.querySelectorAll('.lesson-reading-section')).toHaveLength(7);
   expect(screen.getByRole('navigation', { name: 'Course units and lessons' })).toBeInTheDocument();
-  expect(document.querySelectorAll('.course-sidebar details')).toHaveLength(6);
+  expect(document.querySelectorAll('.course-sidebar details')).toHaveLength(5);
+  expect(screen.getByRole('link', { name: 'Deep Learning guide' })).toHaveAttribute('href', '#/deep-learning');
   const state = JSON.parse(localStorage.getItem(STORAGE_KEY));
   expect(state.completedSteps['numbers-signs']).toEqual({ start: true });
   expect(screen.getByRole('link', { name: 'NLP study guide →' })).toHaveAttribute('href', '#/nlp');

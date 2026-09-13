@@ -12,6 +12,7 @@ import PythonLibraryPage from "./pages/PythonLibraryPage.jsx";
 import CoursePackPage from "./pages/CoursePackPage.jsx";
 
 import NlpPage from "./pages/NlpPage.jsx";
+import DeepLearningPage from "./pages/DeepLearningPage.jsx";
 
 export default function App() {
   return (
@@ -25,6 +26,8 @@ export default function App() {
             <Route path="lessons/:lessonId/:level" element={<LessonPage />} />
             <Route path="nlp" element={<NlpPage />} />
             <Route path="nlp/:sectionId" element={<NlpPage />} />
+            <Route path="deep-learning" element={<DeepLearningPage />} />
+            <Route path="deep-learning/:sectionId" element={<DeepLearningPage />} />
             <Route path="python" element={<PythonLibraryPage />} />
             <Route path="practice" element={<PracticePage />} />
             <Route path="formulas" element={<FormulaLibraryPage />} />

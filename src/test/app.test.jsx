@@ -14,9 +14,10 @@ describe("routed application", () => {
     expect(await screen.findByRole("heading", { name: /Learn the maths behind machine learning/i })).toBeInTheDocument();
     const chapterGrid = screen.getByRole("region", { name: "Choose a chapter" });
     expect(within(chapterGrid).getAllByRole("link")).toHaveLength(7);
-    for (const [chapterId, lessonId] of [["foundations", "numbers-signs"], ["linear-algebra", "scalars-vectors-tensors"], ["calculus-optimization", "change-slope-limits"], ["probability-statistics", "experiments-outcomes-events"], ["classical-ml", "ml-workflow"], ["deep-learning", "tensors-perceptrons"]]) {
+    for (const [chapterId, lessonId] of [["foundations", "numbers-signs"], ["linear-algebra", "scalars-vectors-tensors"], ["calculus-optimization", "change-slope-limits"], ["probability-statistics", "experiments-outcomes-events"], ["classical-ml", "ml-workflow"]]) {
       expect(chapterGrid.querySelector(`a[href="#/lessons/${lessonId}/start"]`), chapterId).toBeTruthy();
     }
+    expect(chapterGrid.querySelector('a[href="#/deep-learning"]')).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Foundations roadmap" })).not.toBeInTheDocument();
     expect(chapterGrid.compareDocumentPosition(document.querySelector(".continue-panel")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(screen.getByRole("link", { name: /Start with the first lesson/i })).toHaveAttribute("href", "#/lessons/numbers-signs/start");
@@ -25,10 +26,9 @@ describe("routed application", () => {
   it("redirects legacy chapter URLs into the unit's scrolling lesson", async () => {
     window.location.hash = "#/chapters/deep-learning";
     render(<App />);
-    expect(await screen.findByRole("heading", { name: "Start here" })).toBeInTheDocument();
-    expect(window.location.hash).toBe("#/lessons/tensors-perceptrons/start");
-    expect(screen.getByRole("navigation", { name: "Course units and lessons" })).toBeInTheDocument();
-    expect(document.querySelector(".course-sidebar .current-unit")).toHaveTextContent("Deep Learning");
+    expect(await screen.findByRole("heading", { name: "Deep Learning Fundamentals + PyTorch" })).toBeInTheDocument();
+    expect(window.location.hash).toBe("#/deep-learning");
+    expect(screen.getByRole("navigation", { name: "Deep Learning sections" })).toBeInTheDocument();
   });
 
   it("embeds a runnable browser Python example in every project", async () => {

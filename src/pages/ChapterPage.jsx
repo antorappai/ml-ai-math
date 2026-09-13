@@ -9,6 +9,7 @@ export default function ChapterPage() {
   const chapter = chapterById[chapterId];
   const { mastery } = useMastery();
   if (!chapter) return <Navigate to="/dashboard" replace />;
+  if (chapter.id === "deep-learning") return <Navigate to="/deep-learning" replace />;
   const lessons = getChapterLessons(chapter.id);
   const nextLesson = lessons.find((lesson) => !lesson.beginnerSteps?.every((step) => mastery.completedSteps?.[lesson.id]?.[step.id])) || lessons[0];
   return <Navigate to={resumeStudy(nextLesson, mastery)} replace />;

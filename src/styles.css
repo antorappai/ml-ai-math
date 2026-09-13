@@ -617,14 +617,22 @@ summary { cursor: pointer; color: var(--green); font-weight: 700; }
 }
 
 .nlp-page { max-width: 1100px; }
+.deep-learning-page { max-width: 1180px; }
 .nlp-navigation { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.5rem 0; }
 .nlp-markdown { line-height: 1.75; overflow-wrap: anywhere; }
+.deep-markdown { line-height: 1.75; overflow-wrap: anywhere; }
 .nlp-markdown h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+.deep-markdown h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
 .nlp-markdown h2, .nlp-markdown h3, .nlp-markdown h4 { margin-top: 1.8rem; }
+.deep-markdown h2, .deep-markdown h3, .deep-markdown h4 { margin-top: 1.8rem; }
 .nlp-markdown pre { overflow-x: auto; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: .6rem; line-height: 1.5; }
+.deep-markdown pre { overflow-x: auto; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: .6rem; line-height: 1.5; }
 .nlp-markdown table { display: block; overflow-x: auto; border-collapse: collapse; margin: 1.5rem 0; }
+.deep-markdown table { display: block; overflow-x: auto; border-collapse: collapse; margin: 1.5rem 0; }
 .nlp-markdown th, .nlp-markdown td { border: 1px solid var(--line); padding: .6rem; min-width: 120px; text-align: left; }
+.deep-markdown th, .deep-markdown td { border: 1px solid var(--line); padding: .6rem; min-width: 120px; text-align: left; }
 .nlp-markdown blockquote { border-left: 3px solid var(--line); margin-left: 0; padding-left: 1rem; }
+.deep-markdown blockquote { border-left: 3px solid var(--line); margin-left: 0; padding-left: 1rem; }
 .nlp-page .home-chapter-box h2 { font-size: 1.05rem; margin: 0; }
 
 /* Dark surfaces use light accents; filled actions retain white-label contrast. */
@@ -638,15 +646,31 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 .card-index { color: var(--muted); }
 
 .nlp-reading-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 2.5rem; margin-top: 1.5rem; align-items: start; }
+.deep-reading-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 2.5rem; margin-top: 1.5rem; align-items: start; }
 .nlp-sidebar { position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; padding: .8rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.deep-sidebar { position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; padding: .8rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
 .nlp-sidebar h2 { margin: .3rem .5rem .8rem; font-size: 1rem; }
+.deep-sidebar h2 { margin: .3rem .5rem .8rem; font-size: 1rem; }
 .nlp-sidebar a { display: block; padding: .55rem .65rem; margin-bottom: .2rem; border-radius: .4rem; font-size: .82rem; line-height: 1.4; color: var(--muted); text-decoration: none; }
+.deep-sidebar a { display: block; padding: .55rem .65rem; margin-bottom: .2rem; border-radius: .4rem; font-size: .82rem; line-height: 1.4; color: var(--muted); text-decoration: none; }
 .nlp-sidebar a:hover, .nlp-sidebar a[aria-current] { background: var(--lime); color: var(--ink); }
+.deep-sidebar a:hover, .deep-sidebar a[aria-current] { background: var(--lime); color: var(--ink); }
 .nlp-reading-layout > article { min-width: 0; }
+.deep-reading-layout > article { min-width: 0; }
 .nlp-reading-section { scroll-margin-top: 90px; }
+.deep-reading-section { scroll-margin-top: 90px; }
+
+.deep-python-labs { margin: 2rem 0; padding: 1.25rem; border: 1px solid var(--line); border-radius: .75rem; background: var(--surface); }
+.deep-python-labs h3 { margin-top: .2rem; }
+.deep-python-labs details { margin-top: .75rem; padding-top: .75rem; border-top: 1px solid var(--line); }
+.deep-python-labs summary { cursor: pointer; font-weight: 700; }
+.deep-python-labs summary span { float: right; color: var(--muted); font-size: .85rem; font-weight: 500; }
+.course-sidebar .current-unit-link { border-left: 3px solid var(--green); background: var(--lime); color: var(--ink); }
 @media (max-width: 700px) {
   .nlp-reading-layout { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+  .deep-reading-layout { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .nlp-sidebar { position: relative; top: auto; max-height: 220px; }
+  .deep-sidebar { position: relative; top: auto; max-height: 220px; }
 }
 
 .scrolling-lesson .lesson-outline { max-height: calc(100vh - 95px); overflow-y: auto; padding-right: .8rem; }
