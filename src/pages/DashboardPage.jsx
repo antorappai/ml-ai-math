@@ -19,6 +19,9 @@ export default function DashboardPage() {
   const visitedGuidedSteps = guidedLessons.reduce((count, lesson) => count + lesson.beginnerSteps.filter((step) => mastery.completedSteps?.[lesson.id]?.[step.id]).length, 0);
   const totalGuidedSteps = guidedLessons.reduce((count, lesson) => count + lesson.beginnerSteps.length, 0);
   const nextPath = next.beginnerSteps?.length ? `/lessons/${next.id}/${nextStep?.id || "start"}` : `/lessons/${next.id}/study`;
+  const homeUnits = chapters.flatMap((chapter) => chapter.id === "deep-learning"
+    ? [{ type: "nlp" }, { type: "chapter", chapter }]
+    : [{ type: "chapter", chapter }]);
 
   return (
     <div className="page learning-home chapter-first-home">
@@ -31,7 +34,16 @@ export default function DashboardPage() {
       <section className="home-chapters" aria-labelledby="chapters-title">
         <h2 id="chapters-title">Choose a chapter</h2>
         <div className="home-chapter-grid">
-          {chapters.map((chapter, index) => {
+          {homeUnits.map((unit, index) => {
+            if (unit.type === "nlp") {
+              return <Link className="home-chapter-box" to="/nlp" key="nlp">
+                <div className="home-chapter-meta"><span>Chapter {index + 1}</span><span>{nlpSections.length} sections</span></div>
+                <h3>NLP</h3>
+                <p>Understand how language moves from tokens and classical features to embeddings, sequence models, attention, and transformers.</p>
+                <div className="home-chapter-footer"><span>Open NLP unit</span><span aria-hidden="true">→</span></div>
+              </Link>;
+            }
+            const chapter = unit.chapter;
             const chapterLessons = getChapterLessons(chapter.id);
             const complete = chapterLessons.filter((lesson) => guidedLessonComplete(mastery, lesson)).length;
             const nextLesson = chapterLessons.find((lesson) => !guidedLessonComplete(mastery, lesson)) || chapterLessons[0];
@@ -43,7 +55,6 @@ export default function DashboardPage() {
               <div className="home-chapter-footer"><span>{isDeepLearning ? "Read the guide" : complete ? `${complete}/${chapterLessons.length} completed` : "Open unit"}</span><span aria-hidden="true">→</span></div>
             </Link>;
           })}
-          <Link className="home-chapter-box" to="/nlp"><div className="home-chapter-meta"><span>Study unit</span><span>{nlpSections.length} sections</span></div><h3>NLP</h3><p>Classical NLP Study Guide</p><div className="home-chapter-footer"><span>Explore sections</span><span aria-hidden="true">→</span></div></Link>
         </div>
       </section>
 
