@@ -1,8 +1,9 @@
 import LessonNavigation from "./LessonNavigation.jsx";
+import CourseSidebar from "./CourseSidebar.jsx";
 import { adjacentLessons, lessonStart } from "../utils/lessonNavigation.js";
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { chapters, formulaById, lessonById } from "../content/index.js";
+import { formulaById, lessonById } from "../content/index.js";
 import { useMastery } from "../state/mastery.js";
 import { BlockMath, InlineMath, MathText } from "./Math.jsx";
 import FormulaCard from "./FormulaCard.jsx";
@@ -237,16 +238,7 @@ export default function GuidedLesson({ lesson, chapter, stepId }) {
       <LessonNavigation lesson={lesson} />
       <div className="guided-lesson-layout">
         <aside id="lesson-outline" className={`lesson-outline ${outlineOpen ? "open" : ""}`} aria-label="Lesson steps">
-          <nav aria-label="Course units and lessons" className="course-sidebar">
-            <p>Course units</p>
-            {chapters.map(unit => unit.id === "deep-learning"
-              ? <Link key={`${lesson.id}-${unit.id}`} className={unit.id === chapter.id ? "current-unit-link" : ""} to="/deep-learning">Deep Learning guide</Link>
-              : <details className={unit.id === chapter.id ? "current-unit" : ""} key={`${lesson.id}-${unit.id}`} open={unit.id === chapter.id}>
-                <summary>{unit.shortTitle}</summary>
-                {unit.lessonIds.map(id => <Link key={id} to={lessonStartPath(id)} aria-current={id === lesson.id ? "page" : undefined}>{lessonById[id].title}</Link>)}
-              </details>)}
-            <Link to="/nlp">NLP study guide →</Link>
-          </nav>
+          <CourseSidebar currentChapterId={chapter.id} currentLessonId={lesson.id} />
           <p>Lesson steps</p>
           <ol>{steps.map((item, index) => <li key={item.id}><Link className={`${item.id === step.id ? "active" : ""} ${mastery.completedSteps?.[lesson.id]?.[item.id] ? "visited" : ""}`} to={`/lessons/${lesson.id}/${item.id}`} onClick={() => { setOutlineOpen(false); jump(item.id); }}><span>{mastery.completedSteps?.[lesson.id]?.[item.id] ? "✓" : index + 1}</span>{item.title}</Link></li>)}</ol>
         </aside>
