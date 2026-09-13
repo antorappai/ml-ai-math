@@ -184,6 +184,18 @@ Specialized Architectures
 
 # 4. Artificial Neuron
 
+A biological neuron communicates through a synapse: a connection whose signal can become stronger or weaker. An artificial neuron does not copy a real brain exactly, but it has a useful parallel.
+
+```text
+Biological synapse
+→ connection strength can change with experience
+
+Artificial connection weight
+→ number that training can increase or decrease
+```
+
+If a useful input should matter more, training can increase its weight. If an input should matter less, training can reduce its weight. A weight is therefore the adjustable strength of one connection in the model.
+
 A modern artificial neuron still starts with:
 
 $$
@@ -241,6 +253,8 @@ $$
 $$
 
 This gives a probability between 0 and 1.
+
+**Binary classification** means choosing between exactly two outcomes, such as spam/not spam or pass/fail. Sigmoid is useful here because it turns an unrestricted score into a probability. For example, an output near 0.90 can be read as a high predicted chance of the positive outcome, while an output near 0.10 is a low predicted chance.
 
 So:
 
@@ -339,6 +353,8 @@ Output
 we call it a deep neural network.
 
 The word **deep** refers mainly to the number of learned layers.
+
+The layers often build an idea in stages. Early layers usually notice simple patterns. For an image, these may be short edges, light and dark changes, or simple lines. Later layers combine those earlier patterns into larger shapes and then more meaningful objects. A later layer does not see an image as a person does; it builds increasingly useful combinations of numbers from the earlier layers.
 
 ---
 
@@ -743,6 +759,22 @@ Use those gradients to update parameters
 ```
 
 Backpropagation and optimization are not the same thing.
+
+## When Gradients Become Too Small
+
+A **vanishing gradient** happens when the feedback sent backward becomes extremely small. In a deep network, backpropagation passes a gradient through many operations. If each operation shrinks the signal a little, the final gradient reaching an early layer can be close to zero.
+
+```text
+Gradient is very small
+↓
+Weight update is very small
+↓
+Early layer changes very slowly
+↓
+Learning slows down
+```
+
+ReLU-style activations, sensible initialization, normalization, and architectures with residual connections are common ways to make this problem less severe.
 
 ---
 
@@ -1340,11 +1372,17 @@ nn.BatchNorm1d(...)
 
 Helps stabilize activations during training.
 
+In plain language, BatchNorm looks at a small group of examples, called a **batch**, and keeps the values moving through a layer on a more manageable scale. This helps later layers avoid receiving values that suddenly become much too large, much too small, or wildly different from one batch to the next.
+
+You may hear the formal phrase **internal covariate shift**. Here it means that the distribution, or usual range and spread, of values arriving at a layer can keep changing while earlier layers learn. BatchNorm aims to make that changing input scale easier for the next layer to handle.
+
 ---
 
 ## Layer Normalization
 
 Common in Transformers.
+
+LayerNorm performs a related stabilizing job for each individual example. Transformer blocks commonly use it around attention and feed-forward parts of the network.
 
 ---
 

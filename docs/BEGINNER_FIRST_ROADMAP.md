@@ -124,6 +124,7 @@ Suggested next content additions: short labs for loss functions, conditional pro
 - Rewrote the guide's framing so it teaches the concepts directly. It no longer refers to a learner's questions, doubts, or an AI textbook agent; the final practice and review sections are now natural parts of the learning sequence.
 - Added the missing optimization-and-regularization clarifications: a numerical gradient update, an explicit separation between optimization and regularization, and bias–variance examples that show too little, useful, and too much regularization.
 - Added five compact interactive MCQs directly to the optimizer and generalization sections, covering a gradient update, backpropagation's role, regularization, overfitting, and evaluation-time dropout.
+- Expanded the continuous guide for learners without maths or programming experience: artificial weights are connected to biological synapses, sigmoid is explained as a binary probability, deep layers are explained as simple-to-complex feature building, vanishing gradients are traced through their effect on learning, and BatchNorm is explained before its formal terminology. Added one compact MCQ for each of those five ideas.
 
 ### Chapter-first homepage — 2026-09-05
 

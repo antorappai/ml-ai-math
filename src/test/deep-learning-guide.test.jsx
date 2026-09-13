@@ -21,7 +21,9 @@ describe("Deep Learning continuous guide", () => {
       expect(document.querySelectorAll(".deep-reading-section")).toHaveLength(32);
       expect(document.querySelector(".block-math .katex")).toBeTruthy();
       expect(screen.getByText("PyTorch MLPs, Training & Inference in Python")).toBeInTheDocument();
-      expect(screen.getAllByRole("region", { name: "Quick checks" })).toHaveLength(2);
+      expect(screen.getAllByRole("region", { name: "Quick checks" })).toHaveLength(6);
+      fireEvent.click(screen.getByRole("button", { name: "Increasing a connection weight through training" }));
+      expect(screen.getByText(/Correct\. A weight is the adjustable strength/i)).toBeInTheDocument();
       fireEvent.click(screen.getByRole("button", { name: "0.76" }));
       expect(screen.getByText(/Correct\. Subtract the scaled gradient/i)).toBeInTheDocument();
       fireEvent.click(screen.getByRole("link", { name: "19. Generalization" }));

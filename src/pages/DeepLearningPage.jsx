@@ -19,6 +19,18 @@ const sectionLabs = {
 };
 
 const sectionChecks = {
+  "4": [
+    { prompt: "In an artificial neural network, what is the closest parallel to a biological synapse becoming stronger?", options: ["Increasing a connection weight through training", "Adding a new layer every time", "Changing a label from 0 to 1"], answer: 0, explanation: "A weight is the adjustable strength of a model connection. Training can increase or decrease it." }
+  ],
+  "5": [
+    { prompt: "Why is sigmoid useful for a pass/fail prediction?", options: ["It turns a score into a probability from 0 to 1", "It always returns exactly 0 or 1", "It removes the need for training"], answer: 0, explanation: "Binary classification has two outcomes. Sigmoid expresses the model's score as a probability for one of them." }
+  ],
+  "6": [
+    { prompt: "What do earlier layers in an image network usually learn first?", options: ["Simple patterns such as edges and lines", "Complete objects such as faces", "The final class label"], answer: 0, explanation: "Later layers combine simple patterns from earlier layers into more complex features." }
+  ],
+  "12": [
+    { prompt: "What happens when a gradient becomes extremely small in an early layer?", options: ["Its weights can update only by a tiny amount, so learning slows", "The model immediately learns faster", "The layer gains more neurons"], answer: 0, explanation: "A very small gradient creates a very small update. This is the vanishing-gradient problem." }
+  ],
   "16": [
     { prompt: "A weight is 0.8, its gradient is 0.4, and the learning rate is 0.1. What is the next weight after one gradient-descent step?", options: ["0.76", "0.84", "0.4"], answer: 0, explanation: "Subtract the scaled gradient: 0.8 − 0.1 × 0.4 = 0.76." },
     { prompt: "What does backpropagation provide to an optimizer?", options: ["A gradient for each parameter", "A new network architecture", "A validation score only"], answer: 0, explanation: "Backpropagation calculates gradients; the optimizer uses them to update parameters." }
@@ -26,7 +38,8 @@ const sectionChecks = {
   "20": [
     { prompt: "Which question is regularization trying to answer?", options: ["How can training loss fall fastest?", "How can the model avoid fitting training details too specifically?", "How can more layers be created during training?"], answer: 1, explanation: "Regularization aims for useful performance on unseen data, not only the smallest training loss." },
     { prompt: "Training accuracy is 99% and validation accuracy is 70%. What is the most likely issue?", options: ["Underfitting", "Overfitting", "A perfect generalization result"], answer: 1, explanation: "A large gap between training and validation performance is a common sign of overfitting." },
-    { prompt: "What does model.eval() do to dropout?", options: ["Keeps it active", "Disables it for evaluation", "Turns it into weight decay"], answer: 1, explanation: "Dropout is a training-time regularization technique and is disabled during evaluation." }
+    { prompt: "What does model.eval() do to dropout?", options: ["Keeps it active", "Disables it for evaluation", "Turns it into weight decay"], answer: 1, explanation: "Dropout is a training-time regularization technique and is disabled during evaluation." },
+    { prompt: "What is BatchNorm mainly trying to do during training?", options: ["Keep layer values on a more manageable scale", "Turn every output into a binary label", "Remove the need for an optimizer"], answer: 0, explanation: "BatchNorm stabilizes the values passed between layers so training is easier to manage." }
   ]
 };
 
