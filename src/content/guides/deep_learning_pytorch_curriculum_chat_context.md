@@ -1,11 +1,9 @@
 # Deep Learning Fundamentals + PyTorch
-## Master's Prep Curriculum Based on the Learner's Actual Questions and Doubts
+## Master's Preparation Curriculum
 
 ## Purpose
 
-This unit is not meant to be a generic deep-learning chapter.
-
-It is designed around the learner's real progression of questions and confusions:
+This unit builds a connected understanding of deep learning, from regression through PyTorch and transformers. Work through these core distinctions in order:
 
 - How does deep learning connect to Linear and Logistic Regression?
 - What exactly is a neuron?
@@ -346,7 +344,7 @@ The word **deep** refers mainly to the number of learned layers.
 
 # 7. Who Decides the Layers?
 
-This was an important learner question.
+Architecture is chosen before training begins.
 
 The standard training process does **not** normally invent the number of layers.
 
@@ -718,7 +716,7 @@ New Weight
 
 # 12. Backpropagation vs Gradient Descent
 
-This distinction caused some confusion and should be explicit.
+Keep these roles distinct.
 
 ```text
 Forward Propagation
@@ -752,7 +750,7 @@ Backpropagation and optimization are not the same thing.
 
 No — not in a normal chat.
 
-If an LLM answers incorrectly and the learner says:
+If an LLM answers incorrectly and a user says:
 
 ```text
 "No, that is wrong."
@@ -1344,14 +1342,7 @@ generalizes better.
 
 # 21. Attention: Where Does It Actually Fit?
 
-The learner asked several variations of:
-
-- Is an attention head a neuron?
-- Is it like a sub-node?
-- Is it another hidden layer?
-- Does each layer contain multi-head attention?
-
-Correct mental model:
+Use this model to distinguish transformer components:
 
 ```text
 Transformer Layer
@@ -1688,17 +1679,17 @@ LLM
 
 ---
 
-# 29. PyTorch Learning Prompts for an AI Textbook Agent
+# 29. PyTorch Practice Exercises
 
-## Prompt 1: One Neuron
+## Exercise 1: One Neuron
 
 Create a beginner-friendly PyTorch exercise using two features. First calculate $z=Wx+b$ manually. Then reproduce the same result with PyTorch tensors. Apply ReLU and explain every line.
 
-## Prompt 2: Logistic Regression Connection
+## Exercise 2: Logistic Regression Connection
 
 Create a tiny binary-classification dataset. Show how $Wx+b$ followed by Sigmoid corresponds conceptually to logistic regression and a single artificial neuron.
 
-## Prompt 3: MLP
+## Exercise 3: MLP
 
 Build a PyTorch MLP with:
 
@@ -1716,7 +1707,7 @@ Explain:
 - why ReLU is used
 - why the output is a logit
 
-## Prompt 4: Loss Functions
+## Exercise 4: Loss Functions
 
 Use tiny predictions and targets to compare:
 
@@ -1727,7 +1718,7 @@ Use tiny predictions and targets to compare:
 
 Explain why each loss is used for different problem types.
 
-## Prompt 5: Optimizers
+## Exercise 5: Optimizers
 
 Train the same MLP using:
 
@@ -1742,7 +1733,7 @@ Ask:
 
 > Which converges fastest? Which generalizes best?
 
-## Prompt 6: Weight Initialization
+## Exercise 6: Weight Initialization
 
 Compare:
 
@@ -1754,7 +1745,7 @@ Use a ReLU network.
 
 Explain why Kaiming is designed for ReLU.
 
-## Prompt 7: Overfitting
+## Exercise 7: Overfitting
 
 Create an oversized network on a tiny dataset.
 
@@ -1773,7 +1764,7 @@ Then add:
 
 Compare the results.
 
-## Prompt 8: Stock Time-Series Attention
+## Exercise 8: Stock Time-Series Attention
 
 Create a PyTorch MultiheadAttention example using a 5-day synthetic stock sequence with:
 
@@ -1789,7 +1780,7 @@ Explain:
 - attention weights
 - why different heads can focus on different relationships
 
-## Prompt 9: LLM Next-Token Prediction
+## Exercise 9: LLM Next-Token Prediction
 
 Create a conceptual notebook that demonstrates:
 
@@ -1806,9 +1797,9 @@ Clearly explain that this is inference and does not update model weights.
 
 ---
 
-# 30. Learner Doubts the Textbook Must Explicitly Answer
+# 30. Core Distinctions to Master
 
-The generated textbook must directly answer these questions:
+Use these questions to check your understanding:
 
 1. Is deep learning just a more complex version of ideas from regression?
 2. What came first: perceptron or ANN?
@@ -1848,9 +1839,9 @@ The generated textbook must directly answer these questions:
 
 ---
 
-# 31. Curriculum Rules for the Textbook Agent
+# 31. Study and Teaching Principles
 
-When turning this curriculum into a textbook:
+Apply these principles throughout the unit:
 
 1. Never introduce a new deep-learning term without connecting it to something already learned.
 2. Explain concepts in simple language before mathematical language.
@@ -1860,7 +1851,7 @@ When turning this curriculum into a textbook:
 6. Give a PyTorch implementation after the conceptual explanation.
 7. Always show tensor shapes.
 8. Explain why each activation/loss/optimizer was chosen.
-9. Include "Common Confusion" boxes based on the learner doubts above.
+9. Include "Key clarification" boxes for the distinctions above.
 10. Include "Connection to What You Already Know" boxes.
 11. Include "Master's-Level Note" sections for deeper theory.
 12. Add short recall questions after each major topic.
@@ -1873,8 +1864,8 @@ When turning this curriculum into a textbook:
 19. Use the stock-market example as one recurring sequence-model example.
 20. Use the student pass/fail dataset as the recurring MLP example.
 21. End each chapter with a concept map.
-22. Preserve the learner's progression of questions rather than rearranging everything into an overly abstract academic sequence.
-23. Explain "why" before asking the learner to memorize "what".
+22. Preserve this conceptual sequence rather than jumping into an overly abstract academic presentation.
+23. Explain "why" before memorizing "what".
 24. Whenever code uses a PyTorch function such as `nn.Linear`, `loss.backward()`, or `optimizer.step()`, explain what mathematical operation it represents.
 25. Do not skip historical/conceptual steps such as perceptron, ANN, and MLP.
 
