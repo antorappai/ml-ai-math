@@ -9,7 +9,7 @@ import { deepLearningIntroduction, deepLearningSections } from "../content/deepL
 
 describe("Deep Learning continuous guide", () => {
   it("preserves the supplied notes as one sectioned study guide", () => {
-    expect(deepLearningSections).toHaveLength(32);
+    expect(deepLearningSections).toHaveLength(31);
     expect(deepLearningIntroduction + deepLearningSections.map((section) => section.markdown).join("")).toBe(source);
   });
 
@@ -30,7 +30,7 @@ describe("Deep Learning continuous guide", () => {
     Element.prototype.scrollIntoView = scroll;
     try {
       render(<MemoryRouter initialEntries={["/deep-learning/18"]}><Routes><Route path="/deep-learning/:sectionId" element={<DeepLearningPage />} /></Routes></MemoryRouter>);
-      expect(document.querySelectorAll(".deep-reading-section")).toHaveLength(32);
+      expect(document.querySelectorAll(".deep-reading-section")).toHaveLength(31);
       expect(document.querySelectorAll(".deep-markdown .block-math")).toHaveLength(33);
       expect(document.querySelectorAll(".deep-markdown .block-math .katex")).toHaveLength(33);
       expect(document.querySelectorAll(".deep-markdown .inline-math .katex")).toHaveLength(16);

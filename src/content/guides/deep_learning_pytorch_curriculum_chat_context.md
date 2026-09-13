@@ -1925,39 +1925,7 @@ Use these questions to check your understanding:
 
 ---
 
-# 31. Study and Teaching Principles
-
-Apply these principles throughout the unit:
-
-1. Never introduce a new deep-learning term without connecting it to something already learned.
-2. Explain concepts in simple language before mathematical language.
-3. Every important formula must be rendered using LaTeX.
-4. Explain every symbol in each formula.
-5. Use small numerical examples before larger code examples.
-6. Give a PyTorch implementation after the conceptual explanation.
-7. Always show tensor shapes.
-8. Explain why each activation/loss/optimizer was chosen.
-9. Include "Key clarification" boxes for the distinctions above.
-10. Include "Connection to What You Already Know" boxes.
-11. Include "Master's-Level Note" sections for deeper theory.
-12. Add short recall questions after each major topic.
-13. Add MCQs that test conceptual distinctions, not rote memorization.
-14. Include at least one practical exercise for each major section.
-15. Revisit overfitting and generalization multiple times.
-16. Do not jump to Transformers before MLP, loss, gradients, optimization, and generalization are established.
-17. When teaching attention, explicitly say that attention heads are not neurons and are not separate hidden layers.
-18. When teaching LLMs, distinguish training from inference.
-19. Use the stock-market example as one recurring sequence-model example.
-20. Use the student pass/fail dataset as the recurring MLP example.
-21. End each chapter with a concept map.
-22. Preserve this conceptual sequence rather than jumping into an overly abstract academic presentation.
-23. Explain "why" before memorizing "what".
-24. Whenever code uses a PyTorch function such as `nn.Linear`, `loss.backward()`, or `optimizer.step()`, explain what mathematical operation it represents.
-25. Do not skip historical/conceptual steps such as perceptron, ANN, and MLP.
-
----
-
-# 32. Final Mental Model
+# 31. Final Mental Model
 
 ```text
 Humans choose architecture
