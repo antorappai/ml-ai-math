@@ -1,405 +1,372 @@
-# Classical NLP Study Guide
+# Natural Language Processing: From Words to Transformers
 
-This guide explains the main ideas in classical Natural Language Processing (NLP), where they fit, what they are used for, and how the mathematics begins.
+Natural Language Processing (NLP) is how we make human language usable by a computer.
 
-The focus is on understanding the map first. The mathematics is introduced only when it helps explain the method.
+The important idea is not to memorize a list of algorithms. It is to understand the problem each generation of NLP was trying to solve.
+
+A useful map is:
+
+```text
+Human language
+    ↓
+Tokens
+    ↓
+Numerical representation
+    ↓
+Language clues and context
+    ↓
+A model
+    ↓
+A language task
+    ↓
+Evaluation
+```
+
+Classical NLP mostly asks humans to design useful text features and then lets a statistical model learn from them. Modern neural NLP learns more of the representation automatically. The two are connected rather than separate worlds.
+
+This unit deliberately comes before Deep Learning. You will first understand the language problems. The Deep Learning unit then explains the neural machinery used to solve them at larger scale.
 
 ---
 
-## 1. What Is NLP?
+## 1. NLP: The Big Picture
 
 **NLP = Natural Language Processing.**
 
-NLP is the area of Artificial Intelligence that allows computers to work with human language such as emails, reviews, documents, questions, and messages.
-
-A computer cannot directly calculate with:
+Language is easy for people to read, but a machine-learning model cannot directly calculate with:
 
 ```text
 The student reads a book.
 ```
 
-NLP converts the sentence into a form that a computer can analyse.
+The sentence must eventually become numbers.
+
+A classical pipeline might look like:
 
 ```text
-Human language
-      ↓
-Tokens and features
-      ↓
-Numbers
-      ↓
-Classical model
-      ↓
-Prediction or labels
+"The movie was excellent"
+        ↓
+Tokenise
+        ↓
+[the, movie, was, excellent]
+        ↓
+TF-IDF vector
+        ↓
+Logistic Regression
+        ↓
+Positive
 ```
 
-The main idea is:
-
-> NLP converts language into useful representations so a machine-learning model can learn patterns from it.
-
----
-
-## 2. The Classical NLP Pipeline
+A sequence-labelling pipeline might instead look like:
 
 ```text
-RAW TEXT
-"The student reads a book."
+Barack Obama visited India
         ↓
-PRE-PROCESSING
-Tokenisation, lowercasing, cleaning
+Tokens + word/context features
         ↓
-TEXT REPRESENTATION
-Bag-of-Words, TF-IDF, N-grams
-        ↓
-LANGUAGE CLUES
-Context, co-occurrence, word shape, POS information
-        ↓
-LEXICAL SEMANTICS
-Synonyms, antonyms, polysemy, homonymy, WordNet
-        ↓
-CLASSICAL MODEL
-Rules, Naive Bayes, Logistic Regression, SVM, HMM, or CRF
-        ↓
-NLP TASK
-Classification, tagging, entity recognition, or word-sense selection
-        ↓
-OUTPUT
-Positive, spam, noun, person, location, and so on
-        ↓
-EVALUATION
-Accuracy, precision, recall, and F1 score
-```
-
-There are two common paths inside this map.
-
-### Document classification
-
-```text
-Text
-  ↓
-BoW or TF-IDF
-  ↓
-Naive Bayes, Logistic Regression, or SVM
-  ↓
-One label for the whole document
-```
-
-Example:
-
-```text
-"The movie was excellent."
-→ Positive
-```
-
-### Sequence labelling
-
-```text
-Text
-  ↓
-Tokens and word features
-  ↓
 HMM or CRF
-  ↓
-One label for each token
+        ↓
+Barack/B-PER Obama/I-PER visited/O India/B-LOC
 ```
 
-Example:
+So before choosing an NLP model, ask two questions:
 
-```text
-The/DET student/NOUN reads/VERB
-```
+1. **What is the input representation?**
+2. **What kind of output do I need?**
 
----
+Common outputs include:
 
-## 3. Historical Timeline
+- one label for a whole document: spam / not spam
+- one label for each token: noun / verb / adjective
+- entity spans: person / place / organisation
+- a selected word meaning
+- extracted facts
+- generated text
 
-The dates below are approximate milestone years. Most NLP techniques were developed over several papers and several years rather than invented on one exact day.
-
-| Period | Milestone | What changed |
-|---|---|---|
-| 1950s-1960s | Early machine translation and rule systems | Researchers began writing grammar and translation rules for computers. |
-| 1964-1966 | ELIZA and pattern matching | A computer could imitate conversation using simple rules and substitutions. |
-| 1960s-1970s | Chomskyan and formal grammar approaches | Researchers tried to describe language using formal grammatical structures. |
-| 1970s-1980s | Statistical methods and Hidden Markov Models | Systems began learning probabilities from language data. |
-| 1980s-1990s | Statistical POS tagging | Probabilistic models became useful for assigning grammatical tags. |
-| 1990s | Corpus-based NLP and machine learning | Larger text collections and statistical features became central. |
-| 1990s-2000s | Maximum Entropy and feature-based models | Systems combined many manually designed word and context features. |
-| 2001 | Conditional Random Fields | CRFs provided a strong method for sequence labelling using features and label transitions. |
-| 2000s | Better search, classification, and information extraction | BoW, TF-IDF, n-grams, SVMs, and other statistical methods became widely used. |
-| 2003 | Neural word representations became influential | Neural methods began learning dense numerical representations of words. |
-| 2013 | Word2Vec | Word vectors were learned from surrounding-word context at large scale. |
-| 2014-2015 | Sequence-to-sequence encoder-decoder models | Neural networks learned to convert one sequence into another, such as translation. |
-| 2014-2017 | Attention mechanisms | Models could focus on relevant parts of the input instead of compressing everything into one vector. |
-| 1997 and 2010s | LSTM and RNN sequence models | Neural models learned sequence information using a hidden state and memory gates. |
-| 2017 | Transformer architecture | Self-attention replaced recurrence as the main way to model relationships between tokens. |
-| 2018 onward | BERT, GPT, and large language models | Transformer models were trained on very large text collections and adapted to many tasks. |
-
-### The classical part of the timeline
-
-For your current learning, the important classical section is:
+### A short historical map
 
 ```text
 Rules
   ↓
-Statistics and probabilities
+Counts and probabilities
   ↓
-BoW, TF-IDF, and N-grams
+BoW / TF-IDF / N-grams
   ↓
-HMM
+HMM / CRF
   ↓
-CRF
+Dense embeddings
+  ↓
+RNN / LSTM
+  ↓
+Attention
+  ↓
+Transformers / LLMs
 ```
 
-RNNs, LSTMs, Word2Vec, encoder-decoder networks, and transformers come after the classical foundation.
+The old methods are still worth learning because they make the core ideas visible: features, context, probability, sequence structure, ambiguity, and evaluation.
+
+**Key idea:** NLP is not one algorithm. It is a collection of ways to represent language and solve language tasks.
 
 ---
 
-## 4. Raw Text
+## 2. Tokens and Pre-processing
 
-Raw text is the original sentence written by a person.
+The starting point is raw text:
 
 ```text
 The student reads a book.
 ```
-
-At this point the sentence is still a string of characters. It is meaningful to a human, but it is not yet a numerical input for a classical model.
-
----
-
-## 5. Pre-processing
-
-Pre-processing prepares the text for later analysis.
 
 ### Tokenisation
 
-Tokenisation splits text into smaller pieces called tokens.
-
-```text
-The student reads a book.
-```
-
-becomes:
+Tokenisation splits text into units called **tokens**.
 
 ```text
 ["The", "student", "reads", "a", "book", "."]
 ```
 
+A token does not have to be a whole word. Modern language models often use word pieces or subword tokens.
+
+The important distinction is:
+
+```text
+text  = the original character sequence
+token = one unit the model will process
+```
+
 ### Lowercasing
 
 ```text
-"The" → "the"
+The → the
 ```
 
-This prevents the system from treating `The` and `the` as separate features.
+This can reduce vocabulary size, but it may remove useful information. `US` and `us`, for example, are not always the same thing.
 
-### Stopword removal
+### Stopwords
 
-Stopwords are very common words such as `the`, `is`, `a`, `and`, and `of`.
+Very common words such as `the`, `a`, `is`, and `of` are sometimes removed.
 
-They may be removed when they add little information, but this depends on the task. Removing `not` from `not good` would reverse the meaning.
+But removal is task-dependent:
+
+```text
+not good
+```
+
+Removing `not` would reverse the meaning.
 
 ### Stemming
 
-Stemming cuts words down roughly.
+Stemming chops words down using rough rules:
 
 ```text
 studies, studying, studied → studi
 ```
 
-It is fast but may produce an incomplete word.
+It is fast, but the result may not be a real word.
 
 ### Lemmatization
 
-Lemmatization uses language knowledge to find the proper base form.
+Lemmatization tries to recover a proper dictionary form:
 
 ```text
 studies, studying, studied → study
 ```
 
+It uses more linguistic information than stemming.
+
 ### Sentence segmentation
 
-This splits a paragraph into individual sentences.
+A paragraph can also be split into sentences:
 
 ```text
 The student reads. The teacher explains.
 ```
 
-becomes two sentences.
+becomes two sentence units.
+
+### Why preprocessing is not automatic cleaning
+
+Do not think:
+
+> more cleaning = better NLP
+
+A preprocessing step is useful only if it removes irrelevant variation without destroying information needed by the task.
+
+**Key idea:** preprocessing changes the representation. Every change should have a reason.
 
 ---
 
-## 6. Text Representation
+## 3. Turning Text into Numbers: One-Hot, Bag-of-Words, TF-IDF and N-grams
 
-Machine-learning models need numerical inputs. Text representation converts words or documents into numbers.
-
-### Bag-of-Words
-
-**BoW = Bag-of-Words.**
-
-It creates a vocabulary and counts how often each word appears.
-
-```text
-Sentence:   the cat sleeps
-Vocabulary: [cat, dog, sleeps]
-Vector:     [ 1,  0,     1]
-```
-
-The `1` means the word appeared. The `0` means it did not appear.
-
-#### Advantages
-
-- Simple and easy to understand
-- Fast to calculate
-- Useful for basic classification
-
-#### Limitations
-
-- Ignores most word order
-- Does not understand meaning
-- Does not naturally understand synonyms
-- Can create many zeros, called sparsity
+A classical machine-learning model needs numerical features.
 
 ### One-hot encoding
 
-One-hot encoding represents one word using one `1` and many `0`s.
+Suppose the vocabulary is:
 
 ```text
-Vocabulary: [cat, dog, book]
+[cat, dog, book]
+```
 
+Then:
+
+```text
 cat  → [1, 0, 0]
 dog  → [0, 1, 0]
 book → [0, 0, 1]
 ```
 
-It identifies the word, but it does not show that `cat` and `dog` are more similar than `cat` and `book`.
+This identifies each word, but it says nothing about meaning. The distance between `cat` and `dog` is not automatically smaller than the distance between `cat` and `book`.
+
+### Bag-of-Words
+
+**BoW = Bag-of-Words.**
+
+For a document, count vocabulary words:
+
+```text
+Sentence:   cat sleeps cat
+Vocabulary: [cat, dog, sleeps]
+Vector:     [ 2,   0,      1]
+```
+
+The vector is useful because a classifier can now multiply those feature values by learned weights.
+
+What BoW loses is most word order:
+
+```text
+dog bites man
+man bites dog
+```
+
+can contain the same words even though the meaning is very different.
 
 ### TF-IDF
 
 **TF-IDF = Term Frequency-Inverse Document Frequency.**
 
-TF-IDF gives a high value to a word that appears often in one document but is uncommon across the document collection.
+BoW asks:
 
-The basic formula is:
+> How often does this word occur here?
 
-```text
-TF-IDF = TF × IDF
-```
+TF-IDF adds another question:
 
-Where:
+> Is this word distinctive, or does it occur everywhere?
 
-```text
-TF = how often the word appears in this document
-```
-
-One common simplified IDF formula is:
+A simplified form is:
 
 ```text
-IDF = log(total number of documents / documents containing the word)
+TF-IDF(term, document) = TF × IDF
 ```
 
-If `the` appears in almost every document, its IDF is low. If `football` appears mainly in sports documents, its IDF is higher in a sports collection.
+where:
 
-#### Advantages
+```text
+TF  = frequency of the term in this document
+IDF = log(total documents / documents containing the term)
+```
 
-- Highlights distinctive words
-- Often useful for search and classification
-- More informative than simple word counts
-
-#### Limitations
-
-- Does not truly understand meaning
-- Mostly ignores long-range word order
-- Does not automatically solve synonyms
-- Produces sparse vectors
+If `the` occurs in almost every document, its IDF is small. A rarer word such as `photosynthesis` may receive a larger weight in a biology document collection.
 
 ### N-grams
 
-An N-gram is a sequence of `N` consecutive tokens.
+An N-gram keeps a short sequence of neighbouring tokens.
 
 For:
 
 ```text
-The student reads books
+not very good
 ```
 
-Unigrams contain one word:
+unigrams are:
 
 ```text
-The, student, reads, books
+not
+very
+good
 ```
 
-Bigrams contain two words:
+bigrams include:
 
 ```text
-The student
-student reads
-reads books
+not very
+very good
 ```
 
-Trigrams contain three words:
+trigrams include:
 
 ```text
-The student reads
-student reads books
+not very good
 ```
 
-N-grams preserve a small amount of word order and help capture phrases such as `not good` or `machine learning`.
+N-grams recover some local word order, but the feature space grows quickly.
 
-#### Advantages
+### Sparse vectors
 
-- Captures short phrases
-- Preserves limited word order
-- Useful for simple language patterns
+BoW and TF-IDF usually create **sparse vectors**: vectors with many zero values.
 
-#### Limitations
+A vocabulary may contain 50,000 terms, while one email uses only 100 of them. Most of the 50,000 positions are therefore zero.
 
-- Large numbers of possible combinations
-- Many combinations are rare
-- Does not handle long context well
+That sounds wasteful, but classical algorithms such as Logistic Regression and SVM can work very well with sparse text vectors.
+
+**Key idea:** classical representation usually tells the model which words or phrases occurred; it does not yet give the model a rich learned concept of meaning.
 
 ---
 
-## 7. Context and Language Clues
+## 4. Context, Co-occurrence and Distributional Meaning
 
-In classical NLP, **context means the surrounding information used to interpret a word**.
+Words become easier to interpret when we look at their neighbours.
 
-Example:
+Consider:
 
 ```text
 The bank approved my loan.
 ```
 
-The context around `bank` includes:
+and:
 
 ```text
-The, approved, my, loan
+The fisherman sat on the bank beside the river.
 ```
+
+The word `bank` is the same, but its surrounding words are different.
 
 ### Context window
 
-A context window defines how many nearby words the system examines.
+A **context window** chooses how many nearby tokens to inspect.
+
+For:
 
 ```text
-The bank approved my loan.
-    ↑
+The bank approved my loan
 ```
 
-A small window may use only `The` and `approved`. A larger window may include `my` and `loan` as well.
+with `bank` as the target word, a window of one word might use:
 
-The window size is chosen by the developer.
+```text
+The [bank] approved
+```
+
+A larger window might use:
+
+```text
+The [bank] approved my loan
+```
+
+Window size is a modelling choice. Small windows often capture local grammatical or semantic relationships; larger windows capture broader topical information.
 
 ### Co-occurrence
 
-Co-occurrence means recording which words appear near each other.
+Co-occurrence records which words appear near each other.
 
-Financial examples:
+Financial contexts may include:
 
 ```text
 bank + loan
-bank + account
 bank + money
+bank + account
 ```
 
-River examples:
+River contexts may include:
 
 ```text
 bank + river
@@ -407,180 +374,39 @@ bank + water
 bank + fishing
 ```
 
-The system can use these counts to estimate which sense of `bank` is more likely.
+This leads to the **distributional idea**:
 
-### Basic probability
+> Words that occur in similar contexts often have related meanings.
 
-The model can compare probabilities such as:
+This idea becomes extremely important later because dense word embeddings such as Word2Vec are learned from context patterns.
 
-```text
-P(financial meaning | loan, account)
-P(river meaning | water, fishing)
-```
+### Context is not the same as a feature
 
-It chooses the interpretation with the higher probability.
+**Context** is the surrounding information.
 
-### Word features
-
-Features are clues recorded about a word.
-
-```text
-current word = Obama
-previous word = Barack
-next word = visited
-starts with a capital letter = yes
-```
-
-Context is the surrounding information. Features are the measurable clues used to represent that information.
-
----
-
-## 8. Lexical Semantics and Word Meaning
-
-**Lexical semantics** means the study of word meaning and relationships between words.
-
-This sits after basic context clues because it gives the system a structured way to reason about meanings, not only nearby-word counts.
-
-### Synonymy
-
-Synonyms have similar meanings.
-
-```text
-student ≈ learner
-big ≈ large
-```
-
-They are rarely perfectly interchangeable in every sentence, but they are semantically related.
-
-### Antonymy
-
-Antonyms have opposite meanings.
-
-```text
-hot ↔ cold
-good ↔ bad
-```
-
-### Polysemy
-
-Polysemy means one word has several **related** meanings.
-
-```text
-head of a person
-head of a department
-head of a table
-```
-
-These meanings differ, but all retain the broad idea of being at the top, front, or in charge.
-
-### Homonymy
-
-Homonymy means the same spelling or sound has **unrelated** meanings.
-
-```text
-bank = financial institution
-bank = land beside a river
-```
-
-```text
-bat = flying animal
-bat = sports equipment
-```
-
-### Hypernyms and hyponyms
-
-A **hypernym** is a broader category. A **hyponym** is a more specific example.
-
-```text
-animal → dog
-vehicle → car
-```
-
-Here, `animal` is a hypernym of `dog`, and `dog` is a hyponym of `animal`.
-
-### WordNet
-
-**WordNet** is a structured lexical database. It stores words as meanings called **synsets** and records relationships such as synonyms, antonyms, hypernyms, and hyponyms.
-
-```text
-dog → animal
-car → vehicle
-```
-
-WordNet gives a classical NLP system a source of language knowledge beyond the exact training document.
-
-### Lesk Algorithm
-
-The **Lesk algorithm** is a classical, dictionary-based method for Word Sense Disambiguation.
-
-It compares the words in the sentence context with the words in each possible dictionary definition, called a **gloss**.
+A **feature** is a measurable clue extracted from that information.
 
 Example:
 
 ```text
-The bank approved my loan.
+Current word: Obama
+Previous word: Barack
+Next word: visited
+Starts with capital letter: yes
+Suffix: -a
 ```
 
-Possible WordNet senses might have glosses containing:
+A CRF can use these features. A neural model may instead learn useful internal features automatically from vectors.
 
-```text
-Financial bank gloss:
-financial institution, money, deposit, loan
-
-River bank gloss:
-land beside a river, water, shore
-```
-
-The context contains `loan`, which overlaps with the financial gloss. The financial sense therefore receives the higher overlap score.
-
-Simplified Lesk score:
-
-```text
-score(sense) = number of shared words between
-               context and dictionary gloss
-```
-
-The sense with the largest overlap is selected.
-
-Lesk does not learn neural vectors and does not require a large labelled training dataset. It depends on the quality of the dictionary glosses and the amount of word overlap.
-
-### Word Sense Disambiguation
-
-**WSD = Word Sense Disambiguation.**
-
-WSD chooses the correct meaning of an ambiguous word from the sentence context.
-
-```text
-The bank approved my loan.
-```
-
-The nearby words `approved` and `loan` support:
-
-```text
-bank → financial institution
-```
-
-But in:
-
-```text
-The fisherman sat on the bank of the river.
-```
-
-the words `fisherman` and `river` support:
-
-```text
-bank → riverside
-```
-
-Classical WSD methods include WordNet, Lesk, co-occurrence counts, and supervised classification.
+**Key idea:** context is where the information comes from; features are how a model receives that information.
 
 ---
 
-## 9. POS Tagging
+## 5. Grammar Matters: Part-of-Speech Tagging
 
 **POS = Part of Speech.**
 
-POS tagging identifies the grammatical job of each word.
+POS tagging assigns a grammatical role to each token:
 
 ```text
 The/DET student/NOUN reads/VERB books/NOUN
@@ -590,237 +416,571 @@ Common tags include:
 
 | Tag | Meaning |
 |---|---|
-| NOUN | Person, place, thing, or idea |
-| VERB | Action or state |
-| ADJ | Adjective |
-| ADV | Adverb |
-| DET | Determiner such as `the` or `a` |
-| PRON | Pronoun such as `he` or `they` |
-| PREP | Preposition such as `in` or `on` |
+| NOUN | person, place, thing, or idea |
+| VERB | action or state |
+| ADJ | adjective |
+| ADV | adverb |
+| DET | determiner such as `the` or `a` |
+| PRON | pronoun such as `he` or `they` |
+| ADP / PREP | preposition or adposition |
 
-The word `book` can have different roles:
+Why does POS matter?
+
+Because the same surface word can play different roles:
 
 ```text
-I will book a hotel. → book = VERB
 I read a book.       → book = NOUN
+I will book a hotel. → book = VERB
 ```
 
-The tagger uses the surrounding context to choose the correct role.
+The tagger must use context, not just the word itself.
 
-POS tagging is useful for grammar checking, parsing, information extraction, word-sense disambiguation, and text-to-speech.
+POS information can support:
+
+- grammar checking
+- parsing
+- named entity recognition
+- information extraction
+- word-sense disambiguation
+- text-to-speech
+
+### How tagging becomes a machine-learning problem
+
+Input:
+
+```text
+The student reads
+```
+
+Desired output:
+
+```text
+DET NOUN VERB
+```
+
+This is a **sequence-labelling** problem because each token needs a label and neighbouring labels are related.
+
+That is why HMMs and CRFs appear later in this unit.
+
+### Do modern transformers still need grammar?
+
+Modern transformers do not usually require a person to supply POS tags before every task. They can learn many grammatical patterns from data.
+
+But POS remains useful for understanding language structure, analysing model behaviour, building smaller systems, and understanding what older sequence models were explicitly trying to capture.
+
+**Key idea:** grammar gives names to structural patterns that models need to recognise, whether those patterns are hand-engineered or learned internally.
 
 ---
 
-## 10. Parsing
+## 6. Syntax, Parsing and Semantic Roles
 
-Parsing analyses how words are grouped or related.
+POS tells us the job of one word. **Parsing** asks how words relate to one another.
 
 ### Constituency parsing
 
-Constituency parsing groups words into phrases.
+Constituency parsing groups words into phrases:
 
 ```text
 [The student] [reads [a book]]
 ```
 
+It asks questions such as:
+
+- Which words form the noun phrase?
+- Which words form the verb phrase?
+
 ### Dependency parsing
 
-Dependency parsing shows relationships between individual words.
+Dependency parsing connects words directly:
 
 ```text
 student → subject of reads
 book    → object of reads
 ```
 
-Parsing helps answer questions such as:
+This makes relationships such as subject, object, modifier, and possession explicit.
 
-- Who performed the action?
-- What did they act on?
-- Which adjective describes which noun?
+### Semantic Role Labelling
 
----
+**SRL = Semantic Role Labelling.**
 
-## 11. Rule-Based NLP
-
-Rule-based systems use manually written language rules.
+SRL goes one level beyond grammatical structure and asks what role a phrase plays in an event.
 
 Example:
 
 ```text
-If a word comes after "will", it may be a verb.
-If a word comes after "the", it may be a noun.
+The student opened the box with a key.
 ```
 
-### Advantages
+Possible roles:
 
-- Easy to explain
-- No large training dataset required
-- Useful for predictable and controlled language
+```text
+student → Agent: who performed the action?
+box     → Patient/Theme: what was affected?
+key     → Instrument: what was used?
+```
 
-### Limitations
+Other roles include Location, Recipient, Source, Destination, and Experiencer.
 
-- Rules take time to write
-- Language has many exceptions
-- Rules can conflict with one another
-- The system does not adapt easily to new language
+Notice the distinction:
 
-Rule-based systems are useful for grammar checkers, keyword extraction, and controlled business rules. Modern tools often combine rules with statistical or neural methods.
+```text
+POS: student = NOUN
+Dependency: student = subject of opened
+Semantic role: student = Agent
+```
+
+These are different layers of description.
+
+### Why this matters in NLP
+
+Parsing and semantic roles support:
+
+- question answering
+- information extraction
+- relationship extraction
+- grammar tools
+- summarisation
+- understanding who did what to whom
+
+**Key idea:** language has structure above the individual word. NLP often needs relationships, not just word counts.
 
 ---
 
-## 12. Classical Machine-Learning Models
+## 7. Lexical Semantics and WordNet
+
+**Lexical semantics** studies word meaning and relationships between words.
+
+### Synonymy
+
+Words with similar meanings:
+
+```text
+student ≈ learner
+large ≈ big
+```
+
+### Antonymy
+
+Words with contrasting meanings:
+
+```text
+hot ↔ cold
+good ↔ bad
+```
+
+### Hypernyms and hyponyms
+
+A **hypernym** is a broader category. A **hyponym** is a more specific member.
+
+```text
+animal → dog
+vehicle → car
+```
+
+`animal` is a hypernym of `dog`; `dog` is a hyponym of `animal`.
+
+### Polysemy
+
+One word has several related meanings:
+
+```text
+head of a person
+head of a department
+head of a table
+```
+
+### Homonymy
+
+The same written or spoken form has unrelated meanings:
+
+```text
+bank = financial institution
+bank = land beside a river
+```
+
+### WordNet
+
+**WordNet** is a structured lexical database.
+
+Instead of storing only words, it groups meanings into **synsets**: sets of synonymous word senses.
+
+A simplified picture is:
+
+```text
+word
+ ↓
+possible senses / synsets
+ ↓
+relationships to other synsets
+```
+
+WordNet stores relationships such as:
+
+- synonymy
+- antonymy
+- hypernymy
+- hyponymy
+
+Why is this useful?
+
+A classical NLP system may not have learned enough from a small dataset to know that `dog` and `animal` are related. WordNet gives it an external structure of lexical knowledge.
+
+**Key idea:** WordNet represents meanings and relationships explicitly; an embedding represents meaning indirectly through learned numbers.
+
+---
+
+## 8. Word Sense Disambiguation and the Lesk Algorithm
+
+**WSD = Word Sense Disambiguation.**
+
+WSD chooses the intended meaning of an ambiguous word using context.
+
+Example:
+
+```text
+The bank approved my loan.
+```
+
+The likely sense is:
+
+```text
+bank → financial institution
+```
+
+But:
+
+```text
+The fisherman sat on the bank of the river.
+```
+
+suggests:
+
+```text
+bank → riverside
+```
+
+### The Lesk algorithm
+
+Lesk is a classical dictionary-based WSD method.
+
+The idea is simple:
+
+1. collect the context words around the ambiguous word
+2. retrieve the dictionary gloss for each possible sense
+3. count overlap between context words and gloss words
+4. choose the sense with the largest overlap
+
+Suppose WordNet gives two simplified glosses:
+
+```text
+Financial bank:
+financial institution, money, deposit, loan
+
+River bank:
+land beside river, water, shore
+```
+
+Sentence context:
+
+```text
+approved loan money
+```
+
+Overlap:
+
+```text
+financial sense → loan, money = 2 matches
+river sense     → 0 matches
+```
+
+So Lesk chooses the financial sense.
+
+A simplified score is:
+
+```text
+score(sense) = number of shared words between context and gloss
+```
+
+### Why Lesk can fail
+
+Dictionary glosses are short. The context may use synonyms rather than exact matching words.
+
+For example, `cash` may strongly suggest a financial bank even if the gloss contains only `money`.
+
+This is one reason dense semantic representations later became useful: similarity does not have to depend on exact word overlap.
+
+### What Lesk teaches us
+
+Lesk is important even if we later use neural models because it exposes the central WSD problem:
+
+> compare the current context with alternative meanings.
+
+Modern contextual embeddings solve a much richer version of the same problem.
+
+**Key idea:** WSD is about choosing meaning from context; Lesk does it with dictionary overlap rather than learned neural representations.
+
+---
+
+## 9. Classical Text Classification: Naive Bayes, Logistic Regression and SVM
+
+Suppose the task is sentiment classification:
+
+```text
+"The movie was excellent" → Positive
+"The movie was terrible"  → Negative
+```
+
+The text is first converted into features such as TF-IDF. A classifier then learns from those feature vectors.
 
 ### Naive Bayes
 
-Naive Bayes is a probability-based classifier.
-
-It may compare:
+Naive Bayes asks:
 
 ```text
-P(Positive | words)
-P(Negative | words)
+Which class makes these observed words most probable?
 ```
 
-The model chooses the larger probability.
+A simplified form is:
 
-It is called `naive` because it assumes the features are independent, even though words are often related.
+```text
+score(class)
+∝ P(class) × P(word1 | class) × P(word2 | class) × ...
+```
 
-It is fast and useful for spam detection, sentiment analysis, and document classification.
+It is called **naive** because it treats features as conditionally independent given the class.
+
+That assumption is not literally true for language, but the model can still work surprisingly well.
 
 ### Logistic Regression
 
-Logistic Regression combines features into a weighted score.
+Logistic Regression learns one weight for each feature:
 
 ```text
-score = w₁x₁ + w₂x₂ + ... + b
+z = w1x1 + w2x2 + ... + b
 ```
 
-Where:
+Then sigmoid converts the score into a probability for a binary class.
 
-- `x` is a feature value
-- `w` is the learned importance of that feature
-- `b` is the bias or starting value
+In a TF-IDF sentiment model, a large positive learned weight for `excellent` might push the prediction toward Positive, while `terrible` pushes it the other way.
 
-The score is converted into a probability between 0 and 1.
+### Support Vector Machine
 
-It works well with TF-IDF features and is a strong classical baseline for text classification.
+An SVM tries to find a separating boundary with a wide margin between classes.
 
-### SVM
+Text data are often high-dimensional and sparse, which is a setting where linear SVMs can be strong baselines.
 
-**SVM = Support Vector Machine.**
+### Same representation, different model
 
-An SVM tries to find a boundary separating classes in feature space.
+This is important:
 
 ```text
-Positive reviews | Negative reviews
+TF-IDF
+  ↓
+Naive Bayes
+or Logistic Regression
+or SVM
 ```
 
-SVMs work well with high-dimensional, sparse text vectors such as TF-IDF.
+The representation and model are separate choices.
 
-### HMM
+A poor representation can limit a good classifier. A strong representation can make a simple classifier surprisingly effective.
 
-**HMM = Hidden Markov Model.**
+### Tiny scikit-learn example
 
-An HMM is useful for sequence problems such as POS tagging.
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
 
-The words are observed, but the correct labels are hidden.
+texts = ["excellent movie", "terrible movie", "excellent acting", "terrible acting"]
+y = [1, 0, 1, 0]
+
+vectorizer = TfidfVectorizer(ngram_range=(1, 2))
+X = vectorizer.fit_transform(texts)
+
+model = LogisticRegression().fit(X, y)
+print(model.predict(vectorizer.transform(["excellent acting"])))
+```
+
+**Key idea:** classical text classification usually separates representation from prediction: first create text features, then fit a classifier.
+
+---
+
+## 10. Hidden Markov Models for Sequence Labelling
+
+A document classifier gives one label to a whole document. POS tagging needs one label per token.
+
+Example:
 
 ```text
-Words:  The student reads
-Tags:   DET  NOUN    VERB
+Words: The   student   reads
+Tags:  DET   NOUN      VERB
 ```
 
-HMM uses two important probabilities.
+This is where sequence models become useful.
 
-#### Emission probability
+### HMM = Hidden Markov Model
 
-How likely is a word given a tag?
+The words are **observed**.
+
+The tags are **hidden states** we want to infer.
+
+An HMM uses two central probabilities.
+
+### Emission probability
+
+How likely is the observed word if the hidden tag is known?
 
 ```text
 P(student | NOUN)
 ```
 
-#### Transition probability
+### Transition probability
 
-How likely is one tag after another?
+How likely is the next tag given the previous tag?
 
 ```text
 P(NOUN | DET)
 ```
 
-The HMM chooses the tag sequence with the highest combined probability.
+The model combines them across the whole sentence.
 
-### CRF
+A simplified sequence score is:
+
+```text
+P(tags, words)
+= product of transition probabilities
+  × product of emission probabilities
+```
+
+In practice we usually work with log probabilities so multiplication becomes addition and tiny numbers are easier to handle.
+
+### Why sequence information matters
+
+Suppose `book` could be a noun or verb.
+
+In:
+
+```text
+the book
+```
+
+`DET → NOUN` is common.
+
+In:
+
+```text
+will book
+```
+
+`MODAL → VERB` is more plausible.
+
+The tag sequence provides information beyond the current word.
+
+### Viterbi intuition
+
+There may be many possible tag sequences. The **Viterbi algorithm** efficiently finds the highest-probability path through them instead of enumerating every sequence independently.
+
+**Key idea:** HMM combines what each tag tends to emit with which tags tend to follow one another.
+
+---
+
+## 11. Conditional Random Fields, BIO Tags and Named Entity Recognition
 
 **CRF = Conditional Random Field.**
 
-CRF is a classical sequence-labelling model.
+Like an HMM, a CRF predicts a sequence of labels. But it approaches the problem differently.
 
-Example:
+An HMM models how hidden states generate observations.
 
-```text
-Barack Obama visited India.
-```
-
-Output:
+A CRF directly scores:
 
 ```text
-Barack/PERSON Obama/PERSON visited/O India/LOCATION
+P(label sequence | observed words and features)
 ```
 
-CRF uses:
+This lets us use many overlapping features without having to build a full generative model of the words.
 
-- The current word
-- Previous and next words
-- Capitalisation
-- Prefixes and suffixes
-- Word shape
-- Context features
-- Relationships between neighbouring labels
+Possible CRF features include:
 
-A simplified score is:
+```text
+current word
+previous word
+next word
+capitalisation
+prefix
+suffix
+word shape
+POS information
+neighbouring label transitions
+```
+
+### Simplified CRF score
+
+For a candidate label sequence:
 
 ```text
 sequence score
-= word and context feature scores
-  + label transition scores
+= sum of observation-feature scores
+  + sum of label-transition scores
 ```
 
-The CRF chooses the complete label sequence with the highest score.
+The model prefers the complete label sequence with the strongest score after normalization.
 
-For Named Entity Recognition, CRFs often use the **BIO tagging scheme**:
+### Named Entity Recognition
 
-```text
-B-PER  → beginning of a person entity
-I-PER  → inside a person entity
-B-LOC  → beginning of a location entity
-I-LOC  → inside a location entity
-O      → outside an entity
-```
+**NER = Named Entity Recognition.**
 
-For:
+NER finds spans such as people, organisations, places, dates, and products.
+
+Example:
 
 ```text
 Barack Obama visited New Delhi.
 ```
 
-the labels might be:
+### BIO tagging
+
+BIO makes multi-token entities explicit:
 
 ```text
-Barack/B-PER Obama/I-PER visited/O New/B-LOC Delhi/I-LOC
+B = beginning of an entity
+I = inside an entity
+O = outside an entity
 ```
 
-The transition structure makes sensible sequences more likely. For example, `I-PER` should normally follow `B-PER` or another `I-PER`, not `O`.
+So:
 
-This is important because it does not label every word completely independently. It asks which labels make the most sense together.
+```text
+Barack/B-PER
+Obama/I-PER
+visited/O
+New/B-LOC
+Delhi/I-LOC
+```
+
+Why is a sequence model useful here?
+
+Because `I-PER` should normally continue a person entity. It should not randomly appear after an unrelated `O` without a valid beginning.
+
+### HMM vs CRF
+
+| HMM | CRF |
+|---|---|
+| generative | discriminative |
+| models tag transitions and word emissions | models label sequence given observed features |
+| stronger independence assumptions | can combine many overlapping features |
+| elegant probabilistic sequence model | flexible feature-based sequence labeller |
+
+**Key idea:** CRF does not label every word independently; it scores how well the entire label sequence fits the observed sentence.
 
 ---
 
-## 13. Main Classical NLP Tasks
+## 12. NLP Tasks and Evaluation
+
+Different NLP tasks require different evaluation measures.
 
 ### Text classification
-
-Assign one label to a complete text.
 
 ```text
 Email → Spam
@@ -828,810 +988,419 @@ Review → Positive
 Article → Sports
 ```
 
-Common models include Naive Bayes, Logistic Regression, and SVM.
-
 ### POS tagging
-
-Assign a grammatical label to every word.
 
 ```text
 The/DET student/NOUN reads/VERB
 ```
 
-Common models include rules, HMM, and CRF.
-
 ### Named Entity Recognition
 
-**NER = Named Entity Recognition.**
-
-NER finds people, places, organisations, dates, and other entities.
-
 ```text
-Antony works at OSC in Sri Lanka.
-```
-
-```text
-Antony → PERSON
-OSC → ORGANISATION
-Sri Lanka → LOCATION
+Antony/PERSON works at OSC/ORGANISATION in Sri Lanka/LOCATION
 ```
 
 ### Word Sense Disambiguation
 
-WSD chooses the correct meaning of an ambiguous word.
-
 ```text
-The bank approved my loan.
+bank → financial institution
 ```
-
-Here, `bank` means a financial institution.
-
-In:
-
-```text
-The fisherman sat on the bank of the river.
-```
-
-`bank` means the land beside a river.
-
-Classical methods include Lesk, WordNet, co-occurrence, and supervised classification.
 
 ### Information extraction
-
-Information extraction converts text into structured information.
 
 ```text
 The student bought a laptop for $800.
 ```
 
-Possible result:
+could become:
 
 ```text
-person = student
-item = laptop
+buyer = student
+item  = laptop
 price = $800
 ```
-
-### Thematic Roles and Semantic Role Labelling
-
-**SRL = Semantic Role Labelling.** It identifies the semantic role played by each phrase in relation to an action or event.
-
-Example:
-
-```text
-The student opened the book with a key.
-```
-
-Possible roles:
-
-```text
-student → Agent: who performed the action?
-book    → Patient or Theme: what was affected?
-key     → Instrument: what was used?
-```
-
-Common thematic roles include:
-
-| Role | Meaning |
-|---|---|
-| Agent | The person or thing performing the action |
-| Patient | The person or thing affected by the action |
-| Theme | The thing being moved, discussed, or experienced |
-| Instrument | The object used to perform the action |
-| Location | Where the event occurs |
-| Recipient | The person receiving something |
-
-Thematic roles go beyond POS tags. POS tells us that `student` is a noun; a thematic role tells us that the student is the **Agent** of `opened`.
-
-### Rule-Based and Template-Based Generation
-
-Classical NLP can also generate text using handwritten rules and templates.
-
-Template:
-
-```text
-The {student} scored {score} in {subject}.
-```
-
-Filled with data:
-
-```text
-The Maya scored 92 in mathematics.
-```
-
-The system uses predefined sentence structures and fills their slots with values. It does not generate by sampling from learned neural representations.
-
-#### Advantages
-
-- Predictable output
-- Easy to control
-- Useful for reports, alerts, and fixed business messages
-- Low risk of inventing information
-
-#### Limitations
-
-- Repetitive language
-- Limited flexibility
-- Requires humans to write the templates and rules
-- Struggles with unexpected input
-
----
-
-## 14. Evaluation
-
-Evaluation measures how well the model performs on data it has not seen before.
 
 ### Accuracy
 
 ```text
-Accuracy = correct predictions / total predictions
+accuracy = correct predictions / all predictions
 ```
 
-If a model gets 90 predictions correct out of 100:
-
-```text
-Accuracy = 90 / 100 = 0.90 = 90%
-```
+Accuracy can be misleading when one class dominates.
 
 ### Precision
 
-Of everything the model predicted as positive, how much was actually positive?
+Of the items predicted positive, how many were truly positive?
 
 ```text
-Precision = true positives / predicted positives
+precision = TP / (TP + FP)
 ```
 
 ### Recall
 
-Of all the genuinely positive examples, how many did the model find?
+Of all truly positive items, how many did the model find?
 
 ```text
-Recall = true positives / actual positives
+recall = TP / (TP + FN)
 ```
 
 ### F1 score
 
-F1 combines precision and recall.
+F1 balances precision and recall:
 
 ```text
-F1 = 2 × precision × recall
-     -------------------------
-     precision + recall
+F1 = 2 × precision × recall / (precision + recall)
 ```
 
-F1 is useful when both false positives and false negatives matter.
+### Sequence evaluation
+
+For NER, token accuracy alone can hide poor entity spans. Entity-level precision, recall, and F1 are often more meaningful.
+
+For example, predicting only `Obama` instead of the full entity `Barack Obama` should not be treated exactly like a perfect entity extraction.
+
+**Key idea:** evaluation must match the real task. A convenient metric is not automatically the right metric.
 
 ---
 
-## 15. The Classical NLP Map in One View
+## 13. From Sparse Vectors to Dense Embeddings
+
+BoW and TF-IDF vectors can be huge and sparse.
+
+A dense embedding does something different:
 
 ```text
-RAW TEXT
-"The student reads a book."
+cat  → [ 0.21, -0.44, 0.81, ... ]
+dog  → [ 0.18, -0.39, 0.76, ... ]
+book → [-0.62,  0.11, 0.09, ... ]
+```
+
+Instead of one dimension per vocabulary word, an embedding uses a smaller number of learned dimensions.
+
+### Word2Vec idea
+
+Word2Vec made the distributional idea practical at large scale:
+
+> learn a word representation from the words that appear around it.
+
+Two common training views are:
+
+```text
+CBOW: surrounding words → predict centre word
+Skip-gram: centre word → predict surrounding words
+```
+
+The important concept is not the name. It is that **context prediction forces useful geometry to emerge in the vectors**.
+
+### Why vectors help
+
+Once words are vectors, we can compare them mathematically.
+
+Suppose:
+
+```text
+u = [1, 2]
+v = [2, 1]
+```
+
+Their dot product is:
+
+```text
+u · v = 1×2 + 2×1 = 4
+```
+
+The dot product becomes large when two vectors point strongly in similar directions and have substantial magnitude.
+
+Cosine similarity removes the magnitude effect:
+
+```text
+cosine similarity = (u · v) / (||u|| ||v||)
+```
+
+This is why the Linear Algebra unit matters for NLP: vectors, dot products, norms, and matrix multiplication become the language of learned representations.
+
+### Element-wise multiplication is different
+
+Do not confuse:
+
+```text
+dot product:      [1,2] · [2,1] = 4
+element-wise:     [1,2] * [2,1] = [2,2]
+```
+
+Both are vector operations, but they answer different mathematical questions.
+
+### Word embeddings vs contextual embeddings
+
+Classic Word2Vec gives one main vector for a word type:
+
+```text
+bank → one learned vector
+```
+
+A transformer creates a **contextual representation** for each occurrence:
+
+```text
+bank in "bank approved loan"
+≠
+bank in "river bank"
+```
+
+The same token can therefore have a different internal vector depending on context.
+
+**Key idea:** embeddings move NLP from sparse identity/count features toward learned geometry of meaning and context.
+
+---
+
+## 14. Sequence Models: RNNs and LSTMs
+
+A sentence is ordered. The meaning of a token often depends on what came before it.
+
+A recurrent neural network (RNN) processes a sequence one step at a time while carrying a hidden state.
+
+A simplified recurrence is:
+
+```text
+h_t = activation(Wx_t + Uh_(t-1) + b)
+```
+
+Read it as:
+
+```text
+new memory
+= current input contribution
++ previous memory contribution
++ bias
+then activation
+```
+
+### Why recurrence was useful
+
+BoW ignores most order. An RNN can represent:
+
+```text
+not good
+```
+
+differently from:
+
+```text
+good
+```
+
+because the state changes as the tokens arrive.
+
+### The long-range problem
+
+During training, gradients must travel backward through many time steps.
+
+If each step repeatedly multiplies the gradient by values smaller than 1, the signal can become tiny:
+
+```text
+0.5 × 0.5 × 0.5 × ...
+```
+
+This is the **vanishing-gradient problem**.
+
+### LSTM
+
+**LSTM = Long Short-Term Memory.**
+
+An LSTM adds a memory cell and learned gates controlling information flow.
+
+You can think of the gates as learned questions such as:
+
+```text
+What old information should I keep?
+What should I forget?
+What new information should I write?
+What part of memory should I expose now?
+```
+
+This gives a more controlled path for long-range information and gradients.
+
+### Why RNNs still matter conceptually
+
+Transformers largely replaced recurrent architectures in large language models, but RNNs teach the core sequence problem very clearly:
+
+> how do I carry information from earlier tokens into later decisions?
+
+The transformer answers the same broad problem in a different way: instead of compressing the past through one recurrent state, attention lets positions directly retrieve relevant information from other positions.
+
+**Key idea:** RNNs carry context through time; attention later lets tokens access context more directly.
+
+---
+
+## 15. Attention, Transformers and the Bridge to Deep Learning
+
+This is where the NLP story meets the Deep Learning unit.
+
+Suppose the sentence is:
+
+```text
+The animal did not cross the street because it was tired.
+```
+
+To interpret `it`, the model should connect that token with relevant earlier information.
+
+Attention creates a learned way to decide which positions matter most to the current position.
+
+### Query, Key, Value intuition
+
+For one token:
+
+```text
+Query = what am I looking for?
+Key   = what information could match that request?
+Value = what information should be retrieved if it matches?
+```
+
+The mathematical pattern is:
+
+```text
+query · key
+    ↓
+similarity scores
+    ↓
+softmax
+    ↓
+attention weights
+    ↓
+weighted combination of values
+```
+
+For two simple scalar values 2 and 6 with attention weights 0.75 and 0.25:
+
+```text
+0.75×2 + 0.25×6 = 3
+```
+
+The output is a mixture weighted by relevance.
+
+### Multi-head attention
+
+One attention head is one parallel attention calculation.
+
+Several heads allow different learned matching patterns to exist at the same time.
+
+Important:
+
+> A head is **not** a neuron, and each neuron does not contain multiple attention heads.
+
+Multi-head attention is a larger module inside a transformer block.
+
+### Transformer block
+
+A simplified transformer block contains:
+
+```text
+input token representations
         ↓
-PRE-PROCESSING
-Tokenisation, lowercasing, stopword decisions,
-stemming, lemmatisation, sentence splitting
+multi-head attention
         ↓
-TEXT REPRESENTATION
-BoW, one-hot encoding, TF-IDF, N-grams
+residual connection + normalization
         ↓
-LANGUAGE CLUES
-Context windows, co-occurrence, word shape,
-POS information, parsing relationships
+feed-forward neural network
         ↓
-LEXICAL SEMANTICS
-Synonyms, antonyms, polysemy, homonymy,
-hypernyms, WordNet, word-sense disambiguation
+residual connection + normalization
         ↓
+updated token representations
+```
+
+The block is repeated many times.
+
+### Why this changed NLP
+
+Earlier sequence models passed information step by step:
+
+```text
+word 1 → word 2 → word 3 → word 4
+```
+
+Self-attention lets a token directly compare itself with many other positions in the sequence.
+
+This makes long-range relationships easier to model and makes training highly parallelizable.
+
+### Causal language modelling
+
+GPT-style language models are trained to predict the next token.
+
+During causal self-attention, a token must not see future tokens. A **causal mask** blocks those positions.
+
+The training idea is:
+
+```text
+previous tokens
+      ↓
+transformer
+      ↓
+logits for next token
+      ↓
+softmax / cross-entropy objective
+```
+
+### What comes next
+
+At this point you know the NLP problem:
+
+- how language becomes tokens
+- how classical text becomes sparse vectors
+- why context matters
+- why grammar and word meaning matter
+- how HMMs and CRFs model sequences
+- why embeddings were a major change
+- why recurrent models tried to carry context
+- why attention gives more direct access to context
+
+The **Deep Learning** unit now explains the machinery underneath this modern NLP stack in more detail:
+
+```text
+artificial neuron
+→ layers / MLPs
+→ activations and loss
+→ forward pass
+→ backpropagation
+→ optimizers
+→ initialization and regularization
+→ embeddings and sequence networks
+→ attention and transformer mathematics
+→ PyTorch training and inference
+```
+
+So the transition is:
+
+```text
+NLP asks:        What language problem are we solving?
+Deep Learning:   How does the neural machinery learn to solve it?
+```
+
+That distinction will keep the two units connected without repeating the same lesson twice.
+
+**Final map:**
+
+```text
+RAW LANGUAGE
+    ↓
+TOKENISATION
+    ↓
+CLASSICAL REPRESENTATION
+BoW / TF-IDF / N-grams
+    ↓
+CONTEXT + LANGUAGE STRUCTURE
+co-occurrence / POS / parsing / WordNet / WSD
+    ↓
 CLASSICAL MODELS
-Rules, Naive Bayes, Logistic Regression,
-SVM, HMM, CRF
-        ↓
-NLP TASKS
-Classification, POS tagging, NER,
-word-sense disambiguation, information extraction
-        ↓
-OUTPUT
-Class labels, token labels, entities,
-selected meanings, or extracted facts
-        ↓
-EVALUATION
-Accuracy, precision, recall, F1 score
+Naive Bayes / Logistic / SVM / HMM / CRF
+    ↓
+DENSE REPRESENTATIONS
+embeddings
+    ↓
+NEURAL SEQUENCE MODELS
+RNN / LSTM
+    ↓
+ATTENTION
+    ↓
+TRANSFORMERS
+    ↓
+DEEP LEARNING UNIT
+architecture, training, optimization and PyTorch
 ```
-
-### What Each Stage Does
-
-#### 1. Raw text: the original language
-
-This is the sentence, email, review, or document written by a person.
-
-```text
-The student reads a book.
-```
-
-At this point, the computer has text, but it does not yet have a useful numerical representation.
-
-#### 2. Pre-processing: prepare the text
-
-The system cleans and separates the text.
-
-```text
-"The student reads a book."
-```
-
-may become:
-
-```text
-["the", "student", "reads", "a", "book"]
-```
-
-This stage may include tokenisation, lowercasing, punctuation handling, stopword decisions, stemming, and lemmatisation.
-
-The purpose is to make the text more consistent before creating features.
-
-#### 3. Text representation: turn text into numbers
-
-Classical models need numerical inputs. This stage converts the tokens into numbers using methods such as:
-
-```text
-Bag-of-Words → counts words
-TF-IDF       → weights distinctive words
-N-grams      → records short word sequences
-```
-
-Example:
-
-```text
-"student reads book"
-→ [1, 1, 1, 0, ...]
-```
-
-The result is a feature vector that a model can calculate with.
-
-#### 4. Language clues: add useful information
-
-The numerical representation alone may not capture enough language information. The system can add clues such as:
-
-```text
-nearby words
-previous and next tokens
-co-occurrence counts
-capitalisation
-prefixes and suffixes
-POS tags
-parsing relationships
-```
-
-For example, in:
-
-```text
-The bank approved my loan.
-```
-
-the words `approved` and `loan` provide context suggesting that `bank` means a financial institution.
-
-#### 5. Lexical semantics: connect words to meanings
-
-This layer handles meaning relationships that are important when the same word may have multiple senses, or when different words are related.
-
-```text
-Synonym:   student ≈ learner
-Antonym:   good ↔ bad
-Polysemy:  head of a person / head of a department
-Homonymy:  bank as money / bank beside a river
-```
-
-WordNet and context-based methods help a classical system choose a suitable sense.
-
-#### 6. Classical model: learn the pattern
-
-The model uses the numerical features and language clues to learn a task.
-
-```text
-Naive Bayes         → probability-based classification
-Logistic Regression → weighted feature scores
-SVM                 → separates classes with a boundary
-HMM                 → predicts a sequence using probabilities
-CRF                 → predicts a sequence using features and label relationships
-```
-
-The model is trained using examples. For instance:
-
-```text
-"The movie was excellent." → Positive
-"The movie was terrible."  → Negative
-```
-
-#### 7. NLP task: decide what the system is doing
-
-The same text features can support different tasks.
-
-```text
-Classification            → label the whole document
-POS tagging               → label each word grammatically
-Named Entity Recognition  → find people, places, and organisations
-Word Sense Disambiguation → choose the correct meaning
-Information Extraction    → pull facts into structured fields
-```
-
-#### 8. Output: produce the result
-
-The output depends on the task.
-
-For classification:
-
-```text
-"The movie was excellent."
-→ Positive
-```
-
-For POS tagging:
-
-```text
-The/DET student/NOUN reads/VERB
-```
-
-For Named Entity Recognition:
-
-```text
-India/LOCATION
-```
-
-#### 9. Evaluation: measure quality
-
-The model is tested on examples it did not use for training.
-
-```text
-Prediction compared with the correct answer
-                 ↓
-Accuracy, precision, recall, or F1 score
-```
-
-This tells us whether the model has learned useful patterns or is making too many mistakes.
-
-### One Complete Example
-
-Suppose the task is to identify people and places:
-
-```text
-Barack Obama visited India.
-```
-
-```text
-1. Raw text
-   The original sentence.
-
-2. Pre-processing
-   Technique: word tokenisation and punctuation handling
-   ["Barack", "Obama", "visited", "India", "."]
-   We keep capital letters because they are useful NER features.
-
-3. Text representation
-   Technique: token-level feature extraction, not BoW or TF-IDF.
-   Each token becomes a row of features such as:
-   word identity, lower-case form, capitalisation,
-   suffix, previous word, and next word.
-
-4. Language clues
-   Techniques: context window, word-shape features,
-   co-occurrence patterns, and gazetteer or training-data clues.
-   Barack and Obama are capitalised and occur together.
-   India is capitalised and occurs after the verb "visited".
-
-5. Lexical semantics, where available
-   Technique: named-entity lexicon or WordNet-style knowledge base.
-   India may be known as a country/location.
-
-6. Classical model
-   Technique: Conditional Random Field (CRF).
-   It scores possible label sequences using token features
-   plus label-transition scores.
-
-7. Output
-   Barack/PERSON Obama/PERSON visited/O India/LOCATION
-
-8. Evaluation
-   Techniques: precision, recall, and F1 score for NER.
-   Compare the predicted entity labels with the correct labels.
-```
-
-### Worked Example: `Barack Obama visited India.`
-
-This example is a **Named Entity Recognition** task.
-
-**NER = Named Entity Recognition.** It assigns an entity label to each token. A simple label set is:
-
-```text
-PERSON   → a person's name
-LOCATION → a place name
-O        → not an entity of interest
-```
-
-For this task, a classical **CRF** is a better fit than Bag-of-Words or TF-IDF. BoW and TF-IDF represent a whole document and are commonly used for document classification. A CRF needs useful features for each individual token.
-
-#### Step 1. Raw text
-
-```text
-Barack Obama visited India.
-```
-
-#### Step 2. Tokenisation
-
-```text
-["Barack", "Obama", "visited", "India", "."]
-```
-
-Each token will receive one label.
-
-#### Step 3. Candidate labels
-
-The model considers possible labels for each word.
-
-| Token | Possible labels |
-|---|---|
-| Barack | PERSON, LOCATION, O |
-| Obama | PERSON, LOCATION, O |
-| visited | PERSON, LOCATION, O |
-| India | PERSON, LOCATION, O |
-| . | O |
-
-The CRF does not decide immediately. It collects evidence first.
-
-#### Step 4. Features and context clues
-
-The CRF turns each token and its nearby context into features.
-
-| Token | Example feature clues |
-|---|---|
-| Barack | capitalised; first word; next word is capitalised; appears in people-name training examples |
-| Obama | capitalised; previous word is capitalised; next word is `visited`; often follows a first name |
-| visited | lower-case; ends in `ed`; previous and next words are capitalised; often behaves like a verb |
-| India | capitalised; previous word is a likely verb; appears in location-name training examples |
-| . | punctuation |
-
-The word context is especially useful here:
-
-```text
-Barack Obama
-```
-
-looks like two adjacent name tokens, while:
-
-```text
-visited India
-```
-
-looks like an action followed by a place.
-
-#### Step 5. Feature scores
-
-During training, the CRF learns a weight for each useful feature. The values below are **illustrative only**. A real model learns them from labelled training data.
-
-For `Barack`:
-
-```text
-capitalised                 → supports PERSON: +1.2
-next word capitalised       → supports PERSON: +1.5
-word seen as a person name  → supports PERSON: +2.0
-```
-
-So a simplified feature score for:
-
-```text
-Barack = PERSON
-```
-
-is:
-
-```text
-1.2 + 1.5 + 2.0 = 4.7
-```
-
-For `India`:
-
-```text
-capitalised                   → supports LOCATION: +1.0
-appears in location examples  → supports LOCATION: +2.4
-previous word is a verb        → supports LOCATION: +0.8
-```
-
-Simplified score:
-
-```text
-India = LOCATION
-1.0 + 2.4 + 0.8 = 4.2
-```
-
-#### Step 6. Label-transition scores
-
-The CRF also learns whether neighbouring labels make sense together.
-
-Illustrative transition scores:
-
-```text
-PERSON   → PERSON   = +1.6
-PERSON   → O        = +0.7
-O        → LOCATION = +1.1
-LOCATION → O        = +0.5
-```
-
-This gives extra support to:
-
-```text
-Barack/PERSON Obama/PERSON
-```
-
-because two adjacent words can belong to one person's name.
-
-#### Step 7. Score the whole sequence
-
-The CRF scores a complete candidate label sequence, rather than choosing each token independently.
-
-Candidate A:
-
-```text
-Barack/PERSON Obama/PERSON visited/O India/LOCATION ./O
-```
-
-Its simplified sequence score is:
-
-```text
-feature scores for each token
-+ transition scores between labels
-```
-
-Using short illustrative values:
-
-```text
-Barack/PERSON      = 4.7
-Obama/PERSON       = 4.5
-visited/O          = 3.8
-India/LOCATION     = 4.2
-./O                 = 2.0
-
-PERSON → PERSON    = 1.6
-PERSON → O         = 0.7
-O → LOCATION       = 1.1
-LOCATION → O       = 0.5
-
-Total score = 4.7 + 4.5 + 3.8 + 4.2 + 2.0
-            + 1.6 + 0.7 + 1.1 + 0.5
-            = 23.1
-```
-
-Candidate B might incorrectly label `India` as a person:
-
-```text
-Barack/PERSON Obama/PERSON visited/O India/PERSON ./O
-```
-
-It may receive lower feature and transition support:
-
-```text
-India/PERSON       = 0.8
-O → PERSON         = 0.2
-```
-
-The rest remains the same, giving:
-
-```text
-Total score = 19.0
-```
-
-Because `23.1` is greater than `19.0`, the CRF chooses Candidate A.
-
-#### Step 8. Final output
-
-```text
-Barack/PERSON
-Obama/PERSON
-visited/O
-India/LOCATION
-./O
-```
-
-#### Step 9. Evaluation
-
-The prediction is compared with a human-labelled test sentence.
-
-```text
-Correct labels:   PERSON PERSON O LOCATION O
-Predicted labels: PERSON PERSON O LOCATION O
-```
-
-For this one example, every label is correct. Across a full test dataset, we would calculate precision, recall, and F1 for entity labels.
-
-### What Techniques Were Used Here?
-
-```text
-Tokenisation
-→ split the sentence into tokens
-
-Context features
-→ use nearby words, capitalisation, suffixes, and position
-
-Classical supervised learning
-→ learn feature weights from labelled examples
-
-CRF
-→ score the entire sequence of entity labels
-
-Viterbi decoding
-→ efficiently find the highest-scoring label sequence
-
-Evaluation
-→ compare predictions with true labels using precision, recall, and F1
-```
-
-The important conclusion is:
-
-> In classical NER, the CRF does not understand names like a human. It learns that certain word features, surrounding words, and neighbouring labels repeatedly match people and locations in labelled training data.
-
-### The Map in Plain English
-
-```text
-Take the original text.
-Prepare it.
-Turn it into numbers.
-Add clues about nearby words and grammar.
-Use word-meaning relationships when meaning is ambiguous.
-Give the features to a suitable model.
-Ask the model to predict something.
-Measure how correct the prediction is.
-```
-
----
-
-## 16. Exam and MCQ Recognition
-
-These are common question patterns and the concept they are testing.
-
-### WordNet
-
-**Question pattern:** What is WordNet's primary function?
-
-**Correct idea:** WordNet is a structured lexical database that groups words into synonym sets, called synsets, and connects them through semantic relationships such as hypernymy and hyponymy.
-
-```text
-WordNet → synsets + semantic relations
-```
-
-### Lesk
-
-**Question pattern:** How does the classic Lesk algorithm perform WSD?
-
-**Correct idea:** It chooses the sense whose dictionary gloss has the greatest word overlap with the surrounding context.
-
-```text
-Lesk → context words compared with dictionary glosses
-```
-
-### CRF
-
-**Question pattern:** What is the key advantage of a CRF in NER or POS tagging?
-
-**Correct idea:** A CRF models dependencies between neighbouring output labels and scores the whole sequence, producing more consistent label combinations.
-
-```text
-CRF → feature scores + label transitions + global sequence consistency
-```
-
-In BIO tagging, this helps prevent unlikely sequences such as an `I-PER` tag appearing without a suitable person-entity beginning.
-
-### Thematic Roles
-
-**Question pattern:** What is the purpose of thematic roles in SRL?
-
-**Correct idea:** They identify semantic functions such as who performs an action, what is affected, where it happens, or what instrument is used.
-
-```text
-Agent → performs the action
-Patient or Theme → affected by or involved in the action
-```
-
-### Rule-Based and Template-Based Generation
-
-**Question pattern:** What characterises rule-based or template-based text generation?
-
-**Correct idea:** It generates text by filling predefined sentence structures with variable values using handcrafted rules.
-
-```text
-Template + data values → generated sentence
-```
-
-It is not the same as statistical sampling or neural text generation.
-
-## 17. Master's-Level Preparation
-
-You do not need to memorise every algorithm immediately. For Master's-level preparation, aim to understand each layer at three levels: **what it does**, **the basic mathematics**, and **when it fails**.
-
-| Area | Know the core idea | Go one level deeper | Be able to discuss |
-|---|---|---|---|
-| Tokenisation and cleaning | How text becomes tokens | Why lowercasing, stopword removal, stemming, and lemmatisation can change results | Why `not` should often be kept; how different tokenisers affect vocabulary |
-| BoW and TF-IDF | How a document becomes a vector | Sparsity, vocabulary size, TF-IDF formula, IDF using logarithms | Why BoW loses order and TF-IDF does not understand meaning |
-| N-grams and context | How short word sequences add local context | Choice of window size and bigram/trigram feature growth | Why `not good` matters; why long context remains difficult |
-| Lexical semantics | Synonyms, antonyms, polysemy, homonymy | Synsets, WordNet, hypernyms, hyponyms, Lesk overlap | Why word meaning depends on context; limits of dictionary methods |
-| POS and parsing | Word roles and relationships | Tag sets, constituency versus dependency parsing | Why `book` can be a noun or verb; subject, verb, and object extraction |
-| Naive Bayes | Classification using probability | Conditional probability, priors, likelihoods, log probabilities | The independence assumption and when it is unrealistic |
-| Logistic Regression and SVM | Classification from text vectors | Weighted sums, sigmoid probability, decision boundaries, regularisation | Why sparse TF-IDF works well; how model weights can be interpreted |
-| HMM | Sequence labelling using probabilities | Emission and transition probabilities; Viterbi decoding | The Markov assumption and limited long-distance context |
-| CRF | Sequence labelling using features and label transitions | Feature functions, sequence score, conditional probability, Viterbi decoding | Why CRF labels a whole sequence rather than each word independently |
-| Evaluation | How to measure a model | Confusion matrix, precision, recall, F1, macro versus micro averages | Why accuracy can mislead with imbalanced data |
-
-### Mathematics to Learn for Classical NLP
-
-Focus on these in order:
-
-```text
-1. Counts and frequency
-2. Vectors and sparse matrices
-3. Conditional probability
-4. Bayes' theorem
-5. Logarithms and log probabilities
-6. Weighted sums and the sigmoid function
-7. Dynamic programming, especially Viterbi decoding
-8. Evaluation metrics and confusion matrices
-```
-
-You do not need advanced calculus for the first pass through classical NLP. Probability, vectors, basic linear algebra, and optimisation intuition matter more.
-
-### What You Should Be Able to Do
-
-By the end of this classical NLP section, you should be able to:
-
-- Explain why a computer needs text representation.
-- Build and compare BoW and TF-IDF features.
-- Explain what sparsity is and why it matters.
-- Use bigrams to capture a phrase such as `not good`.
-- Describe context windows and co-occurrence.
-- Explain the difference between polysemy and homonymy.
-- Explain how WordNet and Lesk help with word-sense disambiguation.
-- Explain the difference between document classification and sequence labelling.
-- Describe HMM emission and transition probabilities.
-- Explain why CRF uses both word features and label transitions.
-- Evaluate a classifier using precision, recall, and F1.
-
-### After Classical NLP
-
-Once this foundation is clear, the natural next progression is:
-
-```text
-Word embeddings and Word2Vec
-        ↓
-RNNs, LSTMs, and GRUs
-        ↓
-Attention and encoder-decoder models
-        ↓
-Transformers
-        ↓
-BERT, GPT, fine-tuning, and modern NLP evaluation
-```
-
-## Final Mental Model
-
-Remember the purpose of each stage:
-
-```text
-Pre-processing
-→ prepares the words
-
-Representation
-→ converts words into numbers
-
-Context and features
-→ provide useful clues
-
-Model
-→ learns patterns from the clues
-
-Output
-→ gives a prediction or label
-
-Evaluation
-→ measures whether the prediction is good
-```
-
-The most important classical NLP idea is:
-
-> Convert text into measurable features, give those features to a suitable statistical model, and use the model to predict a class, meaning, or label.
