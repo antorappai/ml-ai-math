@@ -8,6 +8,7 @@ import FormulaCard from "../components/FormulaCard.jsx";
 import RevealProblems from "../components/RevealProblems.jsx";
 import PythonPlayground from "../PythonPlayground.jsx";
 import GuidedLesson from "../components/GuidedLesson.jsx";
+import LessonReading from "../components/LessonReading.jsx";
 import { chapterById, formulaById, lessonById, projectById } from "../content/index.js";
 import { LEVELS } from "../content/schema.js";
 import { useMastery } from "../state/mastery.js";
@@ -87,8 +88,7 @@ function PracticeView({ lesson }) {
   const examQuestions = LEVELS.flatMap((level) => lesson.levels[level].examQuestions || []);
   return <div className="practice-guide"><header className="plain-section-heading"><p className="eyebrow">Practice & exam preparation</p><h2>Test the whole lesson</h2><p>Attempt each question before revealing the solution. Use the explanation to correct your thinking, not only the final number.</p></header>
     <Assessment questions={questions} testId={`${lesson.id}-practice`} title="Quick checks" />
-    <RevealProblems problems={calculationProblems} title="Calculation and interpretation" />
-    <RevealProblems problems={examQuestions} title="Exam-style questions" />
+    {lesson.writtenPractice ? <LessonReading step={lesson.writtenPractice} /> : <><RevealProblems problems={calculationProblems} title="Calculation and interpretation" /><RevealProblems problems={examQuestions} title="Exam-style questions" /></>}
     {lesson.projectIds.length > 0 && <div className="linked-projects"><h3>Apply this in a project</h3>{lesson.projectIds.map((id) => <Link to="/projects" key={id}>{projectById[id]?.title}</Link>)}</div>}
   </div>;
 }

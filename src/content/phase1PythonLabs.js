@@ -1,6 +1,25 @@
 import { codeLab } from "./lessonBuilder.js";
+import { recoveryPythonLabs } from "./recoveryPythonLabs.js";
 
 const labs = {
+  "determinant-collapse": codeLab({
+    title: "Calculate signed area and exhibit a lost direction", goal: "Compute a 2 × 2 determinant, apply its absolute area scale, and show distinct inputs merging under a singular map.",
+    code: "def determinant2(A):\n    if len(A) != 2 or any(len(row) != 2 for row in A):\n        raise ValueError('This formula requires a 2 by 2 matrix')\n    a, b = A[0]\n    c, d = A[1]\n    return a * d - b * c\n\ndef apply2(A, v):\n    if len(A) != 2 or any(len(row) != 2 for row in A) or len(v) != 2:\n        raise ValueError('Use a 2 by 2 matrix and a two-entry vector')\n    return [row[0] * v[0] + row[1] * v[1] for row in A]\n\nA = [[2, 1], [1, 3]]\noriginal_area = 3\nsigned_scale = determinant2(A)\nprint('Signed scale:', signed_scale)\nprint('Transformed area:', abs(signed_scale) * original_area)\nreflection = [[0, 1], [1, 0]]\nprint('Reflection signed scale:', determinant2(reflection))\nprint('Reflection area:', abs(determinant2(reflection)) * original_area)\n\nM = [[1, 2], [2, 4]]\nx = [3, 1]\nother = [1, 2]\ndifference = [x[i] - other[i] for i in range(2)]\nprint('Collapse determinant:', determinant2(M))\nprint('First output:', apply2(M, x))\nprint('Other output:', apply2(M, other))\nprint('Lost difference output:', apply2(M, difference))",
+    output: "Signed scale: 5\nTransformed area: 15\nReflection signed scale: -1\nReflection area: 3\nCollapse determinant: 0\nFirst output: [5, 10]\nOther output: [5, 10]\nLost difference output: [0, 0]",
+    explanation: "The signed determinant keeps orientation information; abs(signed_scale) converts it into an ordinary area multiplier. M sends two distinct inputs to [5, 10], and sends their nonzero difference to zero, exhibiting information loss.",
+    mathToCode: "a * d - b * c is the 2 × 2 determinant formula. Each apply2 row forms one output coordinate, so the Python vector lists represent column-shaped inputs mathematically. abs does not change the stored signed determinant.",
+    commonTrap: "The ad − bc formula only applies to 2 × 2 matrices. A negative determinant does not make a negative ordinary area, and a zero determinant does not force all output vectors to zero.",
+    exercise: { prompt: "Change A[1][1] from 3 to 4. Predict the new signed scale 7 and patch area 21 before running. Explain why the reflection and collapse outputs stay the same." },
+    hiddenTests: "assert determinant2([[1, 0], [0, 1]]) == 1\nassert determinant2([[2, 1], [1, -1]]) == -3\nassert determinant2([[1, 2], [0, 1]]) == 1\nassert determinant2([[1, 0], [0, 0.5]]) == 0.5\nassert determinant2([[0, 0], [0, 0]]) == 0\nassert apply2(M, x) == apply2(M, other)\nassert difference != [0, 0] and apply2(M, difference) == [0, 0]\nfor invalid in [[], [[1, 2, 3], [4, 5, 6]], [[1, 2], [3]]]:\n    try:\n        determinant2(invalid)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError('The 2 by 2 formula must reject other shapes')"
+  }),
+  "matrix-anatomy-types": codeLab({
+    title: "Read the marks matrix in Python", goal: "Connect row/column addresses to Python indexing, then calculate one prediction per student.",
+    code: "marks = [[60, 80], [70, 90], [50, 75]]\nrows = len(marks)\ncolumns = len(marks[0])\nprint((rows, columns))\nprint(marks[1][0])\n\ncomputing_marks = []\npredictions = []\nfor row in marks:\n    computing_marks.append(row[1])\n    prediction = 0.3 * row[0] + 0.2 * row[1] + 8\n    predictions.append(prediction)\n\nprint(computing_marks)\nprint(predictions)",
+    output: "(3, 2)\n70\n[80, 90, 75]\n[42.0, 47.0, 38.0]", explanation: "Each inner list is one student row. The loop reads Computing from each row and applies the same two feature weights plus one baseline to each student.",
+    mathToCode: "Mathematical X₂₁ becomes marks[1][0] because Python counts from zero. len(marks) counts rows; len(marks[0]) counts columns in this rectangular table.", commonTrap: "len(marks) is the number of rows, not the total number of entries. Keep Maths before Computing in every row.",
+    exercise: { prompt: "Append [65, 85] for a fourth student before counting rows. Predict the new shape (4, 2) and the added prediction 44.5 before running." },
+    hiddenTests: "assert all(len(row) == columns for row in marks)\nassert len(predictions) == rows\nassert len(computing_marks) == rows"
+  }),
   "functions-domain-range": codeLab({
     title: "Turn a function into Python", goal: "Connect f(x) notation to a callable Python function.",
     code: "def fare(x):\n    return 3 * x + 5\n\nprint(fare(4))", output: "17",
@@ -17,14 +36,22 @@ const labs = {
     output: "5.0\n5.0", explanation: "norm(v) computes magnitude; norm(a-b) computes distance.", packages: ["numpy"]
   }),
   "matrix-vector-multiplication": codeLab({
-    title: "Matrix times vector", goal: "Match each output to one row-dot-vector calculation.",
-    code: "import numpy as np\nA = np.array([[1, 2], [0, 1]])\nv = np.array([3, -1])\nprint(A @ v)",
-    output: "[ 1 -1]", explanation: "The @ operator performs matrix multiplication, not entrywise multiplication.", packages: ["numpy"]
+    title: "Calculate every row before collecting the outputs", goal: "Reproduce [10, 9] transparently, then use the same procedure for the three student predictions.",
+    code: "def matrix_vector(matrix, vector):\n    outputs = []\n    for row in matrix:\n        if len(row) != len(vector):\n            raise ValueError('Each row must match the vector length')\n        total = 0\n        for column in range(len(vector)):\n            total += row[column] * vector[column]\n        outputs.append(total)\n    return outputs\n\nA = [[2, 1], [-1, 3]]\nv = [3, 4]\nprint(matrix_vector(A, v))\n\nX = [[60, 80], [70, 90], [50, 75]]\nw = [0.3, 0.2]\nscores = matrix_vector(X, w)\nprint(scores)\npredictions = []\nfor score in scores:\n    predictions.append(score + 8)\nprint(predictions)",
+    output: "[10, 9]\n[34.0, 39.0, 30.0]\n[42.0, 47.0, 38.0]", explanation: "The inner loop adds paired products within one row. The outer loop appends one output for each row. Adding 8 to every student score completes the illustrative prediction rule.",
+    mathToCode: "row[column] * vector[column] is one paired product Aᵢⱼvⱼ. total sums the input positions j within row i; outputs keeps the separate row results. The explicit length check prevents silently omitting inputs.",
+    commonTrap: "Calling Python's zip on unequal-length lists silently stops at the shorter list. Validate dimensions before using it for a dot product.", exercise: { prompt: "Change only v[0] from 3 to 4. Predict the new first output list [12, 8] before running; the student scores stay the same because their inputs have not changed." },
+    hiddenTests: "assert matrix_vector([[1, 0], [0, 1]], [3, 4]) == [3, 4]\nassert matrix_vector([[1, -2], [0, 3], [2, 1]], [4, 2]) == [0, 6, 10]\ntry:\n    matrix_vector([[1, 2]], [1, 2, 3])\nexcept ValueError:\n    pass\nelse:\n    raise AssertionError('Mismatched dimensions must be rejected')"
   }),
   "matrix-matrix-multiplication": codeLab({
-    title: "Matrix products and shapes", goal: "Check inner dimensions before multiplying.",
-    code: "import numpy as np\nA = np.array([[1, 2], [0, 1]])\nB = np.array([[2, 0], [3, 1]])\nC = A @ B\nprint(C)\nprint(C.shape)",
-    output: "[[8 2]\n [3 1]]\n(2, 2)", explanation: "Every entry is a row of A dotted with a column of B.", packages: ["numpy"]
+    title: "Build a bill table with row–column loops", goal: "Recreate the cafe bills and the two student outputs, while checking the shared dimension.",
+    code: "def matrix_multiply(A, B):\n    if not A or not B or not A[0] or not B[0]:\n        raise ValueError('Use non-empty matrices')\n    shared = len(A[0])\n    columns = len(B[0])\n    if any(len(row) != shared for row in A):\n        raise ValueError('A must be rectangular')\n    if any(len(row) != columns for row in B):\n        raise ValueError('B must be rectangular')\n    if shared != len(B):\n        raise ValueError('Inner dimensions must match')\n    result = []\n    for i in range(len(A)):\n        output_row = []\n        for j in range(columns):\n            total = 0\n            for k in range(shared):\n                total += A[i][k] * B[k][j]\n            output_row.append(total)\n        result.append(output_row)\n    return result\n\nA = [[2, 1], [1, 3]]\nB = [[3, 4], [2, 1]]\nprint(matrix_multiply(A, B))\nprint(matrix_multiply(B, A))\n\nX = [[60, 80], [70, 90], [50, 75]]\nW = [[0.3, 0.1], [0.2, 0.4]]\nscores = matrix_multiply(X, W)\nbias = [8, 5]\npredictions = [[score + bias[j] for j, score in enumerate(row)] for row in scores]\nprint(scores)\nprint(predictions)",
+    output: "[[8, 9], [9, 7]]\n[[10, 15], [5, 5]]\n[[34.0, 38.0], [39.0, 43.0], [30.0, 35.0]]\n[[42.0, 43.0], [47.0, 48.0], [38.0, 40.0]]",
+    explanation: "The i loop selects an output row, j selects its column, and k adds the shared item or feature contributions. Reversing the cafe matrices changes the output. In the ML example, bias[j] adds the baseline belonging to each output column.",
+    mathToCode: "A[i][k] * B[k][j] implements AᵢₖBₖⱼ with Python's zero-based indices. total adds over k; output_row collects the separate columns j. The three loops mirror Cᵢⱼ = sum over k of AᵢₖBₖⱼ.",
+    commonTrap: "A matching total entry count is not enough: A's column count must equal B's row count, and each shared position must refer to the same item or feature.",
+    exercise: { prompt: "Change B[0][0] from 3 to 5. Predict the cafe AB output [[12, 9], [11, 7]] before running. Only shop 1's output column changes; the student scores stay the same." },
+    hiddenTests: "assert matrix_multiply([[1, -2], [0, 3]], [[2, 1], [1, -1]]) == [[0, 3], [3, -3]]\nassert matrix_multiply([[2, 1], [1, 3], [0, 2]], [[3, 4], [2, 1]]) == [[8, 9], [9, 7], [4, 2]]\nassert matrix_multiply([[1, 2, 3]], [[1], [0], [-1]]) == [[-2]]\nfor left, right in [([[1, 2]], [[1, 2]]), ([[1], [2, 3]], [[1]]), ([[1, 2]], [[1, 2], [3]]), ([], [[1]])]:\n    try:\n        matrix_multiply(left, right)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError('Invalid matrix shapes must be rejected')"
   }),
   "eigenvalues-eigenvectors": codeLab({
     title: "Compute and verify an eigenpair", goal: "Check Av=lambda v numerically.",
@@ -62,9 +89,10 @@ const labs = {
     output: "2.6666666666666665\n4.0\n2.0", explanation: "ddof=0 divides by N; ddof=1 divides by n-1; std returns to original units.", packages: ["numpy"]
   }),
   "dot-product-angle": codeLab({
-    title: "Measure alignment with a dot product", goal: "Calculate how much one customer-preference vector points along another.",
-    code: "import numpy as np\ncustomer = np.array([2, 3])\nproduct = np.array([4, 1])\nalignment = customer @ product\nprint(alignment)",
-    output: "11", explanation: "@ multiplies matching components and adds them: 2×4 + 3×1.", mathToCode: "customer @ product is the code form of aᵀb. A larger positive result means stronger alignment.", commonTrap: "Using * here performs entry-by-entry multiplication, not the final dot product.", exercise: { prompt: "Change product to [-4, -1]. Run it and explain why the sign changes." }, packages: ["numpy"]
+    title: "Rebuild the delivery prediction in Python", goal: "See every contribution before combining them into the same 21-coin prediction as the lesson.",
+    code: "distance_km = 4\nmass_kg = 2\ndistance_weight = 3\nmass_weight = 2\nbias = 5\n\ndistance_contribution = distance_km * distance_weight\nmass_contribution = mass_kg * mass_weight\ndot_product = distance_contribution + mass_contribution\nprediction = dot_product + bias\n\nprint(distance_contribution)\nprint(mass_contribution)\nprint(dot_product)\nprint(prediction)",
+    output: "12\n4\n16\n21", explanation: "The first two outputs are contributions in coins. Their sum is the dot product; adding the bias gives the predicted bill.", mathToCode: "distance_km * distance_weight + mass_kg * mass_weight is xᵀw. Adding bias implements prediction = xᵀw + b.", commonTrap: "Adding distance to mass before multiplying mixes units and loses the correct feature–weight pairing.", exercise: { prompt: "Change distance_km to 5, keeping everything else fixed. Predict all four outputs before running: the bill should increase by the distance weight, 3 coins." },
+    hiddenTests: "assert dot_product == distance_contribution + mass_contribution\nassert prediction == dot_product + bias"
   }),
   "unit-vectors-normalization": codeLab({
     title: "Keep direction, remove size", goal: "Turn a route direction into a unit vector before comparing it with another route.",
@@ -72,15 +100,16 @@ const labs = {
     output: "[0.6 0.8]\n1.0", explanation: "Dividing by length keeps the direction but makes its length exactly one.", mathToCode: "np.linalg.norm(v) is ||v||, and v / norm(v) is the unit-vector formula.", commonTrap: "Normalizing the zero vector is undefined because its length is zero.", exercise: { prompt: "Replace v with [5.0, 12.0] and verify the new vector still has length one." }, packages: ["numpy"]
   }),
   "transpose-symmetry": codeLab({
-    title: "Swap rows and columns", goal: "See how a people-by-products table becomes a products-by-people table.",
-    code: "import numpy as np\nratings = np.array([[5, 2, 4], [1, 4, 3]])\nprint(ratings.T)\nprint(np.array_equal(ratings, ratings.T))",
-    output: "[[5 1]\n [2 4]\n [4 3]]\nFalse", explanation: ".T swaps the row and column positions; it does not reverse or invert the matrix.", mathToCode: "ratings.T implements Aᵀ. The equality check asks whether A=Aᵀ, which defines symmetry.", commonTrap: "A transpose changes shape; it does not solve a system or undo a transformation.", exercise: { prompt: "Create a 2×2 symmetric matrix and make the equality check print True." }, packages: ["numpy"]
+    title: "Follow the exchanged indices in Python", goal: "Transpose the student marks, break a mirrored pair, and build the two ML Gram matrices.",
+    code: "def transpose(A):\n    if not A or not A[0]:\n        raise ValueError('Use a non-empty matrix')\n    columns = len(A[0])\n    if any(len(row) != columns for row in A):\n        raise ValueError('Every row must have the same length')\n    result = []\n    for j in range(columns):\n        new_row = []\n        for i in range(len(A)):\n            new_row.append(A[i][j])\n        result.append(new_row)\n    return result\n\ndef is_symmetric(A):\n    return A == transpose(A)\n\ndef feature_gram(Z):\n    features = transpose(Z)\n    result = []\n    for left in features:\n        output_row = []\n        for right in features:\n            total = 0\n            for k in range(len(left)):\n                total += left[k] * right[k]\n            output_row.append(total)\n        result.append(output_row)\n    return result\n\nX = [[60, 80], [70, 90], [50, 75]]\nprint(transpose(X))\nprint(transpose(transpose(X)) == X)\nS = [[1, 4, 2], [4, 0, 3], [2, 3, 5]]\nprint(is_symmetric(S))\nS[0][1] = 6\nprint(is_symmetric(S))\nZ = [[1, 2], [2, 0], [0, 1]]\nprint(feature_gram(Z))\nprint(feature_gram(transpose(Z)))",
+    output: "[[60, 70, 50], [80, 90, 75]]\nTrue\nTrue\nFalse\n[[5, 2], [2, 5]]\n[[5, 2, 2], [2, 4, 0], [2, 0, 1]]",
+    explanation: "The transpose's new row j copies the original column j. Equality with the transpose tests every address, so changing only S₁₂ breaks symmetry. feature_gram compares the original columns; feeding it transpose(Z) compares Z's observation rows instead.",
+    mathToCode: "new_row.append(A[i][j]) moves mathematical Aᵢⱼ into the new row j, column i; Python indices start at zero. feature_gram(Z) implements ZᵀZ by summing column-pair products over observations k.",
+    commonTrap: "Python nested lists have no .T attribute. For a two-dimensional NumPy array, .T performs this exchange; transposing a one-dimensional NumPy array does not create a row or column shape.",
+    exercise: { prompt: "After S[0][1] = 6, add S[1][0] = 6 before checking symmetry again. Predict which False changes to True, and explain why the diagonal may still be [1, 0, 5]." },
+    hiddenTests: "assert transpose([[1, -2, 0], [3, 4, 5]]) == [[1, 3], [-2, 4], [0, 5]]\nassert not is_symmetric(X)\nassert is_symmetric([[2, -1], [-1, 5]])\nassert not is_symmetric([[0, 4, 7], [4, 0, 2], [7, 3, 0]])\nassert feature_gram(Z) == [[5, 2], [2, 5]]\nassert is_symmetric(feature_gram(Z))\nassert is_symmetric(feature_gram(transpose(Z)))\nfor invalid in [[], [[]], [[1, 2], [3]]]:\n    try:\n        transpose(invalid)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError('Empty or ragged matrices must be rejected')"
   }),
-  "inverse-systems": codeLab({
-    title: "Solve a two-condition decision", goal: "Use an inverse to recover two unknown prices from two combined bills.",
-    code: "import numpy as np\nA = np.array([[1.0, 1.0], [2.0, 1.0]])\nb = np.array([3.0, 5.0])\nx = np.linalg.inv(A) @ b\nprint(x)",
-    output: "[2. 1.]", explanation: "The two entries solve the two equations represented by A x = b.", mathToCode: "np.linalg.inv(A) @ b implements x=A⁻¹b when A is invertible.", commonTrap: "An inverse exists only for a square matrix that has not collapsed a direction.", exercise: { prompt: "Change b to [4.0, 6.0]. What two values now solve the system?" }, packages: ["numpy"]
-  }),
+  ...recoveryPythonLabs,
   "linear-transformations": codeLab({
     title: "Transform a map direction", goal: "Apply a scaling matrix to a direction vector.",
     code: "import numpy as np\nA = np.array([[2, 0], [0, 3]])\nv = np.array([3, -1])\nprint(A @ v)",

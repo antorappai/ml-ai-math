@@ -13,6 +13,7 @@ import { BasisExplorer, DeterminantExplorer, EigenvectorExplorer, InverseSystemE
 import { BayesExplorer, ConditionalExplorer, ProbabilityRuleExplorer, SampleSpaceExplorer, SetOverlapExplorer } from "./ProbabilityExplorers.jsx";
 import { CdfExplorer, ExpectedValueExplorer, PdfExplorer, PmfExplorer, RandomVariableExplorer, StandardDeviationExplorer, VarianceExplorer } from "./DistributionExplorers.jsx";
 import SlopeExplorer from "./SlopeExplorer.jsx";
+import LessonReading from "./LessonReading.jsx";
 
 function lessonStartPath(lessonId) {
   return `/lessons/${lessonId}/${lessonById[lessonId]?.beginnerSteps?.length ? "start" : "study"}`;
@@ -98,8 +99,8 @@ function StepBody({ step, lesson }) {
       <div className="lesson-goal"><span>By the end, you will be able to</span><strong>{step.goal}</strong></div>
       {step.body.map((paragraph, index) => <p key={`${index}-${paragraph}`}><MathText>{paragraph}</MathText></p>)}
       <div className="orientation-list">
-        <div><span>Time</span><strong>About 10 minutes</strong></div>
-        <div><span>Math level</span><strong>Beginner</strong></div>
+        <div><span>Time</span><strong>{step.estimatedTime || "About 10 minutes"}</strong></div>
+        <div><span>Math level</span><strong>{step.mathLevel || "Beginner"}</strong></div>
         <div><span>How to learn</span><strong>Read, try, then explain</strong></div>
       </div>
       {step.prerequisites.length > 0 && <div className="quiet-note"><strong>Helpful first:</strong> {step.prerequisites.map((id, index) => <React.Fragment key={id}>{index > 0 && ", "}<Link to={lessonStartPath(id)}>{lessonById[id]?.title || id}</Link></React.Fragment>)}</div>}
@@ -109,6 +110,7 @@ function StepBody({ step, lesson }) {
   if (step.type === "scenario") return (
     <>
       <EverydayStory everyday={step.everyday} />
+      <LessonReading step={step} />
       <GuidedCheck question={step.check} compact />
     </>
   );
@@ -116,6 +118,7 @@ function StepBody({ step, lesson }) {
   if (step.type === "concept") return (
     <>
       {step.body.map((paragraph, index) => <p key={`${index}-${paragraph}`}><MathText>{paragraph}</MathText></p>)}
+      <LessonReading step={step} />
       <div className="word-list">
         {step.vocabulary.map((term) => <article key={term.id}><h3>{term.name}</h3><p><MathText>{term.definition}</MathText></p><p><strong>Think of it like:</strong> <MathText>{term.analogy}</MathText></p><details><summary>See an example and a non-example</summary><p><strong>Example:</strong> <MathText>{term.example}</MathText></p><p><strong>Not an example:</strong> <MathText>{term.nonExample}</MathText></p></details></article>)}
       </div>
@@ -151,10 +154,10 @@ function StepBody({ step, lesson }) {
   );
 
   if (step.type === "worked-example") return (
-    <>{step.body.map((paragraph, index) => <p key={`${index}-${paragraph}`}><MathText>{paragraph}</MathText></p>)}<WorkedExample example={step.example} /><GuidedCheck question={step.check} compact /></>
+    <>{step.body.map((paragraph, index) => <p key={`${index}-${paragraph}`}><MathText>{paragraph}</MathText></p>)}<WorkedExample example={step.example} /><LessonReading step={step} /><GuidedCheck question={step.check} compact /></>
   );
 
-  if (step.type === "check") return <>{step.body.map((paragraph, index) => <p key={`${index}-${paragraph}`}><MathText>{paragraph}</MathText></p>)}<GuidedCheck question={step.check} /></>;
+  if (step.type === "check") return <>{step.body.map((paragraph, index) => <p key={`${index}-${paragraph}`}><MathText>{paragraph}</MathText></p>)}<LessonReading step={step} /><GuidedCheck question={step.check} /></>;
 
   if (step.type === "notation") return (
     <>
@@ -165,6 +168,7 @@ function StepBody({ step, lesson }) {
         <dl>{step.notation.symbols.map(([symbol, meaning]) => <div key={symbol}><dt><InlineMath>{symbol}</InlineMath></dt><dd>{meaning}</dd></div>)}</dl>
       </section>
       <MlBridge bridge={step.mlBridge} />
+      <LessonReading step={step} />
       <GuidedCheck question={step.check} compact />
       {step.formulaIds.length > 0 && <details className="deeper-detail"><summary>Explore the full formula reference</summary><div>{step.formulaIds.map((id) => <FormulaCard formula={formulaById[id]} compact key={id} />)}</div></details>}
     </>
@@ -173,6 +177,7 @@ function StepBody({ step, lesson }) {
   return (
     <>
       {step.body.map((paragraph, index) => <p key={`${index}-${paragraph}`}><MathText>{paragraph}</MathText></p>)}
+      <LessonReading step={step} />
       <div className="misconception-note"><strong>A useful correction</strong><p><s><MathText>{step.misconception.wrong}</MathText></s></p><p><MathText>{step.misconception.correction}</MathText></p></div>
       <div className="recap-checks">{step.recapQuestions.map((question) => <GuidedCheck question={question} compact key={question.id} />)}</div>
       <div className="next-options">

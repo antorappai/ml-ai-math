@@ -1,6 +1,7 @@
 import { MathText } from "./Math.jsx";
 import React, { useEffect, useState } from "react";
 import { useMastery } from "../state/mastery.js";
+import QuestionFeedback from "./QuestionFeedback.jsx";
 
 export default function Assessment({ questions, testId, title = "Quick check", limit, timedMinutes = 0 }) {
   const selectedQuestions = limit ? questions.slice(0, limit) : questions;
@@ -64,7 +65,7 @@ export default function Assessment({ questions, testId, title = "Quick check", l
                 </button>
               ))}
             </div>
-            {submitted && <p className={correct ? "feedback correct-text" : "feedback incorrect-text"}><strong>{correct ? "Correct." : "Not yet."}</strong> <MathText>{question.explanation}</MathText></p>}
+            {submitted && <div className={correct ? "feedback correct-text" : "feedback incorrect-text"}><strong>{correct ? "Correct." : "Not yet."}</strong><QuestionFeedback question={question} chosen={chosen} /></div>}
           </article>
         );
       })}

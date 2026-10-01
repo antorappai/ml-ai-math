@@ -690,6 +690,91 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 .course-sidebar details > a { display: block; padding: .5rem .6rem .5rem 1rem; font-size: .8rem; line-height: 1.4; text-decoration: none; color: var(--muted); }
 .course-sidebar a[aria-current], .course-sidebar a:hover { color: var(--ink); background: var(--lime); border-radius: .4rem; }
 .lesson-reading-section { scroll-margin-top: 90px; padding-bottom: 2.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--line); }
+.authored-reading { margin: 2rem 0; }
+.authored-reading h3 { font-size: 1.3rem; line-height: 1.4; }
+.written-exercise { margin: 1.5rem 0; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.written-exercise h3 { margin-top: 0; line-height: 1.4; }
+.written-exercise label { display: block; margin: 1rem 0 .5rem; font-weight: 700; }
+.written-exercise textarea { display: block; width: 100%; padding: .8rem; resize: vertical; min-height: 110px; border: 1px solid var(--line); border-radius: .4rem; background: var(--paper); color: var(--ink); font: inherit; line-height: 1.6; }
+.written-exercise textarea:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.exercise-hint { margin: 1rem 0; }
+.written-exercise .button { white-space: normal; text-align: left; }
+.written-solution { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.written-solution li { margin-bottom: .65rem; line-height: 1.65; }
+.dot-product-explorer { margin: 1.5rem 0; padding: 1.25rem; border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.dot-explorer-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: center; }
+.dot-explorer-layout svg { width: 100%; height: auto; }
+.dot-explorer-controls label { display: flex; justify-content: space-between; gap: .5rem; font-weight: 700; font-size: .9rem; }
+.dot-explorer-controls input { width: 100%; margin: .75rem 0 1.25rem; accent-color: var(--green); }
+.dot-explorer-controls dl > div { display: flex; justify-content: space-between; gap: .5rem; padding: .5rem 0; }
+.dot-explorer-controls dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: 700; }
+@media (max-width: 600px) { .dot-explorer-layout { grid-template-columns: 1fr; } }
+.choice-explanations { margin-top: 1rem; }
+.choice-explanations ul { padding-left: 1.3rem; }
+.choice-explanations li { margin: 1rem 0; line-height: 1.6; }
+.choice-explanations li > strong { color: var(--ink); }
+.delivery-prediction-lab { margin: 2rem 0; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.delivery-prediction-lab h3 { margin-top: 0; }
+.delivery-controls label { display: flex; justify-content: space-between; gap: .5rem; font-weight: 700; }
+.delivery-controls input { width: 100%; margin: .75rem 0 1.25rem; accent-color: var(--green); }
+.delivery-prediction-lab form > label { display: block; margin-bottom: .5rem; font-weight: 700; }
+.prediction-answer-row { display: flex; flex-wrap: wrap; gap: .75rem; }
+.prediction-answer-row input { width: 130px; max-width: 100%; padding: .75rem; border: 1px solid var(--line); border-radius: .45rem; background: var(--paper); color: var(--ink); }
+.prediction-answer-row input:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.matrix-cell-explorer { margin: 2rem 0; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.matrix-cell-explorer h3 { margin-top: 0; }
+.matrix-table-scroll { overflow-x: auto; margin: 1.25rem 0; }
+.matrix-table-scroll table { width: 100%; border-collapse: collapse; }
+.matrix-table-scroll caption { text-align: left; margin-bottom: .75rem; color: var(--muted); line-height: 1.5; }
+.matrix-table-scroll th, .matrix-table-scroll td { padding: .7rem; border: 1px solid var(--line); text-align: left; }
+.matrix-table-scroll th { font-size: .9rem; }
+.matrix-table-scroll .selected-row, .matrix-table-scroll .selected-column { background: var(--lime); }
+.matrix-cell { width: 100%; min-width: 50px; background: var(--paper); border: 1px solid var(--line); }
+.matrix-cell.selected { border-color: var(--green); outline: 2px solid var(--green); outline-offset: 2px; }
+.matrix-cell:disabled { cursor: default; opacity: 1; }
+.row-dot-lab { margin: 2rem 0; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.row-dot-lab h3 { margin-top: 0; }
+.row-dot-choice { display: flex; flex-wrap: wrap; gap: .75rem; }
+.row-dot-choice button { background: var(--paper); border: 1px solid var(--line); }
+.row-dot-choice button[aria-pressed="true"] { background: var(--lime); border-color: var(--green); }
+.row-dot-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.row-dot-controls label { display: flex; justify-content: space-between; gap: .5rem; font-weight: 700; }
+.row-dot-controls input { width: 100%; margin: .75rem 0 1.25rem; accent-color: var(--green); }
+.row-dot-lab form > label { display: block; margin-bottom: .5rem; font-weight: 700; }
+@media (max-width: 600px) { .row-dot-controls { grid-template-columns: 1fr; } }
+.matrix-product-lab { margin: 2rem 0; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.matrix-product-lab h3 { margin-top: 0; }
+.matrix-product-inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.matrix-product-lab form > label { display: block; margin-bottom: .5rem; font-weight: 700; }
+.matrix-product-price { margin-top: 1.5rem; }
+.matrix-product-price label { display: flex; justify-content: space-between; gap: .5rem; font-weight: 700; }
+.matrix-product-price input { width: 100%; margin-top: .75rem; accent-color: var(--green); }
+@media (max-width: 700px) { .matrix-product-inputs { grid-template-columns: 1fr; gap: 0; } }
 .reading-finish { margin: 2rem 0; }
+.determinant-prediction-lab { margin: 2rem 0; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.determinant-prediction-lab h3 { margin-top: 0; }
+.determinant-prediction-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: center; }
+.determinant-prediction-layout figure { margin: 1rem 0; }
+.determinant-prediction-layout svg { width: 100%; height: auto; }
+.determinant-prediction-layout figcaption { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+.determinant-prediction-layout label { display: flex; justify-content: space-between; gap: .5rem; font-weight: 700; }
+.determinant-prediction-layout input { width: 100%; margin: .75rem 0; accent-color: var(--green); }
+.det-original { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.determinant-answer-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+.determinant-answer-fields > div:last-child { grid-column: 1 / -1; }
+.determinant-answer-fields label { display: block; margin-bottom: .5rem; font-weight: 700; }
+.determinant-answer-fields input, .determinant-answer-fields select { width: 100%; padding: .75rem; border: 1px solid var(--line); border-radius: .45rem; background: var(--paper); color: var(--ink); font: inherit; }
+.determinant-answer-fields input:focus-visible, .determinant-answer-fields select:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+@media (max-width: 700px) { .determinant-prediction-layout, .determinant-answer-fields { grid-template-columns: 1fr; } }
+.transpose-lab, .symmetry-lab { margin: 2rem 0; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid var(--line); border-radius: .7rem; background: var(--surface); }
+.transpose-lab h3, .symmetry-lab h3 { margin-top: 0; }
+.transpose-tables { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.transpose-highlight { background: var(--lime); font-weight: 700; }
+.transpose-target { display: block; font-size: .8rem; }
+.transpose-again, .symmetry-check, .symmetry-repair { margin-top: 1.25rem; }
+.symmetry-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1rem 0; }
+.symmetry-controls label { display: flex; justify-content: space-between; gap: .5rem; font-weight: 700; }
+.symmetry-controls input { width: 100%; margin: .75rem 0; accent-color: var(--green); }
+@media (max-width: 760px) { .transpose-tables, .symmetry-controls { grid-template-columns: 1fr; gap: 0; } }
 @media (max-width: 760px) { .scrolling-lesson .lesson-outline { max-height: 45vh; } }
 @media (max-width: 560px) { .formula-preview-grid { grid-template-columns: 1fr; } }

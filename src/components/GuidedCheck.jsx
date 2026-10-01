@@ -1,6 +1,7 @@
 import { MathText } from "./Math.jsx";
 import React, { useState, useId } from "react";
 import { useMastery } from "../state/mastery.js";
+import QuestionFeedback from "./QuestionFeedback.jsx";
 
 export default function GuidedCheck({ question, compact = false }) {
   const checkId = useId();
@@ -42,7 +43,7 @@ export default function GuidedCheck({ question, compact = false }) {
       {submitted && (
         <div className={`gentle-feedback ${correct ? "correct" : "incorrect"}`} role="status">
           <strong>{correct ? "That’s right." : "Not yet—and that is useful feedback."}</strong>
-          <p><MathText>{question.explanation}</MathText></p>
+          <QuestionFeedback question={question} chosen={answer} />
           {!correct && <button type="button" className="text-button" onClick={tryAgain}>Try again</button>}
         </div>
       )}

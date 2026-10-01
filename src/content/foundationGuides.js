@@ -2,6 +2,13 @@ import { CLASSICAL_ML_GUIDES } from "./classicalMlGuides.js";
 import { GUIDED_NOTATION } from "./guidedNotation.js";
 import { DEEP_LEARNING_GUIDES } from "./deepLearningGuides.js";
 import { buildEveryday, buildMlBridge } from "./guidedEnhancements.js";
+import { buildDotProductTrial } from "./dotProductLesson.js";
+import { buildMatrixAnatomyTrial } from "./matrixAnatomyLesson.js";
+import { buildMatrixVectorTrial } from "./matrixVectorLesson.js";
+import { buildMatrixMatrixTrial } from "./matrixMatrixLesson.js";
+import { buildTransposeTrial } from "./transposeLesson.js";
+import { buildDeterminantTrial } from "./determinantLesson.js";
+import { recoveryLessons } from "./recoveryLessons.js";
 
 export const FOUNDATION_GUIDES = {
   ...DEEP_LEARNING_GUIDES,
@@ -433,7 +440,7 @@ export function buildBeginnerSteps(seed, examples, questions) {
   const mlBridge = buildMlBridge(seed, mlExample, everydayExample);
   const conceptBody = seed.plain === term.definition ? [seed.plain] : [seed.plain, term.definition];
 
-  return [
+  const steps = [
     {
       id: "start",
       type: "orientation",
@@ -495,6 +502,9 @@ export function buildBeginnerSteps(seed, examples, questions) {
       misconception: seed.misconceptions[0]
     }
   ];
+  const authoredBuilders = { "dot-product-angle": buildDotProductTrial, "matrix-anatomy-types": buildMatrixAnatomyTrial, "matrix-vector-multiplication": buildMatrixVectorTrial, "matrix-matrix-multiplication": buildMatrixMatrixTrial, "transpose-symmetry": buildTransposeTrial, "determinant-collapse": buildDeterminantTrial };
+  const authoredBuilder = recoveryLessons[seed.id]?.buildSteps || authoredBuilders[seed.id];
+  return authoredBuilder ? authoredBuilder(steps) : steps;
 }
 
 export function buildProgressiveBeginnerSteps(seed, levels) {

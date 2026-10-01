@@ -17,7 +17,8 @@ const strictRender = (latex) => katex.renderToString(latex, { throwOnError: true
 describe("curriculum LaTeX rendering", () => {
   it("validates every guided and reference formula and every symbol in strict mode", () => {
     expect(Object.keys(GUIDED_NOTATION).sort()).toEqual(lessons.map((lesson) => lesson.id).sort());
-    for (const formula of [...Object.values(GUIDED_NOTATION), ...formulaList]) {
+    const authoredNotation = lessons.flatMap((lesson) => lesson.beginnerSteps.filter((step) => step.notation).map((step) => step.notation));
+    for (const formula of [...Object.values(GUIDED_NOTATION), ...formulaList, ...authoredNotation]) {
       expect(formula.latex).toBeTruthy();
       for (const latex of [formula.latex, ...formula.symbols.map(([symbol]) => symbol)]) {
         expect(() => strictRender(latex), latex).not.toThrow();
@@ -46,7 +47,7 @@ describe("curriculum LaTeX rendering", () => {
         expect(panel?.querySelector(".block-math .katex"), `${lesson.id}/${stepId}`).toBeTruthy();
         expect(doc.querySelector(".katex-error, .math-fallback")).toBeNull();
         if (stepId === "math-to-ml") {
-          expect(panel.querySelectorAll("dt .katex").length).toBe(GUIDED_NOTATION[lesson.id].symbols.length);
+          expect(panel.querySelectorAll("dt .katex").length).toBe(lesson.beginnerSteps.find((step) => step.id === stepId).notation.symbols.length);
         }
       }
     }

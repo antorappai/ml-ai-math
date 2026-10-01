@@ -1,6 +1,23 @@
 import { defineLesson, level } from "./schema.js";
 import { buildExamQuestions, buildFoundationQuestions, buildProblems } from "./questionBank.js";
 import { buildBeginnerSteps } from "./foundationGuides.js";
+import { dotProductChecks, dotProductPractice, dotProductExam } from "./dotProductLesson.js";
+import { matrixAnatomyChecks, matrixAnatomyPractice, matrixAnatomyExam } from "./matrixAnatomyLesson.js";
+import { matrixVectorChecks, matrixVectorPractice, matrixVectorExam } from "./matrixVectorLesson.js";
+import { matrixMatrixChecks, matrixMatrixPractice, matrixMatrixExam } from "./matrixMatrixLesson.js";
+import { transposeChecks, transposePractice, transposeExam } from "./transposeLesson.js";
+import { determinantChecks, determinantPractice, determinantExam } from "./determinantLesson.js";
+import { recoveryLessons } from "./recoveryLessons.js";
+
+const authoredPracticeByLesson = {
+  ...recoveryLessons,
+  "dot-product-angle": { checks: dotProductChecks, practice: dotProductPractice, exam: dotProductExam },
+  "matrix-anatomy-types": { checks: matrixAnatomyChecks, practice: matrixAnatomyPractice, exam: matrixAnatomyExam },
+  "matrix-vector-multiplication": { checks: matrixVectorChecks, practice: matrixVectorPractice, exam: matrixVectorExam },
+  "matrix-matrix-multiplication": { checks: matrixMatrixChecks, practice: matrixMatrixPractice, exam: matrixMatrixExam },
+  "transpose-symmetry": { checks: transposeChecks, practice: transposePractice, exam: transposeExam },
+  "determinant-collapse": { checks: determinantChecks, practice: determinantPractice, exam: determinantExam },
+};
 
 export const vocab = (id, name, definition, analogy, example, nonExample, mlConnection, prerequisites = []) => ({
   id, name, definition, analogy, example, nonExample, mlConnection, prerequisites,
@@ -44,9 +61,10 @@ function makeExplanation(levelKey, seed, term) {
 export function beginnerLesson(seed) {
   const term = seed.vocabulary[0];
   const examples = seed.examples.map((example) => connectExampleToStory(example, seed, term));
-  const questions = buildFoundationQuestions(seed.id, seed.vocabulary, seed.misconceptions[0], seed.ml);
-  const problems = buildProblems(seed.id, examples, seed.vocabulary, seed.ml);
-  const exams = buildExamQuestions(seed.id, examples, seed.misconceptions[0]);
+  const authored = authoredPracticeByLesson[seed.id];
+  const questions = authored ? authored.checks : buildFoundationQuestions(seed.id, seed.vocabulary, seed.misconceptions[0], seed.ml);
+  const problems = authored ? [...authored.practice, ...authored.exam] : buildProblems(seed.id, examples, seed.vocabulary, seed.ml);
+  const exams = authored ? [authored.practice[1], ...authored.exam] : buildExamQuestions(seed.id, examples, seed.misconceptions[0]);
   const beginnerSteps = buildBeginnerSteps(seed, examples, questions);
   const levelConfigs = [
     { key: "basics", q: questions.slice(0, 2), p: problems.slice(0, 1), exam: exams[0] },
@@ -68,6 +86,7 @@ export function beginnerLesson(seed) {
     mlConnection: seed.ml,
     vocabulary: seed.vocabulary,
     beginnerSteps,
+    ...(authored ? { writtenPractice: { exercises: [...authored.practice, ...authored.exam] } } : {}),
     projectIds: seed.projectIds || [],
     levels: Object.fromEntries(levelConfigs.map(({ key, q, p, exam }, index) => [key, level({
       title: key[0].toUpperCase() + key.slice(1),

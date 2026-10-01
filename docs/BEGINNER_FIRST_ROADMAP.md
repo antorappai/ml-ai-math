@@ -1,6 +1,82 @@
 # ML Math Studio — Beginner-First Roadmap
 
-Last updated: 2026-09-13
+Last updated: 2026-10-01
+
+## Single-lesson teaching trial — 2026-10-01
+
+The **Dot Product, Angle & Cosine** lesson in the original app now uses an authored delivery-cost narrative, explicit feature units, signed contributions, a geometric explanation, a cosine-ranking reversal, and a small linear prediction model. Its seven existing section IDs remain compatible with navigation and saved progress. New MCQs use new IDs so earlier attempts are not reinterpreted.
+
+The trial adds an angle/length explorer, three written practice questions, and a 10-mark mini-exam with hints, worked answers, common traps, and self-assessment marking guides. Written drafts last while the page is mounted; they are not saved or automatically graded. The Python companion recreates the delivery calculation using ordinary arithmetic. Optional ML reasoning explains feature scaling, unit normalization, and the relationship between cosine and distance for unit vectors.
+
+The five trial MCQs now include authored explanations for every correct and incorrect option. Guided checks and the practice assessment show reasoning for the selected answer and offer an expandable comparison of all options after submission. A delivery prediction activity lets learners change distance and mass, enter a predicted bill, and receive feedback about omitted contributions or a missing/doubled baseline. Changing the activity inputs clears the previous answer and feedback so the next prediction is a fresh attempt.
+
+This is an editorial trial awaiting learner feedback, not a course-wide quality approval or a guarantee of exam coverage. Prior automated completion records demonstrate structural coverage; they do not establish that explanations are sufficiently clear or deep. Review this lesson's teaching before applying the approach to other lessons. The separate `study-guide-v2` has not been edited.
+
+## Next lesson rewritten: Matrix Anatomy, Dimensions & Types — 2026-10-01
+
+At the user's request to improve lessons one by one, the next lesson now follows a three-student marks table through matrix shapes, entry addresses, structural types, feature order, and row-wise ML predictions. It includes a clickable cell-address activity with feedback on swapped indices, five MCQs with per-option explanations, three written practice questions, a 10-mark mini-exam, and a prepared Python companion using the same data. Optional depth discusses axis conventions, semantic errors that shape checks miss, and feature redundancy.
+
+Existing lesson and section IDs remain compatible with saved navigation. New authored MCQs use distinct IDs. Continue one lesson per review cycle rather than treating structural coverage as teaching approval.
+
+The new companion raises the Python Library coverage to 45 lessons, including 39 with browser execution and 7 with notebooks (one has both). These are authored/configured counts; the matrix companion was executed independently with Python for its default data and added-student exercise.
+
+## Third lesson rewritten: Matrix–Vector Multiplication — 2026-10-01
+
+The third authored lesson connects the marks table to one dot product per output row. It explains shape compatibility from coordinate pairing, preserves separate outputs, works through signed integer contributions, and derives the weighted-column view and its use for predicting input changes. ML examples distinguish observations from output units, add a shared bias to each prediction, and discuss flat arrays versus explicit columns in optional depth.
+
+The new row-output prediction activity diagnoses omitted contributions and lost signs; changing the row or input clears stale attempts. The existing geometric explorer remains, with authored explanations for stretch, swap, and shear. Five MCQs have per-option feedback, and three written practice questions plus a 10-mark mini-exam have worked answers and marking guides. The Python companion uses explicit row loops and rejects mismatched input dimensions.
+
+The user requests interactive elements where they improve the explanation; each future lesson should include them when they clarify its concept.
+
+## Fourth lesson rewritten: Matrix–Matrix Multiplication — 2026-10-01
+
+The fourth authored lesson prices the same cafe orders at two shops, using matching item quantities and price columns to give each output cell a meaning and units. It derives product dimensions from row–column pairing, connects the column view to matrix–vector multiplication, and explains noncommutativity through both arithmetic and successive transformations. The ML bridge uses the existing student marks to calculate two output scores and add per-output biases. Optional depth covers weight layouts, feature alignment, broadcasting, nonlinear layers, and NumPy operators.
+
+An interactive bill table highlights the chosen row and column, asks for a predicted cell, and diagnoses missing item contributions or use of a price row instead of a column. Changing a shop price clears stale results and supports predicting the effect on a whole output column. Five authored MCQs explain every option; three written exercises and a 10-mark mini-exam include hints, worked answers, common traps, and self-assessment marks. The Python companion follows explicit row–column loops and validates dimensions.
+
+Validation: all 105 app tests pass, including five new lesson tests for prediction feedback, changed prices, written practice, option reasoning, and formula rendering. The production build succeeds. The Python companion was executed independently for its default output, changed-price exercise, transformation products, feature reorder, and invalid-dimension checks. Browser appearance has not been visually verified.
+
+## Fifth lesson rewritten: Transpose & Symmetric Matrices — 2026-10-01
+
+The fifth authored lesson reorganises the familiar student marks from student-by-subject to subject-by-student, keeping labels and values intact. It explains index exchange, rectangular shapes, double transposes, row and column vectors, and symmetry through every mirrored pair. The product-transpose rule is justified by dimensions and individual scalar sums. The ML bridge builds both feature and observation Gram matrices using three small observations; optional depth distinguishes covariance, positive semidefiniteness, and invertibility, and explains NumPy's one-dimensional transpose behaviour.
+
+Two activities support the explanation. The address activity diagnoses keeping an original address instead of exchanging indices, and can restore the layout with a second transpose. The symmetry activity lets learners independently change a mirrored pair and a diagonal value, predict symmetry, and repair the pair. Changes clear stale answers and feedback. Five authored MCQs explain every option. Three written practice exercises and a 10-mark mini-exam include hints, worked answers, traps, and self-assessment marking guides. The plain-Python companion reproduces the marks transpose, symmetry change, and both Gram products.
+
+Validation: all 111 app tests pass, including six new lesson tests for address feedback, restored labels, symmetry changes and repairs, option reasoning, written practice, and formula rendering. The production build succeeds. The Python companion was executed independently with its hidden checks, mirrored-entry exercise, negative diagonal change, and product-transpose verification. Browser appearance has not been visually verified.
+
+## Sixth lesson rewritten: Determinants & Geometric Collapse — 2026-10-01
+
+The sixth authored lesson follows a unit square into a parallelogram, connects its image sides to matrix columns, and separates signed determinant, ordinary area, and orientation. It exhibits distinct inputs merging under a singular map, distinguishing line collapse from collapse to a point. The ML bridge demonstrates redundant output coordinates while distinguishing information loss from task usefulness. Optional depth explains why determinant magnitude alone does not establish numerical stability. Core practice covers signed entries, lost directions, and area scales through composition.
+
+The existing live matrix graph remains and now identifies point collapse correctly. A prediction activity provides six transformation cases, asks for a signed determinant, transformed patch area, and geometric interpretation, and diagnoses lost signs, negative ordinary areas, or a missing original-area multiplier. Changing cases or patch area clears stale guesses and feedback. Five authored MCQs explain every option; three written exercises and a 10-mark mini-exam include hints, worked answers, common traps, and self-assessment marking guides. A new plain-Python companion reproduces the area and lost-direction calculations, bringing configured Python coverage to 46 lessons, including 40 browser labs and 7 notebooks (one lesson has both).
+
+Validation: all 117 app tests pass, including six new lesson tests covering patch-area changes, sign feedback, compression, line and point collapse, the retained graph, written practice, and formula rendering. The production build succeeds. The Python companion's printed output was compared with its authored expected output, and its hidden checks, changed-input exercise, column images, composition determinant, and merging-input examples were executed independently. Browser appearance has not been visually verified.
+
+## First three-lesson batch — 2026-10-01
+
+The user approved batches of three to reduce repeated setup, review, and verification overhead. Use the established teaching structure, keep optional depth compact, reuse useful interactions, and run one full test/build check per batch. This replaces the earlier one-lesson-per-turn workflow; learners can still review lessons individually.
+
+- **Matrix Inverses & Systems of Equations** now recovers cafe prices by elimination and inverse, verifies forward substitution, distinguishes inconsistent systems from solution families, and fits a tiny intercept/slope model. The existing equation-intersection graph is retained and explicitly explained. Optional depth distinguishes numerical solving, least squares, and pseudoinverses.
+- **Rank, Column Space & Null Space** now connects dependent sensor readouts to reachable output directions and invisible input changes. It works through square and rectangular examples, particular solutions plus null directions, and identical predictions from different weight vectors. A new activity reuses the existing explorer shell to compare a dependent map, identity, and zero map under the same input displacement.
+- **Standard Basis & Coordinates** now reconstructs a destination using horizontal and diagonal directions, explains independence and spanning, and connects unique coordinates to absence of null-space freedom. The existing basis explorer is retained with a sequence that restores the same destination after changing the basis and updating coefficients. Optional depth explains orthonormal dot-product coordinates and geometry in a skew basis.
+
+Each lesson has five MCQs with reasoning for every option, three written exercises, and a 10-mark mini-exam with hints, worked answers, traps, and self-assessment marking guides. Shared authoring code keeps the seven navigation IDs stable. Three plain-Python companions reproduce the examples; rank and basis add two new companions, bringing configured coverage to 48 lessons, including 42 browser labs and 7 notebooks (one lesson has both).
+
+Validation covers 124 app tests, including seven new batch tests. The full suite passed 123 checks and identified an incorrect selector in one new test; after correcting the selector, all seven batch tests passed in a focused rerun. The production build succeeds. All three Python companions were executed independently, with printed output compared to authored expectations, hidden checks run, and changed-input exercises verified. Browser appearance has not been visually verified.
+
+There are now nine rewritten Linear Algebra lessons; the other ten retain their existing teaching content. **Change of Basis** is next. Continue in batches of three unless the user steers the scope differently.
+
+## Cloud continuation notes — 2026-10-01
+
+The user asked about continuing this work in the cloud. These notes prepare the continuation; they do not indicate that a cloud task has started or that local changes have been published.
+
+Repository: `antorappai/ml-ai-math`. Preserve the completed nine lesson rewrites and their shared feedback/reading components before starting remote work. The separate, pre-existing untracked `study-guide-v2/` is outside the current rewrite scope. Cloud work must start from a branch containing the latest lesson edits, not an older remote snapshot.
+
+Next batch: `change-of-basis`, `composition-matrix-powers`, and `eigenvalues-eigenvectors`. Continue improving the original app under `src/`. Use approachable, descriptive teaching with concrete examples, then bounded master's-level ML reasoning. Decode each main formula using a read-aloud explanation, symbol meanings, and a numerical example. Keep optional depth compact. Each lesson needs five MCQs explaining every option, three written exercises, and a 10-mark topic mini-exam with hints, worked answers, common traps, and self-assessment marks. Reuse interactions when useful and add a new one only when it clarifies the concept.
+
+Preserve existing lesson IDs, seven guided section IDs, navigation, and saved progress; give newly authored MCQs distinct IDs. See `recoveryLessons.js` for the recent batch structure and the earlier authored lesson files for reference. Validate numerical examples and execute changed Python companions independently. Run the full app tests and production build once per batch; repair failures and rerun affected checks as needed. Report actual verification and avoid claiming browser visual inspection without doing it. Use short progress updates and a concise final with the three lesson links and updated rewrite count.
+
+Environment commands: `npm ci`, `npm test`, `npm run build`. The root is a Vite/React project. No service secrets are needed for this lesson-authoring batch.
 
 ## Product goal
 
